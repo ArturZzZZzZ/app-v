@@ -4,7 +4,7 @@ import { Box, AppBar, Toolbar, Button } from '@mui/material';
 import { ThemeProvider } from '@mui/material/styles';
 
 import theme from './utils/theme';
-import WalletDisplay from './components/Bridge/components/WalletDisplay';
+import WalletDisplay from './components/WalletDisplay/WalletDisplay';
 import { blockchainInfo, IS_TESTNET } from './utils/globals';
 import { initializeWeb3Modal } from './utils/Web3ModalConfig';
 import Bridge from './components/Bridge/components/Bridge';

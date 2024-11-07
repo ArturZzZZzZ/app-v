@@ -12,7 +12,7 @@ import { VaultABI } from '../../utils/ABIs';
 import VaultTransaction from './components/VaultTransaction';
 import VaultAdmin from './components/VaultAdmin';
 import SecuritizeCreditVault from './components/SecuritizeCreditVault';
-import WalletDisplay from '../Bridge/components/WalletDisplay';
+import WalletDisplay from '../WalletDisplay/WalletDisplay';
 import SmartContractInterface from './components/SmartContractInterfaces';
 
 function SecuritizeCreditVaultApp() {
