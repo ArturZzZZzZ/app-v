@@ -11,7 +11,6 @@ import {
     BridgeABI,
     blockchainInfo
 } from '../../../globals';
-import WalletDisplay from '../../../utils/WalletDisplay';
 
 const Bridge = ({ network1, network2 }) => {
     const [amount, setAmount] = useState(0);
@@ -35,20 +34,13 @@ const Bridge = ({ network1, network2 }) => {
     const [dialogOpen, setDialogOpen] = useState(false);
     const [txHash, setTxHash] = useState(null);
 
-
     const { address, chainId, isConnected } = useWeb3ModalAccount();
     const { walletProvider } = useWeb3ModalProvider();
     const { switchNetwork } = useSwitchNetwork();
     const { disconnect } = useDisconnect();
 
-    // const [fromNetwork, setFromNetwork] = isSwitched ? network2 : network1;
-    // const [toNetwork, setToNetwork] = isSwitched ? network2 : network1;
-
     const [fromNetwork, setFromNetwork] = useState(network1);
     const [toNetwork, setToNetwork] = useState(network2);
-
-    // const fromNetwork = isSwitched ? network2 : network1;
-    // const toNetwork = isSwitched ? network1 : network2;
 
     // Snackbar handler
     const handleSnackbarClose = (event, reason) => {
@@ -85,6 +77,7 @@ const Bridge = ({ network1, network2 }) => {
         }
     }
 
+    // Fetch token balances on load
     useEffect(() => {
         if (fromNetwork?.assets) {
             setSourceAssetAddress(fromNetwork.assets[0].address);
@@ -108,7 +101,7 @@ const Bridge = ({ network1, network2 }) => {
         }
     }, [amount, expectedAmount, isSwitched]);
 
-
+    // Synchronize assets after switching networks
     useEffect(() => {
         console.log("New Netwoks; changing assets: ");
         console.log("From Network: ", fromNetwork);
