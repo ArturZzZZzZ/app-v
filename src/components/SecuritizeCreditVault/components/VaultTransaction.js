@@ -1,5 +1,5 @@
 import { VaultAddress, AssetAddress, AssetName, RepresentationTokenName } from '../../../utils/globals';
-import { VaultABI, ERC20Abi } from '../../../utils/ABIs';
+import { VaultABI, ERC20ABI } from '../../../utils/ABIs';
 import React, { useState, useEffect } from 'react';
 import { Container, Paper, Typography, Box, TextField, Button, CircularProgress, Chip, Stack, Snackbar, Alert } from '@mui/material';
 import { useWeb3ModalProvider, useWeb3ModalAccount } from '@web3modal/ethers/react';
@@ -34,7 +34,7 @@ function VaultTransaction() {
             const ethersProvider = await new ethers.BrowserProvider(walletProvider);
             const signer = await ethersProvider.getSigner();
             const contractAddress = action === 'deposit' ? AssetAddress : VaultAddress;
-            const contractABI = action === 'deposit' ? ERC20Abi : VaultABI;
+            const contractABI = action === 'deposit' ? ERC20ABI : VaultABI;
             const assetContract = await new ethers.Contract(contractAddress, contractABI, signer);
             const assetBalance = await assetContract.balanceOf(address);
             return ethers.formatUnits(assetBalance, 6);
@@ -69,7 +69,7 @@ function VaultTransaction() {
             const numberOfAssets = ethers.parseUnits(assets.toString(), 6); // Convert assets to BigInt
 
             if (action === 'deposit') {
-                const tokenContract = new ethers.Contract(AssetAddress, ERC20Abi, signer);
+                const tokenContract = new ethers.Contract(AssetAddress, ERC20ABI, signer);
                 const approveTx = await tokenContract.approve(VaultAddress, numberOfAssets);
                 await approveTx.wait();
                 setStep(2); // Step 2: Depositing tokens
@@ -180,7 +180,7 @@ function VaultTransaction() {
                     />
                     <TokenBalance
                         contractAddress={action === 'deposit' ? AssetAddress : VaultAddress}
-                        abi={action === 'deposit' ? ERC20Abi : VaultABI}
+                        abi={action === 'deposit' ? ERC20ABI : VaultABI}
                         label={action === 'deposit' ? AssetName : RepresentationTokenName}
                         refresh={refresh} // Pass the refresh state as a prop
                     />

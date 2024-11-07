@@ -11,7 +11,7 @@ import {
 } from '../../../utils/globals';
 
 import {
-    ERC20Abi,
+    ERC20ABI,
     BridgeABI,
 } from '../../../utils/ABIs';
 
@@ -67,7 +67,7 @@ const Bridge = ({ network1, network2 }) => {
             console.log("------> Network: ", network);
             const ethersProvider = new ethers.JsonRpcProvider(network.rpcUrl);
             console.log("Ethers Provider: ", ethersProvider);
-            const contract = new Contract(assetAddress, ERC20Abi, ethersProvider);
+            const contract = new Contract(assetAddress, ERC20ABI, ethersProvider);
             console.log("Contract: ", contract);
             const tokenBalance = await contract.balanceOf(address);
             console.log("Token Balance: ", tokenBalance);

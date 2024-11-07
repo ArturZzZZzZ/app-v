@@ -1,4 +1,4 @@
-export const ERC20Abi = [
+export const ERC20ABI = [
     'function name() view returns (string)',
     'function symbol() view returns (string)',
     'function balanceOf(address) view returns (uint)',

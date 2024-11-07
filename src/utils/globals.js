@@ -431,6 +431,5 @@ export const VaultAddress = "0x602B85F6e27656d2897fF6984896d9af7661939f";
 export const AssetAddress = "0x71dB752c6642bb1CeD83c48C43C7A9E003F36AA1";
 export const AssetName = "TA AVA";
 export const RepresentationTokenName = "szTAAVA";
-// export const TargetBlockchainChainId = 43113;
-export const TargetBlockchainChainId = 1;
+export const TargetBlockchainChainId = 43113;
 
