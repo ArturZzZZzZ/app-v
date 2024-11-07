@@ -11,7 +11,7 @@ import { VaultABI } from '../../../utils/ABIs';
 
 import VaultTransaction from './VaultTransaction';
 import VaultAdmin from './VaultAdmin';
-import WalletDisplay from '../../../utils/WalletDisplay';
+import WalletDisplay from '../../Bridge/components/WalletDisplay';
 import SmartContractInterface from './SmartContractInterfaces';
 import { useSwitchNetwork } from '@web3modal/ethers/react';
 

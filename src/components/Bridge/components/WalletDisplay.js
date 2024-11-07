@@ -4,13 +4,13 @@ import ContentCopyIcon from '@mui/icons-material/ContentCopy';
 import ExitToAppIcon from '@mui/icons-material/ExitToApp';
 import { useWeb3Modal, useDisconnect, useWeb3ModalAccount } from '@web3modal/ethers/react';
 
-  const WalletDisplay = () => {
-    const [copied, setCopied] = useState(false);
+const WalletDisplay = () => {
+  const [copied, setCopied] = useState(false);
   const [anchorEl, setAnchorEl] = useState(null);
   const { open } = useWeb3Modal(); // Access the open function from useWeb3Modal
   const { isConnected } = useWeb3ModalAccount();
-    const { address} = useWeb3ModalAccount();
-    const { disconnect } = useDisconnect();
+  const { address } = useWeb3ModalAccount();
+  const { disconnect } = useDisconnect();
   useEffect(() => {
     console.log("Wallet Disconnected: ", address);
     console.log("Wallet Connected: ", isConnected);
@@ -72,10 +72,10 @@ import { useWeb3Modal, useDisconnect, useWeb3ModalAccount } from '@web3modal/eth
   return (
     <Box sx={{ display: 'flex', alignItems: 'center', gap: 2 }}>
       <Typography variant="h6" component="div" sx={{ display: 'flex', alignItems: 'center', gap: 0 }}>
-        <Chip 
-          label={`${address.slice(0, 6)}...${address.slice(-4)}`} 
-          size="small" 
-          sx={{ fontSize: '0.75rem', padding: '0 5px', cursor: 'pointer', color: 'white', backgroundColor: 'grey' }} 
+        <Chip
+          label={`${address.slice(0, 6)}...${address.slice(-4)}`}
+          size="small"
+          sx={{ fontSize: '0.75rem', padding: '0 5px', cursor: 'pointer', color: 'white', backgroundColor: 'grey' }}
           onClick={handleChipClick}
         />
         <Tooltip title={copied ? "Copied!" : "Copy to clipboard"} arrow>

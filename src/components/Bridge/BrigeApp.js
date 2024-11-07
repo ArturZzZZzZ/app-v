@@ -1,7 +1,7 @@
 import React from 'react';
 import {Box,  Paper } from '@mui/material';
 
-import WalletDisplay from '../../utils/WalletDisplay';
+import WalletDisplay from './components/WalletDisplay';
 import Bridge from './components/Bridge';
 
 const BridgeApp = ({ network1, network2 }) => {
