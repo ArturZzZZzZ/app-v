@@ -99,8 +99,6 @@ const Bridge = ({ network1, network2 }) => {
             } else
                 setTargetAssetBalance(0);
 
-            // getTokenBalance(fromNetwork, sourceAssetAddress, setSourceAssetBalance);
-            // getTokenBalance(toNetwork, targetAssetAddress, setTargetAssetBalance);
         // }
     }, [address, isConnected, fromNetwork, toNetwork]);
 
