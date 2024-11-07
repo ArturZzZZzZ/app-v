@@ -7,7 +7,7 @@ import theme from './utils/theme';
 import WalletDisplay from './components/WalletDisplay/WalletDisplay';
 import { blockchainInfo, IS_TESTNET } from './utils/globals';
 import { initializeWeb3Modal } from './utils/Web3ModalConfig';
-import Bridge from './components/Bridge/components/Bridge';
+import Bridge from './components/Bridge/Bridge';
 import SecuritizeCreditVault from './components/SecuritizeCreditVault/components/SecuritizeCreditVault';
 
 // Initialize Web3Modal

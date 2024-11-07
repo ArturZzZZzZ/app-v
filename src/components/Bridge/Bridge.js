@@ -1,19 +1,19 @@
 import React, { useEffect, useState } from 'react';
 import { IconButton, Box, Button, Snackbar, Alert, CircularProgress, Container, Paper, Dialog, DialogTitle, DialogContent, Typography, Link, DialogActions } from '@mui/material';
 import SwapVertIcon from '@mui/icons-material/SwapVert';
-import CryptoInput from './CryptoInput';
+import CryptoInput from './components/CryptoInput';
 import { useWeb3ModalProvider, useWeb3ModalAccount, useDisconnect } from '@web3modal/ethers/react';
 
 import { useSwitchNetwork } from '@web3modal/ethers/react';
 import { ethers, Contract } from 'ethers';
 import {
     blockchainInfo
-} from '../../../utils/globals';
+} from '../../utils/globals';
 
 import {
     ERC20ABI,
     BridgeABI,
-} from '../../../utils/ABIs';
+} from '../../utils/ABIs';
 
 const Bridge = ({ network1, network2 }) => {
     const [amount, setAmount] = useState(0);
