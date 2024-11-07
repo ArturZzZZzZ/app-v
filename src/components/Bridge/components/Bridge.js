@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from 'react';
-import { IconButton, Box, Button, Snackbar, Alert, CircularProgress, Container, Paper } from '@mui/material';
+import { IconButton, Box, Button, Snackbar, Alert, CircularProgress, Container, Paper, Dialog, DialogTitle, DialogContent, Typography, Link, DialogActions } from '@mui/material';
 import SwapVertIcon from '@mui/icons-material/SwapVert';
 import CryptoInput from './CryptoInput';
 import { useWeb3ModalProvider, useWeb3ModalAccount, useDisconnect } from '@web3modal/ethers/react';
@@ -15,8 +15,6 @@ import WalletDisplay from '../../../utils/WalletDisplay';
 
 const Bridge = ({ network1, network2 }) => {
     const [amount, setAmount] = useState(0);
-    // const [sourceAssetAddress, setSourceAssetAddress] = useState(network1.assets.find(asset => asset.symbol === "AUG9").address);
-    // const [targetAssetAddress, setTargetAssetAddress] = useState(network2.assets.find(asset => asset.symbol === "AUG9").address);
     const [sourceAssetAddress, setSourceAssetAddress] = useState(network1.assets[0].address);
     const [targetAssetAddress, setTargetAssetAddress] = useState(network2.assets[0].address);
 
@@ -33,6 +31,10 @@ const Bridge = ({ network1, network2 }) => {
     const [snackbarMessage, setSnackbarMessage] = useState('');
     const [snackbarSeverity, setSnackbarSeverity] = useState('info');  // Snackbar message type
     const [buttonLabelStatus, setButtonLabelStatus] = useState(null);
+
+    const [dialogOpen, setDialogOpen] = useState(false);
+    const [txHash, setTxHash] = useState(null);
+
 
     const { address, chainId, isConnected } = useWeb3ModalAccount();
     const { walletProvider } = useWeb3ModalProvider();
@@ -56,17 +58,26 @@ const Bridge = ({ network1, network2 }) => {
         setSnackbarOpen(false);
     };
 
+    const handleDialogClose = () => setDialogOpen(false);
+
+
     // Function to get token balance
     async function getTokenBalance(network, assetAddress, setBalance) {
         if (!isConnected || !walletProvider) {
             console.log('User disconnected');
+            setBalance(0);
             return;
         }
         try {
+            console.log("------> Network: ", network);
             const ethersProvider = new ethers.JsonRpcProvider(network.rpcUrl);
+            console.log("Ethers Provider: ", ethersProvider);
             const contract = new Contract(assetAddress, ERC20Abi, ethersProvider);
+            console.log("Contract: ", contract);
             const tokenBalance = await contract.balanceOf(address);
+            console.log("Token Balance: ", tokenBalance);
             const formattedBalance = ethers.formatUnits(tokenBalance, 6);  // Adjust decimals as needed
+            console.log("Formatted Balance: ", formattedBalance);
             setBalance(formattedBalance);
         } catch (error) {
             console.error("Failed to fetch balance: ", error);
@@ -75,7 +86,7 @@ const Bridge = ({ network1, network2 }) => {
     }
 
     useEffect(() => {
-        if (walletProvider) {
+        // if (walletProvider) {
 
             if (fromNetwork?.assets) {
                 setSourceAssetAddress(fromNetwork.assets[0].address);
@@ -90,14 +101,12 @@ const Bridge = ({ network1, network2 }) => {
 
             // getTokenBalance(fromNetwork, sourceAssetAddress, setSourceAssetBalance);
             // getTokenBalance(toNetwork, targetAssetAddress, setTargetAssetBalance);
-        }
+        // }
     }, [address, isConnected, fromNetwork, toNetwork]);
 
     // Synchronize amounts after switching or when the amount changes
     useEffect(() => {
         console.log("The blockchain Info: ", blockchainInfo)
-        // const asset = blockchainInfo.celoAlfajores.assets.find(asset => asset.symbol === "AUG9");
-        // console.log("The asset: ", asset);
         if (!isSwitched) {
             setExpectedAmount(amount);  // When not switched, update expectedAmount with amount
         } else {
@@ -108,6 +117,8 @@ const Bridge = ({ network1, network2 }) => {
 
     useEffect(() => {
         console.log("New Netwoks; changing assets: ");
+        console.log("From Network: ", fromNetwork);
+        console.log("To Network: ", toNetwork);
         if (isSwitched) {
             setSourceAsset(toNetwork.assets[0]);
             setTargetAsset(fromNetwork.assets[0]);
@@ -148,14 +159,20 @@ const Bridge = ({ network1, network2 }) => {
                 await switchNetwork(sourceChainId);
             }
 
-            const ethersProvider = new ethers.BrowserProvider(walletProvider);
+            const ethersProvider = await new ethers.BrowserProvider(walletProvider);
+            console.log("=========> Ethers Provider: ", ethersProvider);
             await ethersProvider.send("eth_requestAccounts", []);
             const signer = await ethersProvider.getSigner();
-            const bridgeContract = new ethers.Contract(contractSourceAddress, BridgeABI, signer);
+            console.log("=========> Signer: ", signer);
+            const bridgeContract = await new ethers.Contract(contractSourceAddress, BridgeABI, signer);
+            console.log("=========> Bridge Contract: ", bridgeContract);
 
             setButtonLabelStatus("Quetting quote");
             const numberOfAssets = ethers.parseUnits(amount.toString(), 6);
+            console.log("=========> Number of Assets: ", numberOfAssets);
+            console.log("=========> Wormhole Target Chain ID: ", wormholeTargetChainId);
             const quote = await bridgeContract.quoteBridge(wormholeTargetChainId);
+            console.log("=========> Quote: ", quote);
 
             setSnackbarMessage('Processing transaction...');
             setSnackbarOpen(true);
@@ -170,11 +187,17 @@ const Bridge = ({ network1, network2 }) => {
 
             setSnackbarMessage('Transaction successful!');
             setSnackbarSeverity('success');
+
+            setTxHash(bridgeTx.hash);
+            setDialogOpen(true);
+
         } catch (err) {
+            console.error("Transaction failed: ", err);
             setSnackbarMessage(`Error: ${err.message || 'Transaction failed.'}`);
             setSnackbarSeverity('error');
         } finally {
             console.log("FINALLY!");
+            console.log("DESESPERAADOS!");
 
             setLoading(false);  // End loading
             setSnackbarOpen(true);
@@ -236,18 +259,15 @@ const Bridge = ({ network1, network2 }) => {
         <Box sx={bridgeStyles.container}>
             <CryptoInput
                 network={isSwitched ? toNetwork.name : fromNetwork.name}
+                otherNetwork={isSwitched ? fromNetwork.name : toNetwork.name}
                 setNetwork={isSwitched ? setToNetwork : setFromNetwork}
                 amount={isSwitched ? expectedAmount : amount}
                 balance={isSwitched ? targetAssetBalance : sourceAssetBalance}
                 setAmount={isSwitched ? setExpectedAmount : setAmount}
                 editable={true}
                 label="From:"
-                // assetSymbol={fromNetwork.assets[0].symbol}
-                // assetIcon={fromNetwork.assets[0].address.icon}
-                // assetSymbol={network1.assets.find(asset => asset.symbol === "AUG9").symbol}
-                // assetIcon={network1.assets.find(asset => asset.symbol === "AUG9").icon}
-                assetSymbol={isSwitched ? toNetwork.assets[0].symbol :  fromNetwork.assets[0].symbol}
-                assetIcon  ={isSwitched ? toNetwork.assets[0].icon :  fromNetwork.assets[0].icon }
+                assetSymbol={isSwitched ? toNetwork.assets[0].symbol : fromNetwork.assets[0].symbol}
+                assetIcon={isSwitched ? toNetwork.assets[0].icon : fromNetwork.assets[0].icon}
             />
 
             <Box display="flex" justifyContent="center" marginY={-2} marginBottom={-7}>
@@ -264,14 +284,15 @@ const Bridge = ({ network1, network2 }) => {
 
             <CryptoInput
                 network={isSwitched ? fromNetwork.name : toNetwork.name}
+                otherNetwork={isSwitched ? toNetwork.name : fromNetwork.name}
                 setNetwork={isSwitched ? setFromNetwork : setToNetwork}
                 amount={isSwitched ? amount : expectedAmount}
                 balance={isSwitched ? sourceAssetBalance : targetAssetBalance}
                 setAmount={isSwitched ? setAmount : setExpectedAmount}
                 editable={false}
                 label="To:"
-                assetSymbol={isSwitched ? fromNetwork.assets[0].symbol :  toNetwork.assets[0].symbol}
-                assetIcon  ={isSwitched ? fromNetwork.assets[0].icon :  toNetwork.assets[0].icon }
+                assetSymbol={isSwitched ? fromNetwork.assets[0].symbol : toNetwork.assets[0].symbol}
+                assetIcon={isSwitched ? fromNetwork.assets[0].icon : toNetwork.assets[0].icon}
             />
 
             <Button
@@ -301,9 +322,35 @@ const Bridge = ({ network1, network2 }) => {
                     {snackbarMessage}
                 </Alert>
             </Snackbar>
+
+            <Dialog open={dialogOpen} onClose={handleDialogClose}>
+                <DialogTitle>Bridging in Progress</DialogTitle>
+                <DialogContent>
+                    <Typography align='center'>
+                        Your transaction is being processed. The bridging process may take some time as it requires confirmation on both the source and destination blockchains. You can monitor the transaction’s status by clicking on the link below to view real-time updates on Wormhole Scan.
+                    </Typography>
+                    <Typography align='center' variant="body2" sx={{ mt: 1, mb:3 }}>
+                        <Link
+                            href={`https://wormholescan.io/#/tx/${txHash}?network=Testnet&view=progress`}
+                            target="_blank"
+                            rel="noopener"
+                        >
+                            View transaction status on Wormhole Scan
+                        </Link>
+                    </Typography>
+                    <Typography variant='body2'>
+                        Bridging times may vary based on network congestion and blockchain speeds. Please be patient, and rest assured your transaction is underway.
+                    </Typography>
+                </DialogContent>
+                <DialogActions>
+                    <Button onClick={handleDialogClose} color="primary">
+                        Close
+                    </Button>
+                </DialogActions>
+            </Dialog>
+
         </Box>
     );
 };
 
 export default Bridge;
-

@@ -5,7 +5,7 @@ import NetworkSelector from './NetworkSelector';
 
 import { blockchainInfo } from '../../../globals';
 
-const CryptoInput = ({ network, setNetwork, amount, balance, setAmount, editable = true, label = "From", assetSymbol = "BUIDL", assetIcon = buidlIcon }) => {
+const CryptoInput = ({ network, otherNetwork, setNetwork, amount, balance, setAmount, editable = true, label = "From", assetSymbol = "BUIDL", assetIcon = buidlIcon }) => {
     // Mock price data for assets
     const assetPrice = 1; // Assuming 1 BUIDL = 1 USD
 
@@ -215,6 +215,7 @@ const CryptoInput = ({ network, setNetwork, amount, balance, setAmount, editable
                 onSelect={setNetwork}
                 label="Choose Your Blockchain Network"
                 currentNetwork={network}
+                otherNetwork={otherNetwork}
             />
         </>
     );

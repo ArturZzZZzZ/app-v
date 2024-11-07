@@ -10,27 +10,26 @@ import {
 } from '@mui/material';
 import { blockchainInfo } from '../../../globals'; // Adjust the import path
 
-const NetworkSelectorModal = ({ open, onClose, onSelect, label, currentNetwork }) => {
+const NetworkSelectorModal = ({ open, onClose, onSelect, label, currentNetwork, otherNetwork }) => {
     const handleNetworkSelect = (networkKey) => {
         if (onSelect) {
             onSelect(blockchainInfo[networkKey]);
             console.log("Current Network: ", currentNetwork);
+            console.log("Other Network: ", otherNetwork);
             console.log("Selected Network: ", networkKey, blockchainInfo[networkKey]);
         }
         onClose(); // Close modal after selecting network
     };
 
-    // // Filter networks that have a valid bridgeContractAddress
-    // const validNetworks = Object.keys(blockchainInfo).filter(
-    //     (key) => blockchainInfo[key].bridgeContractAddress
-    // );
-    // Filter networks that have a valid bridgeContractAddress and are not the current network
+    // Filter out the current network and the other network
     const validNetworks = Object.keys(blockchainInfo).filter(
-        (key) => blockchainInfo[key].bridgeContractAddress && blockchainInfo[key].name !== currentNetwork
+        (key) =>
+            blockchainInfo[key].bridgeContractAddress &&
+            blockchainInfo[key].name !== currentNetwork &&
+            blockchainInfo[key].name !== otherNetwork &&
+            blockchainInfo[key].mainnet === false // false: Testing mode: only show testnets
     );
-    // const validNetworks = Object.keys(blockchainInfo).filter(
-    //     (key) => blockchainInfo[key].name && blockchainInfo[key].name !== currentNetwork
-    // );
+
     return (
         <Dialog open={open} onClose={onClose} fullWidth>
             <DialogTitle>{label || 'Select a Network'}</DialogTitle>

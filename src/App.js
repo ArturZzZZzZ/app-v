@@ -16,15 +16,31 @@ import WalletDisplay from './utils/WalletDisplay';
 import BridgeApp from './components/Bridge/BrigeApp';
 import EditableTable from './components/InvestorIngest/EditableTable';
 
-// Create Ethers config
-const ethersConfig = defaultConfig({
-  metadata: walletConnectMetadata,
-  enableEIP6963: true,
-  enableInjected: true,
-  enableCoinbase: true,
-  rpcUrl: '...',
-  defaultChainId: TargetBlockchainChainId,
-});
+
+try {
+  // Create Ethers config
+  const ethersConfig = defaultConfig({
+    metadata: walletConnectMetadata,
+    enableEIP6963: true,
+    enableInjected: true,
+    enableCoinbase: true,
+    rpcUrl: '...',
+    defaultChainId: TargetBlockchainChainId,
+  });
+
+  // Create a AppKit instance
+  const web3modal= createWeb3Modal({
+    ethersConfig,
+    chains: walletConnectTargetBlockchainConfig,
+    projectId: walletConnectProjectId,
+    enableAnalytics: true,
+  });
+
+  console.log('Web3Modal instance created successfully',web3modal );
+
+} catch (error) {
+  console.error('Failed to create Web3Modal instance:', error);
+}
 
 const theme = createTheme({
   palette: {
@@ -80,14 +96,6 @@ const theme = createTheme({
 });
 
 
-// Create a AppKit instance
-createWeb3Modal({
-  ethersConfig,
-  chains: walletConnectTargetBlockchainConfig,
-  projectId: walletConnectProjectId,
-  enableAnalytics: true,
-});
-
 function ConnectButton() {
   const { open } = useWeb3Modal();
 
@@ -112,7 +120,7 @@ function App() {
   const { address } = useWeb3ModalAccount();
   const { disconnect } = useDisconnect();
 
-  const [selectedView, setSelectedView] = useState(0); // State to control selected view
+  const [selectedView, setSelectedView] = useState(1); // State to control selected view
 
   // Function to handle view change
   const handleViewChange = (view) => {
@@ -124,10 +132,11 @@ function App() {
       <>
         <AppBar position="sticky" sx={{ backgroundColor: 'grey', marginBottom: '12px' }}>
           <Toolbar sx={{ justifyContent: 'space-between', backgroundColor: "#2b2d42" }}>
-            {isConnected ? (
+            {true ? (
               <>
                 <Box sx={{ display: 'flex', gap: 2, justifyContent: 'flex-start' }}>
-                  <Button
+                  BUILD Bridge
+                  {/* <Button
                     color="inherit"
                     onClick={() => handleViewChange(0)}
                     sx={{
@@ -139,8 +148,8 @@ function App() {
                     }}
                   >
                     Vault
-                  </Button>
-                  <Button
+                  </Button> */}
+                  {/* <Button
                     color="inherit"
                     onClick={() => handleViewChange(1)}
                     sx={{
@@ -152,7 +161,7 @@ function App() {
                     }}
                   >
                     Bridge
-                  </Button>
+                  </Button> */}
                   {/* <Button
                     color="inherit"
                     onClick={() => handleViewChange(2)}
@@ -175,9 +184,10 @@ function App() {
           </Toolbar>
         </AppBar>
 
-        {isConnected ? (
+        {true ? (
           <Box >
-            {selectedView === 0 && <SecuritizeCreditVault />}
+            {/* {selectedView === 0 && <SecuritizeCreditVault />} */}
+            {/* {selectedView === 1 && <Bridge network1={blockchainInfo.ethereum} network2={blockchainInfo.avalanche} />} */}
             {selectedView === 1 && <Bridge network1={blockchainInfo.avalancheFuji} network2={blockchainInfo.arbitrumSepolia} />}
             {/* {selectedView === 2 && <EditableTable />} */}
           </Box>
