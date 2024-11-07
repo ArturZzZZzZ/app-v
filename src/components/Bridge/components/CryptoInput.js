@@ -3,7 +3,7 @@ import { Box, Typography, TextField } from '@mui/material';
 import buidlIcon from '../../../assets/buidl_32.png'; // Default BUIDL icon
 import NetworkSelector from './NetworkSelector';
 
-import { blockchainInfo } from '../../../globals';
+import { blockchainInfo } from '../../../utils/globals';
 
 const CryptoInput = ({ network, otherNetwork, setNetwork, amount, balance, setAmount, editable = true, label = "From", assetSymbol = "BUIDL", assetIcon = buidlIcon }) => {
     // Mock price data for assets

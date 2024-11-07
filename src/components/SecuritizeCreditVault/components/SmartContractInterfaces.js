@@ -3,7 +3,7 @@ import { Container, Paper, Typography, Box, TextField, Button, CircularProgress,
 import ExpandMoreIcon from '@mui/icons-material/ExpandMore';
 import { useWeb3ModalProvider, useWeb3ModalAccount } from '@web3modal/ethers/react';
 import { ethers } from 'ethers';
-import { VaultAddress } from '../../../globals';
+import { VaultAddress } from '../../../utils/globals';
 import contractAbi from './SecuritizeVaultABI.json'; // Adjust the path to your ABI file
 
 const SmartContractInterface = () => {

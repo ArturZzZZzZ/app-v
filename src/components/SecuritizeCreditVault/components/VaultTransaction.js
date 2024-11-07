@@ -1,4 +1,5 @@
-import { VaultAddress, AssetAddress, VaultABI, ERC20Abi, AssetName, RepresentationTokenName } from '../../../globals';
+import { VaultAddress, AssetAddress, AssetName, RepresentationTokenName } from '../../../utils/globals';
+import { VaultABI, ERC20Abi } from '../../../utils/ABIs';
 import React, { useState, useEffect } from 'react';
 import { Container, Paper, Typography, Box, TextField, Button, CircularProgress, Chip, Stack, Snackbar, Alert } from '@mui/material';
 import { useWeb3ModalProvider, useWeb3ModalAccount } from '@web3modal/ethers/react';

@@ -8,7 +8,7 @@ import {
     Button,
     Typography,
 } from '@mui/material';
-import { blockchainInfo } from '../../../globals'; // Adjust the import path
+import { blockchainInfo, IS_TESTNET } from '../../../utils/globals'; // Adjust the import path
 
 const NetworkSelectorModal = ({ open, onClose, onSelect, label, currentNetwork, otherNetwork }) => {
     const handleNetworkSelect = (networkKey) => {
@@ -27,7 +27,7 @@ const NetworkSelectorModal = ({ open, onClose, onSelect, label, currentNetwork, 
             blockchainInfo[key].bridgeContractAddress &&
             blockchainInfo[key].name !== currentNetwork &&
             blockchainInfo[key].name !== otherNetwork &&
-            blockchainInfo[key].mainnet === false // false: Testing mode: only show testnets
+            blockchainInfo[key].mainnet === !IS_TESTNET // false: Testing mode: only show testnets
     );
 
     return (

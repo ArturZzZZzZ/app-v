@@ -7,10 +7,13 @@ import { useWeb3ModalProvider, useWeb3ModalAccount, useDisconnect } from '@web3m
 import { useSwitchNetwork } from '@web3modal/ethers/react';
 import { ethers, Contract } from 'ethers';
 import {
+    blockchainInfo
+} from '../../../utils/globals';
+
+import {
     ERC20Abi,
     BridgeABI,
-    blockchainInfo
-} from '../../../globals';
+} from '../../../utils/ABIs';
 
 const Bridge = ({ network1, network2 }) => {
     const [amount, setAmount] = useState(0);

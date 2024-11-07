@@ -1,5 +1,5 @@
 import '@fontsource/roboto'; // Defaults to weight 400.
-import { TargetBlockchainChainId, walletConnectMetadata, walletConnectProjectId, walletConnectTargetBlockchainConfig, blockchainInfo } from './globals';
+import { TargetBlockchainChainId, walletConnectMetadata, walletConnectProjectId, walletConnectTargetBlockchainConfig, blockchainInfo, IS_TESTNET } from './utils/globals';
 
 import React, { useEffect, useState } from 'react';
 import { createWeb3Modal, defaultConfig } from '@web3modal/ethers/react';
@@ -188,7 +188,7 @@ function App() {
           <Box >
             {/* {selectedView === 0 && <SecuritizeCreditVault />} */}
             {/* {selectedView === 1 && <Bridge network1={blockchainInfo.ethereum} network2={blockchainInfo.avalanche} />} */}
-            {selectedView === 1 && <Bridge network1={blockchainInfo.avalancheFuji} network2={blockchainInfo.arbitrumSepolia} />}
+            {selectedView === 1 && <Bridge network1={IS_TESTNET ? blockchainInfo.avalancheFuji : blockchainInfo.ethereum} network2={IS_TESTNET ? blockchainInfo.optimismSepolia : blockchainInfo.avalanche} />}
             {/* {selectedView === 2 && <EditableTable />} */}
           </Box>
         ) : (

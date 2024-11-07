@@ -1,4 +1,4 @@
-import { TargetBlockchainChainId, walletConnectMetadata, walletConnectProjectId, walletConnectTargetBlockchainConfig, blockchainInfo } from '../../globals';
+import { TargetBlockchainChainId, walletConnectMetadata, walletConnectProjectId, walletConnectTargetBlockchainConfig, blockchainInfo } from '../../utils/globals';
 
 import React, { useEffect, useState } from 'react';
 import { createWeb3Modal, defaultConfig } from '@web3modal/ethers/react';
@@ -6,7 +6,8 @@ import { useWeb3Modal, useDisconnect } from '@web3modal/ethers/react';
 import { Button, Typography, Box, Container, Paper, Tabs, Tab } from '@mui/material';
 import { useWeb3ModalProvider, useWeb3ModalAccount } from '@web3modal/ethers/react';
 import { ethers } from 'ethers';
-import { VaultAddress, VaultABI } from '../../globals';
+import { VaultAddress } from '../../utils/globals';
+import { VaultABI } from '../../utils/ABIs';
 
 import VaultTransaction from './components/VaultTransaction';
 import VaultAdmin from './components/VaultAdmin';
