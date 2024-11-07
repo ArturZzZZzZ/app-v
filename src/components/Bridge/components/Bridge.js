@@ -86,20 +86,16 @@ const Bridge = ({ network1, network2 }) => {
     }
 
     useEffect(() => {
-        // if (walletProvider) {
-
-            if (fromNetwork?.assets) {
-                setSourceAssetAddress(fromNetwork.assets[0].address);
-                getTokenBalance(fromNetwork, fromNetwork.assets[0].address, setSourceAssetBalance);
-            } else
-                setSourceAssetBalance(0);
-            if (toNetwork?.assets) {
-                setTargetAssetAddress(toNetwork.assets[0].address);
-                getTokenBalance(toNetwork, toNetwork.assets[0].address, setTargetAssetBalance);
-            } else
-                setTargetAssetBalance(0);
-
-        // }
+        if (fromNetwork?.assets) {
+            setSourceAssetAddress(fromNetwork.assets[0].address);
+            getTokenBalance(fromNetwork, fromNetwork.assets[0].address, setSourceAssetBalance);
+        } else
+            setSourceAssetBalance(0);
+        if (toNetwork?.assets) {
+            setTargetAssetAddress(toNetwork.assets[0].address);
+            getTokenBalance(toNetwork, toNetwork.assets[0].address, setTargetAssetBalance);
+        } else
+            setTargetAssetBalance(0);
     }, [address, isConnected, fromNetwork, toNetwork]);
 
     // Synchronize amounts after switching or when the amount changes
@@ -327,7 +323,7 @@ const Bridge = ({ network1, network2 }) => {
                     <Typography align='center'>
                         Your transaction is being processed. The bridging process may take some time as it requires confirmation on both the source and destination blockchains. You can monitor the transaction’s status by clicking on the link below to view real-time updates on Wormhole Scan.
                     </Typography>
-                    <Typography align='center' variant="body2" sx={{ mt: 1, mb:3 }}>
+                    <Typography align='center' variant="body2" sx={{ mt: 1, mb: 3 }}>
                         <Link
                             href={`https://wormholescan.io/#/tx/${txHash}?network=Testnet&view=progress`}
                             target="_blank"
