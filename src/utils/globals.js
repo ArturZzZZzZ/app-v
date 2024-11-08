@@ -20,7 +20,7 @@ import celoIcon from '../assets/Celo.svg'
 // false: Testing mode 
 // true: Production mode
 // If in testing mode, testnets will be shown in the network selector as well as the rest of components (e.g. Vault)
-export const BRIDGE_PRODUCTION_VERSION = false;
+export const BRIDGE_PRODUCTION_VERSION = true;
 const INFURA_PROJECT_ID = 'ac240982f9804e358d1f59fc60a5c451';
 
 // Define the blockchain information
