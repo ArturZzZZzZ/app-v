@@ -194,14 +194,14 @@ const Bridge = ({ network1, network2 }) => {
             // getNativeTokenBalance();
             const balance = await getNativeTokenBalanceWithBackoff();
 
-            const minQuote = 100000000000000000n;  // Minimum value to cover transaction fees for the quote
-            setQuote(minQuote);
-            console.log("Native Balance  (the balance): ", balance);
-            if (balance < minQuote) {
-                setBalanceDialogOpen(true);  // Show dialog if native balance is insufficient
-                setLoading(false);
-                return;  // Cancel the transaction
-            }
+            // const minQuote = 100000000000000000n;  // Minimum value to cover transaction fees for the quote
+            // setQuote(minQuote);
+            // console.log("Native Balance  (the balance): ", balance);
+            // if (balance < minQuote) {
+            //     setBalanceDialogOpen(true);  // Show dialog if native balance is insufficient
+            //     setLoading(false);
+            //     return;  // Cancel the transaction
+            // }
 
             const ethersProvider = await new ethers.BrowserProvider(walletProvider);
             console.log("=========> Ethers Provider: ", ethersProvider);
