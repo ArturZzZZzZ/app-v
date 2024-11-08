@@ -50,7 +50,7 @@ export const blockchainInfo = {
     chainId: 1,
     rpcUrl: "https://mainnet.infura.io/v3/" + INFURA_PROJECT_ID, // Replace with your RPC URL
     icon: ethereumIcon, // Variable representing the Ethereum icon
-    wormholeChainId: 1,
+    wormholeChainId: 2,
     bridgeContractAddress: "0xcbB5B950A76B82Ec7982bABa99F5D4a92bA2288E",
     assets: [
       {
