@@ -30,7 +30,7 @@ const App = () => {
   const views = BRIDGE_PRODUCTION_VERSION
     ? [
         {
-          label: "Bridge",
+          label: "BUIDL Bridge",
           component: (
             <Bridge
               network1={sourceNetwork}

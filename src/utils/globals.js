@@ -21,6 +21,7 @@ import celoIcon from '../assets/Celo.svg'
 // true: Production mode
 // If in testing mode, testnets will be shown in the network selector as well as the rest of components (e.g. Vault)
 export const BRIDGE_PRODUCTION_VERSION = false; 
+const INFURA_PROJECT_ID = 'ac240982f9804e358d1f59fc60a5c451';
 
 // Define the blockchain information
 // This object contains the information for each blockchain
@@ -45,8 +46,9 @@ export const blockchainInfo = {
   ethereum: {
     mainnet: true,
     name: "Ethereum",
+    nativeCurrencySymbol: "ETH",
     chainId: 1,
-    rpcUrl: "https://mainnet.infura.io/v3/ac240982f9804e358d1f59fc60a5c451", // Replace with your RPC URL
+    rpcUrl: "https://mainnet.infura.io/v3/"+INFURA_PROJECT_ID, // Replace with your RPC URL
     icon: ethereumIcon, // Variable representing the Ethereum icon
     wormholeChainId: 1,
     bridgeContractAddress: "0xcbB5B950A76B82Ec7982bABa99F5D4a92bA2288E",
@@ -62,8 +64,9 @@ export const blockchainInfo = {
   ethereumSepolia: {
     mainnet: false,
     name: "Ethereum Sepolia",
+    nativeCurrencySymbol: "ETH",
     chainId: 11155111,
-    rpcUrl: "https://sepolia.infura.io/v3/ac240982f9804e358d1f59fc60a5c451",
+    rpcUrl: "https://sepolia.infura.io/v3/"+INFURA_PROJECT_ID,
     icon: ethereumIcon, // Same variable for Sepolia testnet
   },
 
@@ -71,8 +74,9 @@ export const blockchainInfo = {
   polygon: {
     mainnet: true,
     name: "Polygon",
+    nativeCurrencySymbol: "MATIC",
     chainId: 137,
-    rpcUrl: "https://polygon-mainnet.infura.io/v3/ac240982f9804e358d1f59fc60a5c451",
+    rpcUrl: "https://polygon-mainnet.infura.io/v3/"+INFURA_PROJECT_ID,
     icon: polygonIcon, // Variable representing the Polygon icon
     wormholeChainId: 5,
     bridgeContractAddress: "0xcbB5B950A76B82Ec7982bABa99F5D4a92bA2288E",
@@ -88,6 +92,7 @@ export const blockchainInfo = {
   polygonAmoy: {
     mainnet: false,
     name: "Polygon Amoy",
+    nativeCurrencySymbol: "MATIC",
     chainId: 80002,
     rpcUrl: "https://rpc-amoy.polygon.technology",
     icon: polygonIcon,
@@ -107,8 +112,9 @@ export const blockchainInfo = {
   arbitrum: {
     mainnet: true,
     name: "Arbitrum",
+    nativeCurrencySymbol: "ETH",
     chainId: 42161,
-    rpcUrl: "https://arbitrum-mainnet.infura.io/v3/ac240982f9804e358d1f59fc60a5c451",
+    rpcUrl: "https://arbitrum-mainnet.infura.io/v3/"+INFURA_PROJECT_ID,
     icon: arbitrumIcon, // Variable representing the Arbitrum icon
     wormholeChainId: 23,
     bridgeContractAddress: "0xcbB5B950A76B82Ec7982bABa99F5D4a92bA2288E",
@@ -124,8 +130,9 @@ export const blockchainInfo = {
   arbitrumSepolia: {
     mainnet: false,
     name: "Arbitrum Sepolia",
+    nativeCurrencySymbol: "ETH",
     chainId: 421614,
-    rpcUrl: "https://arbitrum-sepolia.infura.io/v3/ac240982f9804e358d1f59fc60a5c451",
+    rpcUrl: "https://arbitrum-sepolia.infura.io/v3/"+INFURA_PROJECT_ID,
     icon: arbitrumIcon, // Same variable for Sepolia testnet
     wormholeChainId: 10003,
     bridgeContractAddress: "0x9e2Cc840CF4d163b1A9AfdBBeD11D04ACa91BC30",
@@ -149,8 +156,9 @@ export const blockchainInfo = {
   avalanche: {
     mainnet: true,
     name: "Avalanche",
+    nativeCurrencySymbol: "AVAX",
     chainId: 43114,
-    rpcUrl: "https://avalanche-mainnet.infura.io/v3/ac240982f9804e358d1f59fc60a5c451",
+    rpcUrl: "https://avalanche-mainnet.infura.io/v3/"+INFURA_PROJECT_ID,
     icon: avalancheIcon, // Variable representing the Avalanche icon
     wormholeChainId: 6,
     bridgeContractAddress: "0xcbB5B950A76B82Ec7982bABa99F5D4a92bA2288E",
@@ -166,8 +174,9 @@ export const blockchainInfo = {
   avalancheFuji: {
     mainnet: false,
     name: "Avalanche Fuji",
+    nativeCurrencySymbol: "AVAX",
     chainId: 43113,
-    rpcUrl: "https://avalanche-fuji.infura.io/v3/ac240982f9804e358d1f59fc60a5c451",
+    rpcUrl: "https://avalanche-fuji.infura.io/v3/"+INFURA_PROJECT_ID,
     icon: avalancheIcon, // Same variable for Fuji testnet
     wormholeChainId: 6,
     // bridgeContractAddress: "0xA11e9c666ED79456951807334B290e0ee422D215",
@@ -193,8 +202,9 @@ export const blockchainInfo = {
   optimism: {
     mainnet: true,
     name: "Optimism",
+    nativeCurrencySymbol: "ETH",
     chainId: 10,
-    rpcUrl: "https://optimism-mainnet.infura.io/v3/ac240982f9804e358d1f59fc60a5c451",
+    rpcUrl: "https://optimism-mainnet.infura.io/v3/"+INFURA_PROJECT_ID,
     icon: optimismIcon, // Variable representing the Optimism icon
     wormholeChainId: 24,
     bridgeContractAddress: "0xcbB5B950A76B82Ec7982bABa99F5D4a92bA2288E",
@@ -210,8 +220,9 @@ export const blockchainInfo = {
   optimismSepolia: {
     mainnet: false,
     name: "Optimism Sepolia",
+    nativeCurrencySymbol: "ETH",
     chainId: 11155420,
-    rpcUrl: "https://optimism-sepolia.infura.io/v3/ac240982f9804e358d1f59fc60a5c451",
+    rpcUrl: "https://optimism-sepolia.infura.io/v3/"+INFURA_PROJECT_ID,
     icon: optimismIcon, // Variable representing the Optimism icon
     wormholeChainId: 10005,
 
@@ -244,6 +255,7 @@ export const blockchainInfo = {
   base: {
     mainnet: true,
     name: "Base",
+    nativeCurrencySymbol: "BASE",
     chainId: 8453,
     rpcUrl: "https://mainnet.base.org",
     icon: baseIcon, // Variable representing the Base icon
@@ -252,6 +264,7 @@ export const blockchainInfo = {
   baseGoerli: {
     mainnet: false,
     name: "Base Goerli Testnet",
+    nativeCurrencySymbol: "BASE",
     chainId: 84531,
     rpcUrl: "https://goerli.base.org",
     icon: baseIcon, // Same variable for Goerli testnet
@@ -261,6 +274,7 @@ export const blockchainInfo = {
   xdc: {
     mainnet: true,
     name: "XDC Network",
+    nativeCurrencySymbol: "XDC",
     chainId: 50,
     rpcUrl: "https://rpc.xinfin.network",
     icon: xdcIcon, // Variable representing the XDC icon
@@ -268,6 +282,7 @@ export const blockchainInfo = {
   xdcApothem: {
     mainnet: false,
     name: "XDC Apothem Testnet",
+    nativeCurrencySymbol: "XDC",
     chainId: 51,
     rpcUrl: "https://rpc.apothem.network",
     icon: xdcIcon, // Same variable for Apothem testnet
@@ -277,6 +292,7 @@ export const blockchainInfo = {
   celo: {
     mainnet: true,
     name: "Celo",
+    nativeCurrencySymbol: "CELO",
     chainId: 42220,
     rpcUrl: "https://forno.celo.org",
     icon: celoIcon, // Variable representing the Celo icon
@@ -284,6 +300,7 @@ export const blockchainInfo = {
   celoAlfajores: {
     mainnet: false,
     name: "Celo Alfajores",
+    nativeCurrencySymbol: "CELO",
     chainId: 44787,
     rpcUrl: "https://alfajores-forno.celo-testnet.org",
     icon: celoIcon, // Same variable for Celo Alfajores testnet
@@ -325,42 +342,42 @@ export const walletConnectTargetBlockchainConfig = [
     name: 'Ethereum Mainnet',
     currency: 'ETH',
     explorerUrl: 'hhttps://etherscan.io/',
-    rpcUrl: 'https://mainnet.infura.io/v3/ac240982f9804e358d1f59fc60a5c451'
+    rpcUrl: 'https://mainnet.infura.io/v3/INFURA_PROJECT_ID'
   },
   {
     chainId: 137,
     name: 'Polygon Mainnet',
     currency: 'MATIC',
     explorerUrl: 'https://polygonscan.com/',
-    rpcUrl: 'https://polygon-mainnet.infura.io/v3/ac240982f9804e358d1f59fc60a5c451'
+    rpcUrl: 'https://polygon-mainnet.infura.io/v3/INFURA_PROJECT_ID'
   },
   {
     chainId: 43114,
     name: 'Avalanche Mainnet',
     currency: 'AVAX',
     explorerUrl: 'https://snowtrace.io/',
-    rpcUrl: 'https://avalanche-mainnet.infura.io/v3/ac240982f9804e358d1f59fc60a5c451'
+    rpcUrl: 'https://avalanche-mainnet.infura.io/v3/INFURA_PROJECT_ID'
   },
   {
     chainId: 42161,
     name: 'Arbitrum One',
     currency: 'ETH',
     explorerUrl: 'https://arbiscan.io/',
-    rpcUrl: 'https://arbitrum-mainnet.infura.io/v3/ac240982f9804e358d1f59fc60a5c451'
+    rpcUrl: 'https://arbitrum-mainnet.infura.io/v3/INFURA_PROJECT_ID'
   },
   {
     chainId: 10,
     name: 'Optimism Mainnet',
     currency: 'ETH',
     explorerUrl: 'https://optimistic.etherscan.io/',
-    rpcUrl: 'https://optimism-mainnet.infura.io/v3/ac240982f9804e358d1f59fc60a5c451'
+    rpcUrl: 'https://optimism-mainnet.infura.io/v3/INFURA_PROJECT_ID'
   },
   {
     chainId: 43113,
     name: 'Avalanche Fuji Testnet',
     currency: 'AVAX',
     explorerUrl: 'https://testnet.snowtrace.io',
-    rpcUrl: 'https://avalanche-fuji.infura.io/v3/ac240982f9804e358d1f59fc60a5c451'
+    rpcUrl: 'https://avalanche-fuji.infura.io/v3/INFURA_PROJECT_ID'
   },
   {
     chainId: 44787,
@@ -374,14 +391,14 @@ export const walletConnectTargetBlockchainConfig = [
     name: 'Arbitrum Sepolia',
     currency: 'ETH',
     explorerUrl: 'https://sepolia.arbiscan.io/',
-    rpcUrl: 'https://arbitrum-sepolia.infura.io/v3/ac240982f9804e358d1f59fc60a5c451'
+    rpcUrl: 'https://arbitrum-sepolia.infura.io/v3/INFURA_PROJECT_ID'
   },
   {
     chainId: 11155420,
     name: 'Optimism Sepolia',
     currency: 'ETH',
     explorerUrl: 'https://sepolia-optimism.etherscan.io/',
-    rpcUrl: 'https://optimism-sepolia.infura.io/v3/ac240982f9804e358d1f59fc60a5c451'
+    rpcUrl: 'https://optimism-sepolia.infura.io/v3/INFURA_PROJECT_ID'
   },
   {
     chainId: 80002,
@@ -425,7 +442,7 @@ export const walletConnectProjectId = '9d05d4b1b35fad1c007771dc63f9911d'
 //   name: 'Ethereum Mainnet',
 //   currency: 'ETH',
 //   explorerUrl: 'https://etherscan.io',
-//   rpcUrl: 'https://mainnet.infura.io/v3/ac240982f9804e358d1f59fc60a5c451'
+//   rpcUrl: 'https://mainnet.infura.io/v3/INFURA_PROJECT_ID'
 // }]
 
 // For Vault in Testnets
