@@ -16,9 +16,11 @@ import celoIcon from '../assets/Celo.svg'
 //////////////////////////////////////////
 //////////////////////////////////////////
 
-// Define if working on a testnet or mainnet
-export const BRIDGE_PRODUCTION_VERSION = false;
-
+// Define the production version of the bridge
+// false: Testing mode 
+// true: Production mode
+// If in testing mode, testnets will be shown in the network selector as well as the rest of components (e.g. Vault)
+export const BRIDGE_PRODUCTION_VERSION = false; 
 
 // Define the blockchain information
 // This object contains the information for each blockchain
