@@ -12,6 +12,7 @@ import {
 } from '../../utils/ABIs';
 import SwapVertIcon from '@mui/icons-material/SwapVert';
 import CryptoInput from './components/CryptoInput';
+import {useAppContext} from '../../utils/AppContext';
 
 const Bridge = ({ network1, network2 }) => {
     const [amount, setAmount] = useState(0);
@@ -41,6 +42,9 @@ const Bridge = ({ network1, network2 }) => {
 
     const [fromNetwork, setFromNetwork] = useState(network1);
     const [toNetwork, setToNetwork] = useState(network2);
+
+
+    const { showMainNets } = useAppContext();
 
     // Snackbar handler
     const handleSnackbarClose = (event, reason) => {
@@ -76,6 +80,12 @@ const Bridge = ({ network1, network2 }) => {
             setBalance(0);
         }
     }
+
+    useEffect(() => {
+        setFromNetwork(network1);
+        setToNetwork(network2);
+
+    }, [network1, network2]);
 
     // Fetch token balances on load
     useEffect(() => {
@@ -114,7 +124,7 @@ const Bridge = ({ network1, network2 }) => {
             setTargetAsset(toNetwork.assets[0]);
         }
 
-    }, [fromNetwork, toNetwork]);
+    }, [fromNetwork, toNetwork, network1, network2]);
 
     // Handle transaction
     async function handleTransaction() {

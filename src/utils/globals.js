@@ -17,7 +17,7 @@ import celoIcon from '../assets/Celo.svg'
 //////////////////////////////////////////
 
 // Define if working on a testnet or mainnet
-export const IS_TESTNET = true;
+export const BRIDGE_PRODUCTION_VERSION = false;
 
 
 // Define the blockchain information
