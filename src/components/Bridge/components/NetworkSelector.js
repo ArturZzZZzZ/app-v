@@ -30,7 +30,6 @@ const NetworkSelectorModal = ({ open, onClose, onSelect, label, currentNetwork, 
             blockchainInfo[key].bridgeContractAddress &&
             blockchainInfo[key].name !== currentNetwork &&
             blockchainInfo[key].name !== otherNetwork &&
-            // blockchainInfo[key].mainnet === !IS_TESTNET // false: Testing mode: only show testnets
             blockchainInfo[key].mainnet === showMainNets // false: Testing mode: only show testnets
     );
 
