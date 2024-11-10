@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from 'react';
-import { IconButton, Box, Button, Snackbar, Alert, CircularProgress, Dialog, DialogTitle, DialogContent, Typography, Link, DialogActions } from '@mui/material';
-import { useWeb3ModalProvider, useWeb3ModalAccount, useDisconnect } from '@web3modal/ethers/react';
+import { IconButton, Box, Button, Snackbar, Alert, CircularProgress } from '@mui/material';
+import { useWeb3ModalProvider, useWeb3ModalAccount } from '@web3modal/ethers/react';
 import { useSwitchNetwork } from '@web3modal/ethers/react';
 import { ethers, Contract, formatUnits } from 'ethers';
 import {
@@ -12,44 +12,57 @@ import {
 } from '../../utils/ABIs';
 import SwapVertIcon from '@mui/icons-material/SwapVert';
 import CryptoInput from './components/CryptoInput';
-import { useAppContext } from '../../utils/AppContext';
+import TransactionProgressDialog from './components/TransactionProgressDialog';
+import InsufficientBalanceDialog from './components/InsufficientBalanceDialog';
+import bridgeStyles from './styles/bridgeStyles';
+import { format, isBefore, isAfter, parseISO } from 'date-fns';
+import { formatInTimeZone, toDate } from 'date-fns-tz';
+import Holidays from 'date-holidays';
+import NotBusinessDayDialog from './components/NotBusinessDayDialog';
+import { BRIDGE_PRODUCTION_VERSION } from '../../utils/globals';
+
 
 const Bridge = ({ network1, network2 }) => {
-    const [amount, setAmount] = useState(0);
-    const [sourceAssetAddress, setSourceAssetAddress] = useState(network1.assets[0].address);
-    const [targetAssetAddress, setTargetAssetAddress] = useState(network2.assets[0].address);
+    // Asset-related states
+    const [amount, setAmount] = useState(0);  // Amount to bridge
+    const [sourceAssetAddress, setSourceAssetAddress] = useState(network1.assets[0].address);  // Source asset address
+    const [targetAssetAddress, setTargetAssetAddress] = useState(network2.assets[0].address);  // Target asset address
+    const [sourceAsset, setSourceAsset] = useState(network1.assets[0]);  // Source asset
+    const [targetAsset, setTargetAsset] = useState(network2.assets[0]);  // Target asset
+    const [sourceAssetBalance, setSourceAssetBalance] = useState(0);  // Balance of source asset
+    const [targetAssetBalance, setTargetAssetBalance] = useState(0);  // Balance of target asset
+    const [expectedAmount, setExpectedAmount] = useState(0);  // Expected amount to receive after bridging
 
-    const [sourceAsset, setSourceAsset] = useState(network1.assets[0]);
-    const [targetAsset, setTargetAsset] = useState(network2.assets[0]);
+    // Network-related states
+    const [fromNetwork, setFromNetwork] = useState(network1);  // Initial from network
+    const [toNetwork, setToNetwork] = useState(network2);  // Initial to network
 
-    const [sourceAssetBalance, setSourceAssetBalance] = useState(0);
-    const [targetAssetBalance, setTargetAssetBalance] = useState(0);
-    const [expectedAmount, setExpectedAmount] = useState(0);
-    const [isSwitched, setIsSwitched] = useState(false);
-    const [isRotated, setIsRotated] = useState(false);
-    const [loading, setLoading] = useState(false);  // Add loading state
-    const [snackbarOpen, setSnackbarOpen] = useState(false);  // Add Snackbar
-    const [snackbarMessage, setSnackbarMessage] = useState('');
-    const [snackbarSeverity, setSnackbarSeverity] = useState('info');  // Snackbar message type
-    const [buttonLabelStatus, setButtonLabelStatus] = useState(null);
-
-    const [dialogOpen, setDialogOpen] = useState(false);
-    const [txHash, setTxHash] = useState(null);
-
+    // Transaction-related states
     const [quote, setQuote] = useState(0);  // Quote for the transaction
-    const [nativeBalance, setNativeBalance] = useState(0); // Native token balance state
-    const [balanceDialogOpen, setBalanceDialogOpen] = useState(false); // Dialog for insufficient balance
+    const [nativeBalance, setNativeBalance] = useState(0);  // Native token balance
+    const [txHash, setTxHash] = useState(null);  // Transaction hash
+    const [loading, setLoading] = useState(false);  // Loading state for transaction
+    const [isSwitched, setIsSwitched] = useState(false);  // State for switching networks
 
+    // Snackbar-related states (feedback messages)
+    const [snackbarOpen, setSnackbarOpen] = useState(false);  // Snackbar visibility
+    const [snackbarMessage, setSnackbarMessage] = useState('');  // Snackbar message content
+    const [snackbarSeverity, setSnackbarSeverity] = useState('info');  // Snackbar message type (e.g., info, error, success)
 
-    const { address, chainId, isConnected } = useWeb3ModalAccount();
-    const { walletProvider } = useWeb3ModalProvider();
-    const { switchNetwork } = useSwitchNetwork();
+    // Dialog-related states (UI modals)
+    const [dialogOpen, setDialogOpen] = useState(false);  // Transaction progress dialog visibility
+    const [balanceDialogOpen, setBalanceDialogOpen] = useState(false);  // Insufficient balance dialog visibility
+    const [notBusinessHoursDialogOpen, setNotBusinessHoursDialogOpen] = useState(false);  // Not business hours dialog visibility
 
-    const [fromNetwork, setFromNetwork] = useState(network1);
-    const [toNetwork, setToNetwork] = useState(network2);
+    // UI label state
+    const [buttonLabelStatus, setButtonLabelStatus] = useState(null);  // Label status for the action button
+    const [isRotated, setIsRotated] = useState(false);  // UI state for rotation effect
 
+    // Web3 connection states
+    const { address, chainId, isConnected } = useWeb3ModalAccount();  // Account information
+    const { walletProvider } = useWeb3ModalProvider();  // Web3 provider
+    const { switchNetwork } = useSwitchNetwork();  // Network switcher function
 
-    const { showMainNets } = useAppContext();
 
     // Snackbar handler
     const handleSnackbarClose = (event, reason) => {
@@ -89,7 +102,7 @@ const Bridge = ({ network1, network2 }) => {
             return getNativeTokenBalanceWithBackoff(retries - 1, delay * 2); // Exponential backoff
         }
     }
-    
+
 
     // Function to get token balance
     async function getTokenBalance(network, assetAddress, setBalance) {
@@ -115,6 +128,62 @@ const Bridge = ({ network1, network2 }) => {
             return (0n);
         }
     }
+
+    const isBusinessHoursInNY = () => {
+        const timeZone = 'America/New_York';
+        const hd = new Holidays('US'); // Initialize holidays for the US
+        console.log("Holidays: ", hd.getHolidays(2024));
+
+        // Get the current date and time in NY timezone as a formatted string
+        const now = new Date();
+        const nyTimeStr = formatInTimeZone(now, timeZone, "yyyy-MM-dd'T'HH:mm:ssXXX");
+        console.log("NY Time: ", nyTimeStr);
+
+        // Check if today is a holiday
+        const currentDateStr = formatInTimeZone(now, timeZone, 'yyyy-MM-dd');
+        console.log("Current Date: ", currentDateStr);
+        if (hd.isHoliday(currentDateStr)) return false;
+
+        // Check if today is a business day (Monday to Friday)
+        const dayOfWeek = formatInTimeZone(now, timeZone, 'i'); // 'i' returns day of the week (1-7), where 1 is Monday
+        console.log("Day of the Week: ", dayOfWeek);
+        if (dayOfWeek > 5) return false;
+
+        // Define business hours (9 AM - 5 PM in NY time)
+        const startBusinessHoursStr = `${currentDateStr}T09:00:00-05:00`;
+        const endBusinessHoursStr = `${currentDateStr}T17:00:00-05:00`;
+        const startBusinessHours = parseISO(startBusinessHoursStr);
+        const endBusinessHours = parseISO(endBusinessHoursStr);
+
+        console.log("Start Business Hours: ", startBusinessHours);
+        console.log("End Business Hours: ", endBusinessHours);
+
+        // Check if within general business hours
+        if (!(isAfter(now, startBusinessHours) && isBefore(now, endBusinessHours))) {
+            return false;
+        }
+
+        // Define restricted time period (2:45 PM - 3:45 PM in NY time)
+        const startRestrictedHoursStr = `${currentDateStr}T14:45:00-05:00`;
+        const endRestrictedHoursStr = `${currentDateStr}T15:45:00-05:00`;
+        const startRestrictedHours = parseISO(startRestrictedHoursStr);
+        const endRestrictedHours = parseISO(endRestrictedHoursStr);
+
+        console.log("Start Restricted Hours: ", startRestrictedHours);
+        console.log("End Restricted Hours: ", endRestrictedHours);
+
+        // Check if within restricted hours
+        if (isAfter(now, startRestrictedHours) && isBefore(now, endRestrictedHours)) {
+            return false;
+        }
+
+        return true;
+    };
+
+    console.group('Holidays Group');
+    const businessHours = isBusinessHoursInNY();
+    console.log(`%cBusiness Hours in NY: ${businessHours}`, 'color: red; background-color: yellow;');
+    console.groupEnd();
 
     useEffect(() => {
         setFromNetwork(network1);
@@ -164,6 +233,14 @@ const Bridge = ({ network1, network2 }) => {
     // Handle transaction
     async function handleTransaction() {
         try {
+
+            // const isBusinessHours = isBusinessHoursInNY();
+            if (!isBusinessHoursInNY && !BRIDGE_PRODUCTION_VERSION) {
+            // if (!isBusinessHoursInNY)  {
+                setNotBusinessHoursDialogOpen(true);
+                return;
+            }
+            console.group('Handling transaction');
             setLoading(true);  // Start loading
             setSnackbarMessage('Initiating transaction...');
             setSnackbarSeverity('info');
@@ -193,16 +270,9 @@ const Bridge = ({ network1, network2 }) => {
 
             // getNativeTokenBalance();
             const balance = await getNativeTokenBalanceWithBackoff();
+            console.log("Native Balance: ", balance);
 
-            // const minQuote = 100000000000000000n;  // Minimum value to cover transaction fees for the quote
-            // setQuote(minQuote);
-            // console.log("Native Balance  (the balance): ", balance);
-            // if (balance < minQuote) {
-            //     setBalanceDialogOpen(true);  // Show dialog if native balance is insufficient
-            //     setLoading(false);
-            //     return;  // Cancel the transaction
-            // }
-
+            // getethersProvider & Signer as well as the Bridge Contract
             const ethersProvider = await new ethers.BrowserProvider(walletProvider);
             console.log("=========> Ethers Provider: ", ethersProvider);
             await ethersProvider.send("eth_requestAccounts", []);
@@ -211,11 +281,11 @@ const Bridge = ({ network1, network2 }) => {
             const bridgeContract = await new ethers.Contract(contractSourceAddress, BridgeABI, signer);
             console.log("=========> Bridge Contract: ", bridgeContract);
 
+            // Get the quote for the transaction
             setButtonLabelStatus("Quetting quote");
             const numberOfAssets = ethers.parseUnits(amount.toString(), 6);
             console.log("=========> Number of Assets: ", numberOfAssets);
             console.log("=========> Wormhole Target Chain ID: ", wormholeTargetChainId);
-
 
             const quote = await bridgeContract.quoteBridge(wormholeTargetChainId);
             setQuote(quote);
@@ -225,11 +295,14 @@ const Bridge = ({ network1, network2 }) => {
             setSnackbarMessage('Processing transaction...');
             setSnackbarOpen(true);
 
+            // Check if the native balance is sufficient
             if (balance < quote) {
                 setBalanceDialogOpen(true);  // Show dialog if native balance is insufficient
                 setLoading(false);
                 return;  // Cancel the transaction
             }
+
+            // Sign and send the bridging transaction
             setButtonLabelStatus("Signing bridging transaction. Estimated cost: " + formatUnits(quote, 18) + network1.nativeCurrencySymbol);
             const bridgeTx = await bridgeContract.bridgeDSTokens(wormholeTargetChainId, numberOfAssets, {
                 value: quote, // Pass the quote value as the payment
@@ -242,6 +315,7 @@ const Bridge = ({ network1, network2 }) => {
             setSnackbarSeverity('success');
 
             setTxHash(bridgeTx.hash);
+            // Open the transaction dialog
             setDialogOpen(true);
 
         } catch (err) {
@@ -261,9 +335,6 @@ const Bridge = ({ network1, network2 }) => {
             setSnackbarSeverity('error');
             setSnackbarOpen(true);
         } finally {
-            console.log("FINALLY!");
-            console.log("DESESPERAADOS!");
-
             setLoading(false);  // End loading
             setSnackbarOpen(true);
             setAmount(0);  // Reset the amount after transaction
@@ -272,6 +343,7 @@ const Bridge = ({ network1, network2 }) => {
                 getTokenBalance(toNetwork, targetAssetAddress, setTargetAssetBalance);
             }
             setButtonLabelStatus(null);
+            console.groupEnd()
         }
     }
 
@@ -283,42 +355,6 @@ const Bridge = ({ network1, network2 }) => {
         setExpectedAmount(0);
     };
 
-    // Bridge styles for common UI consistency
-    const bridgeStyles = {
-        container: {
-            display: 'flex',
-            flexDirection: 'column',
-            // padding: 2,
-            // backgroundColor: '#2a2d42',
-            borderRadius: 2,
-            color: '#fff',
-            // width: 'fit-content',
-            width: '100%',
-            maxWidth: '800px',
-            margin: 'auto',
-            gap: '1em',
-            // margin: 'auto'
-        },
-        typography: {
-            fontWeight: 'bold',
-            fontSize: '1.5em',
-            textAlign: 'left',
-            position: 'relative',
-            top: '2em',
-            left: '0.9em'
-        },
-        button: {
-            top: '-1em',
-            backgroundColor: '#1A1B2D',
-            color: '#9fa4c4',
-            width: '50px',
-            height: '50px',
-            borderRadius: '50%',
-            boxShadow: '0 4px 12px rgba(0, 0, 0, 0.2)',
-            transition: 'transform 0.2s ease-in-out',
-            '&:hover': { backgroundColor: '#24263B' },
-        },
-    };
 
     return (
         <Box sx={bridgeStyles.container}>
@@ -388,47 +424,27 @@ const Bridge = ({ network1, network2 }) => {
                 </Alert>
             </Snackbar>
 
-            {/* Dialog for insufficient balance */}
-            <Dialog open={balanceDialogOpen} onClose={handleBalanceDialogClose}>
-                <DialogTitle>Insufficient Balance</DialogTitle>
-                <DialogContent>
-                    <Typography>
-                        The current balance in your wallet is {formatUnits(nativeBalance, 18)} {isSwitched ? toNetwork.nativeCurrencySymbol : fromNetwork.nativeCurrencySymbol} .
-                        You do not have enough {isSwitched ? toNetwork.nativeCurrencySymbol : fromNetwork.nativeCurrencySymbol} to cover the transaction fees. The estimated minimum required amount is {ethers.formatEther(quote)}  {isSwitched ? toNetwork.nativeCurrencySymbol : fromNetwork.nativeCurrencySymbol} . Please add more funds and try again.
-                    </Typography>
-                </DialogContent>
-                <DialogActions>
-                    <Button onClick={handleBalanceDialogClose} color="primary">OK</Button>
-                </DialogActions>
-            </Dialog>
+            {/* Insufficient Balance Dialog */}
+            <InsufficientBalanceDialog
+                open={balanceDialogOpen}
+                onClose={handleBalanceDialogClose}
+                nativeBalance={nativeBalance}
+                quote={quote}
+                currencySymbol={isSwitched ? toNetwork.nativeCurrencySymbol : fromNetwork.nativeCurrencySymbol}
+            />
 
-            {/* Dialog for bridging in progress */}
-            <Dialog open={dialogOpen} onClose={handleDialogClose}>
-                <DialogTitle>Bridging in Progress</DialogTitle>
-                <DialogContent>
-                    <Typography align='center'>
-                        Your transaction is being processed. The bridging process may take some time as it requires confirmation on both the source and destination blockchains. You can monitor the transaction’s status by clicking on the link below to view real-time updates on Wormhole Scan.
-                    </Typography>
-                    <Typography align='center' variant="body2" sx={{ mt: 1, mb: 3 }}>
-                        <Link
-                            href={`https://wormholescan.io/#/tx/${txHash}?network=Testnet&view=progress`}
-                            target="_blank"
-                            rel="noopener"
-                        >
-                            View transaction status on Wormhole Scan
-                        </Link>
-                    </Typography>
-                    <Typography variant='body2'>
-                        Bridging times may vary based on network congestion and blockchain speeds. Please be patient, and rest assured your transaction is underway.
-                    </Typography>
-                </DialogContent>
-                <DialogActions>
-                    <Button onClick={handleDialogClose} color="primary">
-                        Close
-                    </Button>
-                </DialogActions>
-            </Dialog>
+            {/* Transaction Progress Dialog */}
+            <TransactionProgressDialog
+                open={dialogOpen}
+                onClose={handleDialogClose}
+                txHash={txHash}
+            />
 
+            {/* Not Business Hours Dialog */}
+            <NotBusinessDayDialog
+                open={notBusinessHoursDialogOpen}
+                onClose={() => setNotBusinessHoursDialogOpen(false)}
+            />
         </Box>
     );
 };

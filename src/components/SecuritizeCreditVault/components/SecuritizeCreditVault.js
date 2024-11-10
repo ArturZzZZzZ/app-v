@@ -1,4 +1,4 @@
-import { TargetBlockchainChainId, walletConnectMetadata, walletConnectProjectId, walletConnectTargetBlockchainConfig, blockchainInfo } from '../../../utils/globals';
+import { TargetBlockchainChainId } from '../../../utils/globals';
 
 import React, { useEffect, useState } from 'react';
 import { createWeb3Modal, defaultConfig } from '@web3modal/ethers/react';

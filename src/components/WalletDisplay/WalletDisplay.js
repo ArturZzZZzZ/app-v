@@ -4,6 +4,34 @@ import ContentCopyIcon from '@mui/icons-material/ContentCopy';
 import ExitToAppIcon from '@mui/icons-material/ExitToApp';
 import { useWeb3Modal, useDisconnect, useWeb3ModalAccount } from '@web3modal/ethers/react';
 
+import { defaultConfig, createWeb3Modal } from '@web3modal/ethers/react';
+import { TargetBlockchainChainId, walletConnectMetadata, walletConnectProjectId, walletConnectTargetBlockchainConfig } from './WalletConnectConfig';
+
+export const initializeWeb3Modal = () => {
+  try {
+    const ethersConfig = defaultConfig({
+      metadata: walletConnectMetadata,
+      enableEIP6963: true,
+      enableInjected: true,
+      enableCoinbase: true,
+      rpcUrl: '...',
+      defaultChainId: TargetBlockchainChainId,
+    });
+
+    return createWeb3Modal({
+      ethersConfig,
+      chains: walletConnectTargetBlockchainConfig,
+      projectId: walletConnectProjectId,
+      enableAnalytics: true,
+    });
+  } catch (error) {
+    console.error('Failed to create Web3Modal instance:', error);
+    return null;
+  }
+};
+
+initializeWeb3Modal();
+
 const WalletDisplay = () => {
   const [copied, setCopied] = useState(false);
   const [anchorEl, setAnchorEl] = useState(null);

@@ -6,15 +6,11 @@ import { ThemeProvider } from '@mui/material/styles';
 import theme from './utils/theme';
 import WalletDisplay from './components/WalletDisplay/WalletDisplay';
 import { blockchainInfo } from './utils/globals';
-import { initializeWeb3Modal } from './utils/Web3ModalConfig';
 import Bridge from './components/Bridge/Bridge';
 import SecuritizeCreditVault from './components/SecuritizeCreditVault/components/SecuritizeCreditVault';
 
 import { BRIDGE_PRODUCTION_VERSION } from './utils/globals';
 import { useAppContext } from './utils/AppContext';
-
-// Initialize Web3Modal
-initializeWeb3Modal();
 
 const App = () => {
   const [selectedView, setSelectedView] = useState(0);
@@ -29,32 +25,28 @@ const App = () => {
   // Define views based on the BRIDGE_PRODUCTION_VERSION flag
   const views = BRIDGE_PRODUCTION_VERSION
     ? [
-        {
-          label: "BUIDL Bridge",
-          component: (
-            <Bridge
-              network1={sourceNetwork}
-              network2={targetNetwork}
-            />
-          ),
-        }
-      ]
+      {
+        label: "BUIDL Bridge",
+        component: (
+          <Bridge network1={sourceNetwork} network2={targetNetwork} />
+        ),
+      }
+    ]
     : [
-        {
-          label: "Vault",
-          component: <SecuritizeCreditVault />
-        },
-        {
-          label: "Bridge",
-          component: (
-            <Bridge
-              network1={sourceNetwork}
-              network2={targetNetwork}
-            />
-          ),
-        },
-      ];
+      {
+        label: "Vault",
+        component: <SecuritizeCreditVault />
+      },
+      {
+        label: "Bridge",
+        component: (
+          <Bridge network1={sourceNetwork} network2={targetNetwork}
+          />
+        ),
+      },
+    ];
 
+  // Set the source and target networks based on the showMainNets flag
   useEffect(() => {
     if (showMainNets) {
       setSourceNetwork(blockchainInfo.ethereum);
