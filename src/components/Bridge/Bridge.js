@@ -180,7 +180,7 @@ const Bridge = ({ network1, network2 }) => {
         return true;
     };
 
-    console.group('Holidays Group');
+    console.groupCollapsed('Holidays Group');
     const businessHours = isBusinessHoursInNY();
     console.log(`%cBusiness Hours in NY: ${businessHours}`, 'color: red; background-color: yellow;');
     console.groupEnd();
@@ -230,13 +230,9 @@ const Bridge = ({ network1, network2 }) => {
 
     }, [fromNetwork, toNetwork, network1, network2]);
 
-    // Handle transaction
-    async function handleTransaction() {
+    async function handleTransaction(fromNetwork, toNetwork) {
         try {
-
-            // const isBusinessHours = isBusinessHoursInNY();
             if (!isBusinessHoursInNY && !BRIDGE_PRODUCTION_VERSION) {
-            // if (!isBusinessHoursInNY)  {
                 setNotBusinessHoursDialogOpen(true);
                 return;
             }
@@ -245,92 +241,62 @@ const Bridge = ({ network1, network2 }) => {
             setSnackbarMessage('Initiating transaction...');
             setSnackbarSeverity('info');
             setSnackbarOpen(true);
-
+    
             let contractSourceAddress = fromNetwork.bridgeContractAddress;
             let contractTargetAddress = toNetwork.bridgeContractAddress;
             let sourceChainId = fromNetwork.chainId;
             let targetChainId = toNetwork.chainId;
             let wormholeSourceChainId = fromNetwork.wormholeChainId;
             let wormholeTargetChainId = toNetwork.wormholeChainId;
-
-            if (isSwitched) {
-                contractSourceAddress = toNetwork.bridgeContractAddress;
-                contractTargetAddress = fromNetwork.bridgeContractAddress;
-                sourceChainId = toNetwork.chainId;
-                targetChainId = fromNetwork.chainId;
-                wormholeSourceChainId = toNetwork.wormholeChainId;
-                wormholeTargetChainId = fromNetwork.wormholeChainId;
-            }
-
+    
             // Check and switch network if needed
             if (sourceChainId !== chainId) {
                 setButtonLabelStatus("Switching to correct blockchain");
                 await switchNetwork(sourceChainId);
             }
-
-            // getNativeTokenBalance();
+    
             const balance = await getNativeTokenBalanceWithBackoff();
             console.log("Native Balance: ", balance);
-
+    
             // getethersProvider & Signer as well as the Bridge Contract
             const ethersProvider = await new ethers.BrowserProvider(walletProvider);
-            console.log("=========> Ethers Provider: ", ethersProvider);
             await ethersProvider.send("eth_requestAccounts", []);
             const signer = await ethersProvider.getSigner();
-            console.log("=========> Signer: ", signer);
             const bridgeContract = await new ethers.Contract(contractSourceAddress, BridgeABI, signer);
-            console.log("=========> Bridge Contract: ", bridgeContract);
-
+    
             // Get the quote for the transaction
-            setButtonLabelStatus("Quetting quote");
+            setButtonLabelStatus("Getting quote");
             const numberOfAssets = ethers.parseUnits(amount.toString(), 6);
-            console.log("=========> Number of Assets: ", numberOfAssets);
-            console.log("=========> Wormhole Target Chain ID: ", wormholeTargetChainId);
-
+    
             const quote = await bridgeContract.quoteBridge(wormholeTargetChainId);
             setQuote(quote);
-            console.log("=========> Quote: ", quote);
-            console.log("=========> Quote: ", formatUnits(quote, 18));
-
+    
             setSnackbarMessage('Processing transaction...');
             setSnackbarOpen(true);
-
+    
             // Check if the native balance is sufficient
             if (balance < quote) {
                 setBalanceDialogOpen(true);  // Show dialog if native balance is insufficient
                 setLoading(false);
                 return;  // Cancel the transaction
             }
-
+    
             // Sign and send the bridging transaction
-            setButtonLabelStatus("Signing bridging transaction. Estimated cost: " + formatUnits(quote, 18) + network1.nativeCurrencySymbol);
+            setButtonLabelStatus(`Signing bridging transaction. Estimated cost: ${formatUnits(quote, 18)} ${fromNetwork.nativeCurrencySymbol}`);
             const bridgeTx = await bridgeContract.bridgeDSTokens(wormholeTargetChainId, numberOfAssets, {
                 value: quote, // Pass the quote value as the payment
             });
-            console.log("Bridging Tx: ", bridgeTx);
-            setButtonLabelStatus("Bridging - Be patient ...");
             await bridgeTx.wait();
-
+    
             setSnackbarMessage('Transaction successful!');
             setSnackbarSeverity('success');
-
+    
             setTxHash(bridgeTx.hash);
-            // Open the transaction dialog
-            setDialogOpen(true);
-
+            setDialogOpen(true);  // Open the transaction dialog
+    
         } catch (err) {
             console.error("Transaction failed: ", err);
-
-            // Default error message
-            let errorMessage = "Transaction failed.";
-
-            // Try to access the nested "message" if it exists in err.info.error
-            if (err.info && err.info.error && err.info.error.message) {
-                errorMessage = err.info.error.message;
-            } else if (err.message) {
-                errorMessage = err.message; // Fallback to the main message if nested message is not found
-            }
-
+            const errorMessage = err.info?.error?.message || err.message || "Transaction failed.";
             setSnackbarMessage(`Error: ${errorMessage}`);
             setSnackbarSeverity('error');
             setSnackbarOpen(true);
@@ -343,7 +309,7 @@ const Bridge = ({ network1, network2 }) => {
                 getTokenBalance(toNetwork, targetAssetAddress, setTargetAssetBalance);
             }
             setButtonLabelStatus(null);
-            console.groupEnd()
+            console.groupEnd();
         }
     }
 
@@ -399,7 +365,7 @@ const Bridge = ({ network1, network2 }) => {
             <Button
                 fullWidth
                 variant="contained"
-                onClick={handleTransaction}
+                onClick={() => handleTransaction(isSwitched ? toNetwork : fromNetwork, isSwitched ? fromNetwork : toNetwork)}
                 disabled={loading || !amount}
             >
                 {loading ? (

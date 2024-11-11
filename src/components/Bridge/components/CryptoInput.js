@@ -18,12 +18,14 @@ const CryptoInput = ({ network, otherNetwork, setNetwork, amount, balance, setAm
         }).format(value);
     };
 
+
     const handleAmountChange = (e) => {
-        const value = parseFloat(e.target.value);
-        if (value <= balance && value >= 0) {
+        const value = e.target.value;
+
+        // Allow the input to be empty or a valid number within the balance range
+        if (value === '' || (!isNaN(value) && parseFloat(value) >= 0 && parseFloat(value) <= balance)) {
             setAmount(value);
         }
-        if (isNaN(value)) setAmount();
     };
 
     const getNetworkIcon = (network) => {
