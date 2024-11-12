@@ -18,9 +18,7 @@ pipelines:
         script:
           # Limpieza y reinstalación de dependencias
           - echo "Limpieza e instalación de dependencias..."
-          - rm -rf node_modules package-lock.json
-          - npm cache clean --force
-          - npm install
+          - npm ci
 
     - step:
         name: Build React App
