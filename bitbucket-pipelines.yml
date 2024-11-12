@@ -1,21 +1,23 @@
-# Bitbucket Pipeline for React Static Site Deployment to S3
+# Bitbucket Pipeline para Despliegue de Sitio Estático React en S3
 
-# Environment Variables:
-# - AWS_ACCESS_KEY_ID: Pulled from Bitbucket Repository Variables
-# - AWS_SECRET_ACCESS_KEY: Pulled from Bitbucket Repository Variables
-# - AWS_DEFAULT_REGION: The AWS region where your S3 bucket is located (e.g., us-east-1)
-# - S3_BUCKET: The name of your S3 bucket (e.g., buidl-bridge-securitize-production)
+# Variables de Entorno:
+# - AWS_ACCESS_KEY_ID: Configurado en las Variables del Repositorio
+# - AWS_SECRET_ACCESS_KEY: Configurado en las Variables del Repositorio
+# - AWS_DEFAULT_REGION: Región donde se encuentra tu bucket S3 (e.g., us-east-1)
+# - S3_BUCKET: Nombre de tu bucket S3 (e.g., buidl-bridge-securitize-prod)
+# - CLOUDFRONT_DISTRIBUTION_ID: ID de la distribución de CloudFront para invalidar caché
 
-image: node:16
+image: node:18
 
 pipelines:
   default:
     - step:
-        name: Clean Install Dependencies
+        name: Clean and Install Dependencies
         caches:
           - node
         script:
-          # Clean installation of dependencies
+          # Limpieza y reinstalación de dependencias
+          - echo "Limpieza e instalación de dependencias..."
           - rm -rf node_modules package-lock.json
           - npm cache clean --force
           - npm install
@@ -23,15 +25,24 @@ pipelines:
     - step:
         name: Build React App
         script:
-          # Disable source maps to avoid ENOENT errors
+          # Desactivar source maps para evitar errores ENOENT
+          - echo "Construyendo la aplicación..."
           - export GENERATE_SOURCEMAP=false
-          # Run the build command and fall back to npx if necessary
-          - npm run build || npx react-scripts build
+          - npm run build
 
     - step:
         name: Deploy to S3
         deployment: Production
         script:
-          # Sync the build folder with the S3 bucket
+          # Sincronizar archivos de la carpeta build con el bucket S3
+          - echo "Desplegando archivos al bucket S3..."
           - aws s3 sync build/ s3://$S3_BUCKET/ --delete --acl public-read
-          - echo "Deployment to S3 completed successfully."
+          - echo "Despliegue a S3 completado con éxito."
+
+    - step:
+        name: Invalidate CloudFront Cache
+        script:
+          # Invalidar caché de CloudFront para reflejar cambios de inmediato
+          - echo "Invalidando caché de CloudFront..."
+          - aws cloudfront create-invalidation --distribution-id $CLOUDFRONT_DISTRIBUTION_ID --paths "/*"
+          - echo "Invalidación de caché completada."
