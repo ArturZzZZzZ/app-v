@@ -15,7 +15,7 @@ pipelines:
         caches:
           - node
         script:
-          # Option 1: Clean installation of dependencies
+          # Clean installation of dependencies
           - rm -rf node_modules package-lock.json
           - npm cache clean --force
           - npm install
@@ -25,7 +25,8 @@ pipelines:
         script:
           # Disable source maps to avoid ENOENT errors
           - export GENERATE_SOURCEMAP=false
-          - npm run build
+          # Run the build command and fall back to npx if necessary
+          - npm run build || npx react-scripts build
 
     - step:
         name: Deploy to S3
