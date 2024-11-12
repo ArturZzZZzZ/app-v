@@ -9,7 +9,7 @@
 # README https://bitbucket.org/atlassian/aws-s3-deploy/src/master/README.md
 # README https://bitbucket.org/atlassian/aws-cloudfront-invalidate/src/master/README.md
 
-image: node:16
+image: node:18
 
 # Workflow Configuration
 
@@ -43,6 +43,7 @@ pipelines:
               - npm install
               # CI=true in default variables for Bitbucket Pipelines https://support.atlassian.com/bitbucket-cloud/docs/variables-in-pipelines/
               - echo "Skipping tests as no test files are present"
+              - DISABLE_ESLINT_PLUGIN=true npm run build
               - npm run build
             artifacts:
               - build/**
