@@ -12,35 +12,16 @@ image: node:18
 pipelines:
   default:
     - step:
-        name: Clean and Install Dependencies
-        caches:
-          - node
-        script:
-          # Limpieza y reinstalación de dependencias
-          - echo "Limpieza e instalación de dependencias..."
-          - npm ci
-
-    - step:
         name: Build React App
         script:
           # Desactivar source maps para evitar errores ENOENT
           - echo "Construyendo la aplicación..."
+          - npm ci
           - export GENERATE_SOURCEMAP=false
           - npm run build
-
-    - step:
-        name: Deploy to S3
-        deployment: Production
-        script:
-          # Sincronizar archivos de la carpeta build con el bucket S3
           - echo "Desplegando archivos al bucket S3..."
           - aws s3 sync build/ s3://$S3_BUCKET/ --delete --acl public-read
           - echo "Despliegue a S3 completado con éxito."
-
-    - step:
-        name: Invalidate CloudFront Cache
-        script:
-          # Invalidar caché de CloudFront para reflejar cambios de inmediato
           - echo "Invalidando caché de CloudFront..."
           - aws cloudfront create-invalidation --distribution-id $CLOUDFRONT_DISTRIBUTION_ID --paths "/*"
           - echo "Invalidación de caché completada."
