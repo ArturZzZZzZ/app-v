@@ -44,6 +44,7 @@ pipelines:
               # CI=true in default variables for Bitbucket Pipelines https://support.atlassian.com/bitbucket-cloud/docs/variables-in-pipelines/
               - echo "Skipping tests as no test files are present"
               - DISABLE_ESLINT_PLUGIN=true npm run build
+              - export GENERATE_SOURCEMAP=false
               - npm run build
             artifacts:
               - build/**
