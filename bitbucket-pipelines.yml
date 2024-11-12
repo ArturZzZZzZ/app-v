@@ -1,56 +1,33 @@
+# Bitbucket Pipeline for React Static Site Deployment to S3
+
 # Environment Variables:
-# - AWS_ACCESS_KEY_ID: Pulled from Bitbucket master
-# - AWS_SECRET_ACCESS_KEY: Pulled from Bitbucket master
-# - AWS_STAGE: Pulled from Deployments
-image: node:16.13.0
+# - AWS_ACCESS_KEY_ID: Pulled from Bitbucket Repository Variables
+# - AWS_SECRET_ACCESS_KEY: Pulled from Bitbucket Repository Variables
+# - AWS_DEFAULT_REGION: The AWS region where your S3 bucket is located (e.g., us-east-1)
+# - S3_BUCKET: The name of your S3 bucket (e.g., buidl-bridge-securitize-production)
 
-definitions:
-  services:
-    docker:
-      memory: 4096
-
-  caches:
-    node: node_modules      
-
-  steps:
-    - step: &step-install-dependencies
-        name: Install Dependencies
-        caches:
-          - node        
-        script:
-          - npm ci
-        artifacts:
-          - node_modules/**
-          - apps/**/node_modules/**
-          - packages/**/node_modules/**
-    - step: &step-build-packages
-        name: Build Packages
-        size: 2x
-        script:
-          - npm run build:packages
-        artifacts:
-          - packages/**/dist/**        
-    - step: &step-branch-specific-steps
-        size: 2x
-        name: Build Apps
-        script:
-          - if [ "$BITBUCKET_PR_DESTINATION_BRANCH" = "dev" ]; then
-              npm run build:apps-changed:dev;
-            fi
-          - if [ "$BITBUCKET_PR_DESTINATION_BRANCH" = "rc" ]; then
-              npm run build:apps-changed:rc;
-            fi
-          - if [ "$BITBUCKET_PR_DESTINATION_BRANCH" = "master" ]; then
-              npm run build:apps-changed:master;
-            fi
-        artifacts:
-          - packages/**/dist/**        
-
+image: node:18
 
 pipelines:
-  pull-requests:
-    '**':
-      - step: *step-install-dependencies
-      - step: *step-build-packages
-      - step: *step-branch-specific-steps
+  default:
+    - step:
+        name: Install Dependencies
+        caches:
+          - node
+        script:
+          - npm ci
 
+    - step:
+        name: Build React App
+        script:
+          # Disable source maps to avoid ENOENT errors
+          - export GENERATE_SOURCEMAP=false
+          - npm run build
+
+    - step:
+        name: Deploy to S3
+        deployment: Production
+        script:
+          # Sync the build folder with the S3 bucket
+          - aws s3 sync build/ s3://$S3_BUCKET/ --delete --acl public-read
+          - echo "Deployment to S3 completed successfully."
