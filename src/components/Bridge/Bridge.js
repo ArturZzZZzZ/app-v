@@ -232,10 +232,10 @@ const Bridge = ({ network1, network2 }) => {
 
     async function handleTransaction(fromNetwork, toNetwork) {
         try {
-            if (!isBusinessHoursInNY && !BRIDGE_PRODUCTION_VERSION) {
-                setNotBusinessHoursDialogOpen(true);
-                return;
-            }
+            // if (!isBusinessHoursInNY && !BRIDGE_PRODUCTION_VERSION) {
+            //     setNotBusinessHoursDialogOpen(true);
+            //     return;
+            // }
             console.group('Handling transaction');
             setLoading(true);  // Start loading
             setSnackbarMessage('Initiating transaction...');
