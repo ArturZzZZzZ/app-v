@@ -14,6 +14,7 @@ import VaultAdmin from './VaultAdmin';
 import WalletDisplay from '../../WalletDisplay/WalletDisplay';
 import SmartContractInterface from './SmartContractInterfaces';
 import { useSwitchNetwork } from '@web3modal/ethers/react';
+import BlockchainSwitcher from './BlockchainSwitcher';
 
 function SecuritizeCreditVault() {
   const { address, chainId, isConnected } = useWeb3ModalAccount();
@@ -95,7 +96,7 @@ function SecuritizeCreditVault() {
   return (
     // <Container className="SecuritizeCreditVault" >
     <  >
-      <>
+      {/* <>
         <Box elevation={3} sx={{ padding: '16px', textAlign: 'center' }}>
           <Tabs value={tabValue} onChange={handleTabChange} centered>
             <Tab label="Vault Transaction" />
@@ -108,8 +109,9 @@ function SecuritizeCreditVault() {
             {isAdmin && tabValue === 2 && <SmartContractInterface />}
           </Box>
         </Box>
-      </>
-      {/* {isOnCorrectBlockchain ? (
+      </> */}
+      {/* {isOnCorrectBlockchain ? ( */}
+      {isOnCorrectBlockchain ? (
         <>
           <Box elevation={3} sx={{ padding: '16px', textAlign: 'center' }}>
             <Tabs value={tabValue} onChange={handleTabChange} centered>
@@ -124,22 +126,25 @@ function SecuritizeCreditVault() {
             </Box>
           </Box>
         </>
-      ) : (
-        <Paper elevation={3} sx={{ padding: '16px', textAlign: 'center' }}>
-          <Box sx={{ display: 'flex', alignItems: 'center', gap: 2, flexDirection: 'column' }}>
-            <Typography variant="h6" color="error">
-              Please switch to target network
-            </Typography>
-            <Button
-              variant="contained"
-              color="primary"
-              onClick={handleSwitchNetwork}> {buttonLabelStatus}
-            </Button>
-          </Box>
-        </Paper>
-      )} */}
+      ) : (<> </>)}
+      {!isOnCorrectBlockchain && isConnected ?
+        (
+          <Paper elevation={3} sx={{ padding: '16px', textAlign: 'center' }}>
+            <Box sx={{ display: 'flex', alignItems: 'center', gap: 2, flexDirection: 'column' }}>
+              <Typography variant="h6" color="error">
+                Please switch to target network
+              </Typography>
+              <Button
+                variant="contained"
+                color="primary"
+                onClick={handleSwitchNetwork}> {buttonLabelStatus}
+              </Button>
+            </Box>
+          </Paper>
+        ) : (<></>)}
     </>
   );
 }
 
 export default SecuritizeCreditVault;
+

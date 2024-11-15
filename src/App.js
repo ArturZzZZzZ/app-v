@@ -9,7 +9,7 @@ import { blockchainInfo } from './utils/globals';
 import Bridge from './components/Bridge/Bridge';
 import SecuritizeCreditVault from './components/SecuritizeCreditVault/components/SecuritizeCreditVault';
 
-import { BRIDGE_PRODUCTION_VERSION } from './utils/globals';
+import { BRIDGE_PRODUCTION_VERSION, VAULT_PRODUCTION_VERSION, TEST_VERSION } from './utils/globals';
 import { useAppContext } from './utils/AppContext';
 
 const App = () => {
@@ -22,29 +22,49 @@ const App = () => {
     setShowMainNets(event.target.checked);
   };
 
-  // Define views based on the BRIDGE_PRODUCTION_VERSION flag
-  const views = BRIDGE_PRODUCTION_VERSION
-    ? [
+
+  const views = TEST_VERSION
+  ? [
+      {
+        label: "Vault",
+        component: <SecuritizeCreditVault />,
+      },
+      {
+        label: "Bridge",
+        component: (
+          <Bridge network1={sourceNetwork} network2={targetNetwork} />
+        ),
+      },
+    ]
+  : VAULT_PRODUCTION_VERSION
+  ? [
+      {
+        label: "Vault",
+        component: <SecuritizeCreditVault />,
+      },
+    ]
+  : BRIDGE_PRODUCTION_VERSION
+  ? [
       {
         label: "BUIDL Bridge",
         component: (
           <Bridge network1={sourceNetwork} network2={targetNetwork} />
         ),
-      }
+      },
     ]
-    : [
+  : [
       {
         label: "Vault",
-        component: <SecuritizeCreditVault />
+        component: <SecuritizeCreditVault />,
       },
       {
         label: "Bridge",
         component: (
-          <Bridge network1={sourceNetwork} network2={targetNetwork}
-          />
+          <Bridge network1={sourceNetwork} network2={targetNetwork} />
         ),
       },
     ];
+
 
   // Set the source and target networks based on the showMainNets flag
   useEffect(() => {
@@ -81,7 +101,7 @@ const App = () => {
               </Button>
             ))}
           </Box>
-          {!BRIDGE_PRODUCTION_VERSION && selectedView === views.findIndex(view => view.label === "Bridge") && (
+          {TEST_VERSION && selectedView === views.findIndex(view => view.label === "Bridge") && (
             <Box sx={{ display: 'flex', alignItems: 'center', gap: 1 }}>
               <Typography variant="body2">
                 {showMainNets ? 'Main Nets' : 'Test Nets'}
