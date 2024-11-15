@@ -333,10 +333,16 @@ export const blockchainInfo = {
 // export const TargetBlockchainChainId = 1;
 
 
-// For Vault in Testnets
-export const VaultAddress = "0x602B85F6e27656d2897fF6984896d9af7661939f";
-export const AssetAddress = "0x71dB752c6642bb1CeD83c48C43C7A9E003F36AA1";
-export const AssetName = "TA AVA";
-export const RepresentationTokenName = "szTAAVA";
-export const TargetBlockchainChainId = 43113;
+// // For Vault in Testnets
+// export const VaultAddress = "0x602B85F6e27656d2897fF6984896d9af7661939f";
+// export const AssetAddress = "0x71dB752c6642bb1CeD83c48C43C7A9E003F36AA1";
+// export const AssetName = "TA AVA";
+// export const RepresentationTokenName = "szTAAVA";
+// export const TargetBlockchainChainId = 43113;
 
+// For Vault in Testnets
+export const VaultAddress = "0xd7aa8784Ca4E234332cEe8f036434DE82651B992";
+export const AssetAddress = "0x3454B9699fe19cf9219A3fe9D1F9956676eBA7Db";
+export const AssetName = "NOV5";
+export const RepresentationTokenName = "sNOV5";
+export const TargetBlockchainChainId = 43113;

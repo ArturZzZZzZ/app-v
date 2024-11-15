@@ -56,7 +56,9 @@ function TokenBalance({ contractAddress, abi, label, refresh }) {
             {balance !== null ? (
                 <>{label} Balance: {balance}</>
             ) : (
-                <>Loading {label} balance...</>
+                // <>Loading {label} balance...</>
+                <>{label} Balance: - </>
+
             )}
         </>
     );

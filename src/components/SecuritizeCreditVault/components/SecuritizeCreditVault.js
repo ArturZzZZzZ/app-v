@@ -95,7 +95,21 @@ function SecuritizeCreditVault() {
   return (
     // <Container className="SecuritizeCreditVault" >
     <  >
-      {isOnCorrectBlockchain ? (
+      <>
+        <Box elevation={3} sx={{ padding: '16px', textAlign: 'center' }}>
+          <Tabs value={tabValue} onChange={handleTabChange} centered>
+            <Tab label="Vault Transaction" />
+            {isAdmin && <Tab label="Vault Admin" />}
+            {isAdmin && <Tab label="Smart Contract Interface" />}
+          </Tabs>
+          <Box sx={{ mt: 3 }}>
+            {tabValue === 0 && <VaultTransaction action="deposit" />}
+            {isAdmin && tabValue === 1 && <VaultAdmin />}
+            {isAdmin && tabValue === 2 && <SmartContractInterface />}
+          </Box>
+        </Box>
+      </>
+      {/* {isOnCorrectBlockchain ? (
         <>
           <Box elevation={3} sx={{ padding: '16px', textAlign: 'center' }}>
             <Tabs value={tabValue} onChange={handleTabChange} centered>
@@ -112,7 +126,7 @@ function SecuritizeCreditVault() {
         </>
       ) : (
         <Paper elevation={3} sx={{ padding: '16px', textAlign: 'center' }}>
-          <Box sx={{ display: 'flex', alignItems: 'center', gap: 2, flexDirection:'column' }}>
+          <Box sx={{ display: 'flex', alignItems: 'center', gap: 2, flexDirection: 'column' }}>
             <Typography variant="h6" color="error">
               Please switch to target network
             </Typography>
@@ -123,7 +137,7 @@ function SecuritizeCreditVault() {
             </Button>
           </Box>
         </Paper>
-      )}
+      )} */}
     </>
   );
 }
