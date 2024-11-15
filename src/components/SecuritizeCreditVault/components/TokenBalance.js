@@ -54,11 +54,9 @@ function TokenBalance({ contractAddress, abi, label, refresh }) {
     return (
         <>
             {balance !== null ? (
-                <>{label} Balance: {balance}</>
+                <>{label} Balance: {parseFloat(balance).toLocaleString('en-US', { style: 'currency', currency: 'USD' })}</>
             ) : (
-                // <>Loading {label} balance...</>
                 <>{label} Balance: - </>
-
             )}
         </>
     );

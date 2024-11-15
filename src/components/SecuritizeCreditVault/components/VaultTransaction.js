@@ -1,10 +1,12 @@
-import { VaultAddress, AssetAddress, AssetName, RepresentationTokenName } from '../../../utils/globals';
+// import { VaultAddress, AssetAddress, AssetName, RepresentationTokenName } from '../../../utils/globals';
+import {AssetName, RepresentationTokenName } from '../../../utils/globals';
 import { VaultABI, ERC20ABI } from '../../../utils/ABIs';
 import React, { useState, useEffect } from 'react';
 import { Container, Paper, Typography, Box, TextField, Button, CircularProgress, Chip, Stack, Snackbar, Alert } from '@mui/material';
 import { useWeb3ModalProvider, useWeb3ModalAccount } from '@web3modal/ethers/react';
 import TokenBalance from './TokenBalance'; // Assuming you have a TokenBalance component
 import { ethers } from 'ethers';
+import { useAppContext } from '../../../utils/AppContext'; // Import AppContext.js
 
 function VaultTransaction() {
     const { address, isConnected } = useWeb3ModalAccount();
@@ -22,6 +24,13 @@ function VaultTransaction() {
     const [snackbarMessage, setSnackbarMessage] = useState('');
     const [snackbarSeverity, setSnackbarSeverity] = useState('info'); // 'info', 'success', 'warning', 'error'
 
+
+    const { vaultAddress, setVaultAddress } = useAppContext();
+    const { vaultAssetAddress, setVaultAssetAddress } = useAppContext();
+    const { TargetBlockchainChainId, setTargetBlockchainChainId } = useAppContext();
+    const AssetAddress = vaultAssetAddress;
+    const VaultAddress = vaultAddress;
+        
     async function getAssetBalance() {
         setMaxAssets(0);
 

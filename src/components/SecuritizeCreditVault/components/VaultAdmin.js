@@ -1,9 +1,10 @@
-import { VaultAddress, AssetAddress } from '../../../utils/globals';
+// import { VaultAddress, AssetAddress } from '../../../utils/globals';
 import { VaultABI } from '../../../utils/ABIs';
 import React, { useState, useEffect } from 'react';
 import { Container, Paper, Typography, Box, TextField, Button, CircularProgress, Snackbar, Alert, Tabs, Tab } from '@mui/material';
 import { useWeb3ModalProvider, useWeb3ModalAccount } from '@web3modal/ethers/react';
 import { ethers } from 'ethers';
+import { useAppContext } from '../../../utils/AppContext'; // Import AppContext.js
 
 const VaultAdmin = () => {
     const { walletProvider } = useWeb3ModalProvider();
@@ -12,6 +13,11 @@ const VaultAdmin = () => {
     const [activeTab, setActiveTab] = useState(0);
     const [inputValue, setInputValue] = useState('');
 
+    const { vaultAddress, setVaultAddress } = useAppContext();
+    const { vaultAssetAddress, setVaultAssetAddress } = useAppContext();
+    const { TargetBlockchainChainId, setTargetBlockchainChainId } = useAppContext();
+    const AssetAddress = vaultAssetAddress;
+    const VaultAddress = vaultAddress;
 
     const handleAction = async (action) => {
         if (!inputValue) {

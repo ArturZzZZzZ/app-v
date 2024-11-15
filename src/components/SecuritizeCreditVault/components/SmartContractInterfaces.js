@@ -3,8 +3,9 @@ import { Container, Paper, Typography, Box, TextField, Button, CircularProgress,
 import ExpandMoreIcon from '@mui/icons-material/ExpandMore';
 import { useWeb3ModalProvider, useWeb3ModalAccount } from '@web3modal/ethers/react';
 import { ethers } from 'ethers';
-import { VaultAddress } from '../../../utils/globals';
+// import { VaultAddress } from '../../../utils/globals';
 import contractAbi from './SecuritizeVaultABI.json'; // Adjust the path to your ABI file
+import { useAppContext } from '../../../utils/AppContext'; // Import AppContext.js
 
 const SmartContractInterface = () => {
     const { isConnected } = useWeb3ModalAccount();
@@ -16,6 +17,12 @@ const SmartContractInterface = () => {
     const [snackbar, setSnackbar] = useState({ open: false, message: '', severity: 'info' });
     const [expanded, setExpanded] = useState(false);
     const [tabValue, setTabValue] = useState(0);
+
+    const { vaultAddress, setVaultAddress } = useAppContext();
+    const { vaultAssetAddress, setVaultAssetAddress } = useAppContext();
+    const { TargetBlockchainChainId, setTargetBlockchainChainId } = useAppContext();
+    const AssetAddress = vaultAssetAddress;
+    const VaultAddress = vaultAddress;
 
     useEffect(() => {
         if (isConnected && walletProvider) {

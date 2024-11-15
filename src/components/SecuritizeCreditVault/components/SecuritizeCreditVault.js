@@ -1,4 +1,4 @@
-import { TargetBlockchainChainId } from '../../../utils/globals';
+// import { TargetBlockchainChainId } from '../../../utils/globals';
 
 import React, { useEffect, useState } from 'react';
 import { createWeb3Modal, defaultConfig } from '@web3modal/ethers/react';
@@ -6,7 +6,7 @@ import { useWeb3Modal, useDisconnect } from '@web3modal/ethers/react';
 import { Button, Typography, Box, Container, Paper, Tabs, Tab } from '@mui/material';
 import { useWeb3ModalProvider, useWeb3ModalAccount } from '@web3modal/ethers/react';
 import { ethers } from 'ethers';
-import { VaultAddress } from '../../../utils/globals';
+// import { VaultAddress } from '../../../utils/globals';
 import { VaultABI } from '../../../utils/ABIs';
 
 import VaultTransaction from './VaultTransaction';
@@ -16,17 +16,27 @@ import SmartContractInterface from './SmartContractInterfaces';
 import { useSwitchNetwork } from '@web3modal/ethers/react';
 import BlockchainSwitcher from './BlockchainSwitcher';
 
+import { useAppContext } from '../../../utils/AppContext'; // Import AppContext.js
+
+
 function SecuritizeCreditVault() {
   const { address, chainId, isConnected } = useWeb3ModalAccount();
   const { disconnect } = useDisconnect();
   const { provider, setProvider } = useWeb3ModalProvider();
   const { walletProvider } = useWeb3ModalProvider();
 
-  const isOnCorrectBlockchain = chainId === TargetBlockchainChainId;
   const [isAdmin, setIsAdmin] = useState(false);
   const [tabValue, setTabValue] = useState(0);
   const { switchNetwork } = useSwitchNetwork();
   const [buttonLabelStatus, setButtonLabelStatus] = useState("Switch");
+
+  const { vaultAddress, setVaultAddress } = useAppContext();
+  const { vaultAssetAddress, setVaultAssetAddress } = useAppContext();
+  const { TargetBlockchainChainId, setTargetBlockchainChainId } = useAppContext();
+
+  const VaultAddress = vaultAddress;
+
+  const isOnCorrectBlockchain = chainId === TargetBlockchainChainId;
 
 
   useEffect(() => {
@@ -96,6 +106,7 @@ function SecuritizeCreditVault() {
   return (
     // <Container className="SecuritizeCreditVault" >
     <  >
+      <BlockchainSwitcher />
       {/* <>
         <Box elevation={3} sx={{ padding: '16px', textAlign: 'center' }}>
           <Tabs value={tabValue} onChange={handleTabChange} centered>
@@ -116,18 +127,22 @@ function SecuritizeCreditVault() {
           <Box elevation={3} sx={{ padding: '16px', textAlign: 'center' }}>
             <Tabs value={tabValue} onChange={handleTabChange} centered>
               <Tab label="Vault Transaction" />
-              {isAdmin && <Tab label="Vault Admin" />}
-              {isAdmin && <Tab label="Smart Contract Interface" />}
+              {/* {isAdmin && <Tab label="Vault Admin" />}
+              {isAdmin && <Tab label="Smart Contract Interface" />} */}
+              {<Tab label="Vault Admin" />}
+              {<Tab label="Smart Contract Interface" />}
             </Tabs>
             <Box sx={{ mt: 3 }}>
               {tabValue === 0 && <VaultTransaction action="deposit" />}
-              {isAdmin && tabValue === 1 && <VaultAdmin />}
-              {isAdmin && tabValue === 2 && <SmartContractInterface />}
+              {tabValue === 1 && <VaultAdmin />}
+              {tabValue === 2 && <SmartContractInterface />}
+              {/* {isAdmin && tabValue === 1 && <VaultAdmin />}
+              {isAdmin && tabValue === 2 && <SmartContractInterface />} */}
             </Box>
           </Box>
         </>
       ) : (<> </>)}
-      {!isOnCorrectBlockchain && isConnected ?
+      {/* {!isOnCorrectBlockchain && isConnected ?
         (
           <Paper elevation={3} sx={{ padding: '16px', textAlign: 'center' }}>
             <Box sx={{ display: 'flex', alignItems: 'center', gap: 2, flexDirection: 'column' }}>
@@ -141,7 +156,7 @@ function SecuritizeCreditVault() {
               </Button>
             </Box>
           </Paper>
-        ) : (<></>)}
+        ) : (<></>)} */}
     </>
   );
 }

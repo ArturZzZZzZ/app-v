@@ -7,9 +7,15 @@ export default AppContext;
 export const AppProvider = ({ children }) => {
     // define state
     const [showMainNets, setShowMainNets] = useState(true);
-
+    const [vaultAddress, setVaultAddress] = useState('');
+    const [vaultAssetAddress, setVaultAssetAddress] = useState('');
+    const [TargetBlockchainChainId, setTargetBlockchainChainId] = useState(0);
     return (
-        <AppContext.Provider value={{ showMainNets, setShowMainNets }}>
+        <AppContext.Provider value={{ showMainNets, setShowMainNets,
+                                        vaultAddress, setVaultAddress,
+                                        vaultAssetAddress, setVaultAssetAddress,
+                                        TargetBlockchainChainId, setTargetBlockchainChainId
+         }}>
             {children}
         </AppContext.Provider>
     );
