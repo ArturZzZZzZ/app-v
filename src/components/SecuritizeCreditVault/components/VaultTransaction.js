@@ -1,5 +1,5 @@
 // import { VaultAddress, AssetAddress, AssetName, RepresentationTokenName } from '../../../utils/globals';
-import {AssetName, RepresentationTokenName } from '../../../utils/globals';
+import { AssetName, RepresentationTokenName } from '../../../utils/globals';
 import { VaultABI, ERC20ABI } from '../../../utils/ABIs';
 import React, { useState, useEffect } from 'react';
 import { Container, Paper, Typography, Box, TextField, Button, CircularProgress, Chip, Stack, Snackbar, Alert } from '@mui/material';
@@ -30,7 +30,7 @@ function VaultTransaction() {
     const { TargetBlockchainChainId, setTargetBlockchainChainId } = useAppContext();
     const AssetAddress = vaultAssetAddress;
     const VaultAddress = vaultAddress;
-        
+
     async function getAssetBalance() {
         setMaxAssets(0);
 
@@ -92,24 +92,33 @@ function VaultTransaction() {
                 setSnackbarSeverity('success');
             } else if (action === 'redeem') {
                 const isRedeemer = await vaultContract.isRedeemer(address);
-                const isAdmin = await vaultContract.isAdmin(address);
-                if (!isRedeemer && isAdmin) {
-                    const approveTx = await vaultContract.addRedeemer(address);
-                    await approveTx.wait();
-                    setSnackbarMessage('Wallet added as redeemer. Redeeming...');
-                    setSnackbarOpen(true);
+                console.log("isRedeemer: ", isRedeemer);
+                if (isRedeemer) {
+                    const redeemTx = await vaultContract.redeem(numberOfAssets, address, address);
+                    setTransactionHash(redeemTx.hash);
+                    await redeemTx.wait();
+                    setSnackbarMessage('Tokens redeemed successfully!');
+                    setSnackbarSeverity('success');
+                } else {
+                    // show dialog to say wallet is not redeemer
+                    setSnackbarMessage('Wallet is not a redeemer');
+                    setSnackbarSeverity('error');
                 }
-                const redeemTx = await vaultContract.redeem(numberOfAssets, address, address);
-                setTransactionHash(redeemTx.hash);
-                await redeemTx.wait();
-                setSnackbarMessage('Tokens redeemed successfully!');
-                setSnackbarSeverity('success');
             } else if (action === 'liquidate') {
-                const liquidateTx = await vaultContract.liquidate(numberOfAssets);
-                setTransactionHash(liquidateTx.hash);
-                await liquidateTx.wait();
-                setSnackbarMessage('Assets liquidated successfully!');
-                setSnackbarSeverity('success');
+                const isLiquidator = await vaultContract.isLiquidator(address);
+                console.log("isLiquidator: ", isLiquidator);
+                if (!isLiquidator) {
+                    // show dialog to say wallet is not liquidator
+                    setSnackbarMessage('Wallet is not a liquidator');
+                    setSnackbarSeverity('error');
+                    return;
+                } else {
+                    const liquidateTx = await vaultContract.liquidate(numberOfAssets);
+                    setTransactionHash(liquidateTx.hash);
+                    await liquidateTx.wait();
+                    setSnackbarMessage('Assets liquidated successfully!');
+                    setSnackbarSeverity('success');
+                }
             }
 
             setStep(3); // Step 3: Transaction confirmed

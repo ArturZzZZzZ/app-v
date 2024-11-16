@@ -32,10 +32,17 @@ const VaultAdmin = () => {
             const ethersProvider = new ethers.BrowserProvider(walletProvider);
             const signer = await ethersProvider.getSigner();
             const vaultContract = new ethers.Contract(VaultAddress, VaultABI, signer);
-            const tx = await vaultContract[action](inputValue);
-            await tx.wait();
-            setSnackbar({ open: true, message: `${action} completed successfully!`, severity: 'success' });
-            setInputValue(''); // Reset input field
+
+            const isAdmin = await vaultContract.isAdmin(inputValue);
+            console.log('isAdmin:', isAdmin);
+            if (isAdmin) {
+                const tx = await vaultContract[action](inputValue);
+                await tx.wait();
+                setSnackbar({ open: true, message: `${action} completed successfully!`, severity: 'success' });
+                setInputValue(''); // Reset input field
+            } else {
+                setSnackbar({ open: true, message: 'Wallet address is not an admin.', severity: 'error' });
+            }
         } catch (error) {
             console.error(`Failed to ${action.toLowerCase()}:`, error);
             setSnackbar({ open: true, message: `Error: ${error.message || 'Transaction failed.'}`, severity: 'error' });
@@ -61,8 +68,8 @@ const VaultAdmin = () => {
                             activeTab === 0
                                 ? 'Redeemer Wallet Address'
                                 : activeTab === 1
-                                ? 'New Admin Wallet Address'
-                                : 'Liquidator Wallet Address'
+                                    ? 'New Admin Wallet Address'
+                                    : 'Liquidator Wallet Address'
                         }
                         value={inputValue}
                         onChange={(e) => setInputValue(e.target.value)}
@@ -78,8 +85,8 @@ const VaultAdmin = () => {
                                 activeTab === 0
                                     ? 'addRedeemer'
                                     : activeTab === 1
-                                    ? 'changeAdmin'
-                                    : 'addLiquidator'
+                                        ? 'changeAdmin'
+                                        : 'addLiquidator'
                             )
                         }
                         disabled={loading || !inputValue}

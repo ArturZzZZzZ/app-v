@@ -7,7 +7,7 @@ import theme from './utils/theme';
 import WalletDisplay from './components/WalletDisplay/WalletDisplay';
 import { blockchainInfo } from './utils/globals';
 import Bridge from './components/Bridge/Bridge';
-import SecuritizeCreditVault from './components/SecuritizeCreditVault/components/SecuritizeCreditVault';
+import SecuritizeCreditVault from './components/SecuritizeCreditVault/SecuritizeCreditVault';
 
 import { BRIDGE_PRODUCTION_VERSION, VAULT_PRODUCTION_VERSION, TEST_VERSION } from './utils/globals';
 import { useAppContext } from './utils/AppContext';
@@ -101,7 +101,8 @@ const App = () => {
               </Button>
             ))}
           </Box>
-          {TEST_VERSION && selectedView === views.findIndex(view => view.label === "Bridge") && (
+          {/* {TEST_VERSION && selectedView === views.findIndex(view => view.label === "Bridge") && ( */}
+          {TEST_VERSION && (
             <Box sx={{ display: 'flex', alignItems: 'center', gap: 1 }}>
               <Typography variant="body2">
                 {showMainNets ? 'Main Nets' : 'Test Nets'}

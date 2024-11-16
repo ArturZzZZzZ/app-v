@@ -80,12 +80,12 @@ export const blockchainInfo = {
   polygon: {
     mainnet: true,
     name: "Polygon",
-    nativeCurrencySymbol: "MATIC",
+    nativeCurrencySymbol: "POL",
     chainId: 137,
     rpcUrl: "https://polygon-mainnet.infura.io/v3/" + INFURA_PROJECT_ID,
     icon: polygonIcon, // Variable representing the Polygon icon
-    vaultAddress: "0x07a36C630e3F072637da3445Da733B29958D8cAB",
-    vaultAssetAddress: "0x7712c34205737192402172409a8F7ccef8aA2AEc",
+    vaultAddress: "0x4C1e5e780269186A4FBb31c913b11B1a8922B830",
+    vaultAssetAddress: "0x2893Ef551B6dD69F661Ac00F11D93E5Dc5Dc0e99",
     wormholeChainId: 5,
     bridgeContractAddress: "0xcbB5B950A76B82Ec7982bABa99F5D4a92bA2288E",
     assets: [
@@ -100,7 +100,7 @@ export const blockchainInfo = {
   polygonAmoy: {
     mainnet: false,
     name: "Polygon Amoy",
-    nativeCurrencySymbol: "MATIC",
+    nativeCurrencySymbol: "POL",
     chainId: 80002,
     rpcUrl: "https://rpc-amoy.polygon.technology",
     icon: polygonIcon,
@@ -188,6 +188,8 @@ export const blockchainInfo = {
     chainId: 43113,
     rpcUrl: "https://avalanche-fuji.infura.io/v3/" + INFURA_PROJECT_ID,
     icon: avalancheIcon, // Same variable for Fuji testnet
+    vaultAddress:"0xd7aa8784Ca4E234332cEe8f036434DE82651B992",
+    vaultAssetAddress: "0x3454B9699fe19cf9219A3fe9D1F9956676eBA7Db",
     wormholeChainId: 6,
     // bridgeContractAddress: "0xA11e9c666ED79456951807334B290e0ee422D215",
     // bridgeContractAddress: "0x9281F9c872803cb6C5A3576dFba7210F23Ce24E4",

@@ -1,70 +1,3 @@
-// import React, { useState } from 'react';
-// import { useSwitchNetwork } from '@web3modal/ethers/react';
-// import { blockchainInfo } from '../../../utils/globals'; // Import blockchain info
-
-// import { useAppContext } from '../../../utils/AppContext'; // Import AppContext.js
-
-// function BlockchainSwitcher() {
-//     const [selectedChainId, setSelectedChainId] = useState('');
-//     const { switchNetwork } = useSwitchNetwork();
-//     const { vaultAddress, setVaultAddress } = useAppContext();
-//     const { vaultAssetAddress, setVaultAssetAddress } = useAppContext();
-//     const { TargetBlockchainChainId, setTargetBlockchainChainId } = useAppContext();
-
-//     const handleChange = async (event) => {
-//         const chainKey = event.target.value;
-//         const chain = blockchainInfo[chainKey];
-
-//         if (!chain) {
-//             console.error('Invalid chain selected');
-//             return;
-//         }
-
-//         try {
-//             await switchNetwork(chain.chainId);
-//             setSelectedChainId(chainKey);
-//             setVaultAddress(chain.vaultAddress); // Set the vault address
-//             setVaultAssetAddress(chain.vaultAssetAddress); // Set the vault asset address
-//             setTargetBlockchainChainId(chain.chainId); // Set the target blockchain chain ID
-
-//             console.group("Switched Network");
-//             console.log(`Switched to chain: ${chain.name} (ID: ${chain.chainId})`);
-//             console.log(`Vault Address: ${chain.vaultAddress}`);
-//             console.log(`Vault Asset: ${chain.vaultAssetAddress}`);
-//             console.log(`Target Blockchain Chain ID: ${chain.chainId}`);
-//             console.groupEnd();
-
-//         } catch (error) {
-//             console.error('Error switching network:', error);
-//         }
-//     };
-
-//     // Filter blockchains that have a vaultAddress
-//     const filteredBlockchains = Object.entries(blockchainInfo).filter(
-//         ([, chain]) => chain.vaultAddress
-//     );
-
-//     return (
-//         <div>
-//             <label htmlFor="blockchain-selector">Select Blockchain:</label>
-//             <select
-//                 id="blockchain-selector"
-//                 value={selectedChainId}
-//                 onChange={handleChange}
-//             >
-//                 <option value="">Select a Blockchain</option>
-//                 {filteredBlockchains.map(([chainKey, chain]) => (
-//                     <option key={chainKey} value={chainKey}>
-//                         {chain.name}
-//                     </option>
-//                 ))}
-//             </select>
-//         </div>
-//     );
-// }
-
-// export default BlockchainSwitcher;
-
 import React, { useState } from 'react';
 import { Box, FormControl, InputLabel, MenuItem, Select, Typography, CardMedia } from '@mui/material';
 import { blockchainInfo } from '../../../utils/globals'; // Import blockchain info
@@ -80,9 +13,12 @@ function BlockchainSwitcher() {
     const { TargetBlockchainChainId, setTargetBlockchainChainId } = useAppContext();
     const [selectedChain, setSelectedChain] = useState('');
 
+    const { showMainNets } = useAppContext();
+
     // Filter blockchains with a vaultAddress
     const availableBlockchains = Object.entries(blockchainInfo).filter(
-        ([, chain]) => chain.vaultAddress
+        ([, chain]) => chain.vaultAddress &&
+            chain.mainnet === showMainNets // false: Testing mode: only show testnets
     );
 
     const handleChange = async (event) => {
