@@ -22,8 +22,8 @@ import celoIcon from '../assets/Celo.svg'
 
 // ONLY ONE OF THE FOLLOWING VARIABLES SHOULD BE TRUE
 export const BRIDGE_PRODUCTION_VERSION = false;
-export const VAULT_PRODUCTION_VERSION = true;
-export const TEST_VERSION = false;
+export const VAULT_PRODUCTION_VERSION = false;
+export const TEST_VERSION = true;
 
 const INFURA_PROJECT_ID = 'ac240982f9804e358d1f59fc60a5c451';
 

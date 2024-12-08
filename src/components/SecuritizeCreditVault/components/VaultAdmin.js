@@ -5,6 +5,7 @@ import { Container, Paper, Typography, Box, TextField, Button, CircularProgress,
 import { useWeb3ModalProvider, useWeb3ModalAccount } from '@web3modal/ethers/react';
 import { ethers } from 'ethers';
 import { useAppContext } from '../../../utils/AppContext'; // Import AppContext.js
+import { add } from 'date-fns';
 
 const VaultAdmin = () => {
     const { walletProvider } = useWeb3ModalProvider();
@@ -18,6 +19,9 @@ const VaultAdmin = () => {
     const { TargetBlockchainChainId, setTargetBlockchainChainId } = useAppContext();
     const AssetAddress = vaultAssetAddress;
     const VaultAddress = vaultAddress;
+
+    const { address } = useWeb3ModalAccount();
+
 
     const handleAction = async (action) => {
         if (!inputValue) {
@@ -33,7 +37,7 @@ const VaultAdmin = () => {
             const signer = await ethersProvider.getSigner();
             const vaultContract = new ethers.Contract(VaultAddress, VaultABI, signer);
 
-            const isAdmin = await vaultContract.isAdmin(inputValue);
+            const isAdmin = await vaultContract.isAdmin(address);
             console.log('isAdmin:', isAdmin);
             if (isAdmin) {
                 const tx = await vaultContract[action](inputValue);
