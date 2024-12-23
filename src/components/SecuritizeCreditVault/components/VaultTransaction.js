@@ -82,14 +82,6 @@ function VaultTransaction() {
                 setSnackbarMessage('Tokens deposited successfully!');
                 setSnackbarSeverity('success');
             } else if (action === 'redeem') {
-                const isRedeemer = await vaultContract.isRedeemer(address);
-                const isAdmin = await vaultContract.isAdmin(address);
-                if (!isRedeemer && isAdmin) {
-                    const approveTx = await vaultContract.addRedeemer(address);
-                    await approveTx.wait();
-                    setSnackbarMessage('Wallet added as redeemer. Redeeming...');
-                    setSnackbarOpen(true);
-                }
                 const redeemTx = await vaultContract.redeem(numberOfAssets, address, address);
                 setTransactionHash(redeemTx.hash);
                 await redeemTx.wait();
