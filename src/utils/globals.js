@@ -22,8 +22,8 @@ import celoIcon from '../assets/Celo.svg'
 
 // ONLY ONE OF THE FOLLOWING VARIABLES SHOULD BE TRUE
 export const BRIDGE_PRODUCTION_VERSION = false;
-export const VAULT_PRODUCTION_VERSION = false;
-export const TEST_VERSION = true;
+export const VAULT_PRODUCTION_VERSION = true;
+export const TEST_VERSION = false;
 
 const INFURA_PROJECT_ID = 'ac240982f9804e358d1f59fc60a5c451';
 
@@ -54,8 +54,9 @@ export const blockchainInfo = {
     chainId: 1,
     rpcUrl: "https://mainnet.infura.io/v3/" + INFURA_PROJECT_ID, // Replace with your RPC URL
     icon: ethereumIcon, // Variable representing the Ethereum icon
-    vaultAddress: "0x07a36C630e3F072637da3445Da733B29958D8cAB",
-    vaultAssetAddress: "0x7712c34205737192402172409a8F7ccef8aA2AEc",
+    // BUIDL
+    // vaultAddress: "0x07a36C630e3F072637da3445Da733B29958D8cAB",
+    // vaultAssetAddress: "0x7712c34205737192402172409a8F7ccef8aA2AEc",
     wormholeChainId: 2,
     bridgeContractAddress: "0xcbB5B950A76B82Ec7982bABa99F5D4a92bA2288E",
     assets: [
@@ -84,8 +85,13 @@ export const blockchainInfo = {
     chainId: 137,
     rpcUrl: "https://polygon-mainnet.infura.io/v3/" + INFURA_PROJECT_ID,
     icon: polygonIcon, // Variable representing the Polygon icon
-    vaultAddress: "0x4C1e5e780269186A4FBb31c913b11B1a8922B830",
-    vaultAssetAddress: "0x2893Ef551B6dD69F661Ac00F11D93E5Dc5Dc0e99",
+    // BUIDL
+    // vaultAddress: "0x4C1e5e780269186A4FBb31c913b11B1a8922B830",
+    // vaultAssetAddress: "0x2893Ef551B6dD69F661Ac00F11D93E5Dc5Dc0e99",
+    // SCOPE
+    vaultAddress: "0xA482Bec6614f3b923cC0079D5C27EE70B5791c5C",
+    vaultAssetAddress: "0x4C5cA366e26409845624E29B62C388a06961A792",
+
     wormholeChainId: 5,
     bridgeContractAddress: "0xcbB5B950A76B82Ec7982bABa99F5D4a92bA2288E",
     assets: [
@@ -168,8 +174,9 @@ export const blockchainInfo = {
     chainId: 43114,
     rpcUrl: "https://avalanche-mainnet.infura.io/v3/" + INFURA_PROJECT_ID,
     icon: avalancheIcon, // Variable representing the Avalanche icon
-    vaultAddress: "0xaEb1FA0853c7C98EAb10fcF0EA669aE3d07FBB10",
-    vaultAssetAddress: "0x53FC82f14F009009b440a706e31c9021E1196A2F",
+    // BUIDL
+    // vaultAddress: "0xaEb1FA0853c7C98EAb10fcF0EA669aE3d07FBB10",
+    // vaultAssetAddress: "0x53FC82f14F009009b440a706e31c9021E1196A2F",
     wormholeChainId: 6,
     bridgeContractAddress: "0xcbB5B950A76B82Ec7982bABa99F5D4a92bA2288E",
     assets: [
@@ -360,9 +367,16 @@ export const blockchainInfo = {
 // export const RepresentationTokenName = "sNOV5";
 // export const TargetBlockchainChainId = 43113;
 
-// For Vault in Avalanche Production
-export const VaultAddress = "0xaEb1FA0853c7C98EAb10fcF0EA669aE3d07FBB10";
-export const AssetAddress = "0x53FC82f14F009009b440a706e31c9021E1196A2F";
-export const AssetName = "BUIDL";
-export const RepresentationTokenName = "sBUIDL";
-export const TargetBlockchainChainId = 43114;
+// // For Vault in Avalanche Production
+// export const VaultAddress = "0xaEb1FA0853c7C98EAb10fcF0EA669aE3d07FBB10";
+// export const AssetAddress = "0x53FC82f14F009009b440a706e31c9021E1196A2F";
+// export const AssetName = "BUIDL";
+// export const RepresentationTokenName = "sBUIDL";
+// export const TargetBlockchainChainId = 43114;
+
+// For Vault in Poloygon Production (sBUIDL)
+export const VaultAddress = "0xA482Bec6614f3b923cC0079D5C27EE70B5791c5C";
+export const AssetAddress = "0x4C5cA366e26409845624E29B62C388a06961A792";
+export const AssetName = "HLSCOPE";
+export const RepresentationTokenName = "sHLSCOPE";
+export const TargetBlockchainChainId = 137;
