@@ -129,61 +129,130 @@ const Bridge = ({ network1, network2 }) => {
         }
     }
 
+    // const isBusinessHoursInNY = () => {
+    //     const timeZone = 'America/New_York';
+    //     // const hd = new Holidays('US'); // Initialize holidays for the US
+    //     const hd = new Holidays("US","NY"); // Initialize holidays for the US
+    //     // console.log(hd.getStates("US"));
+    //     console.log("Holidays: ", hd.getHolidays());
+
+    //     // Get the current date and time in NY timezone
+    //     const now = new Date();
+    //     const nyTimeStr = formatInTimeZone(now, timeZone, "yyyy-MM-dd'T'HH:mm:ssXXX");
+    //     console.log("NY Time: ", nyTimeStr);
+
+    //     // Get "current date + 9 hours" in NY timezone
+    //     const nowPlus9Hours = new Date(now.getTime() + 9 * 60 * 60 * 1000);
+    //     const currentDatePlus9Str = formatInTimeZone(nowPlus9Hours, timeZone, 'yyyy-MM-dd');
+    //     console.log("Current Date + 9 Hours: ", currentDatePlus9Str);
+
+    //     // Check if "current date + 9 hours" is a holiday
+    //     if (hd.isHoliday(currentDatePlus9Str)) {
+    //         console.log("It's a holiday based on +9 hours logic.");
+    //         return false;
+    //     } else {
+    //         console.log("It's not a holiday based on +9 hours logic.");
+    //     }
+
+    //     // Check if today is Sunday and before 3 PM
+    //     const dayOfWeek = formatInTimeZone(now, timeZone, 'i'); // 'i' returns day of the week (1-7), where 1 is Monday
+    //     console.log("Day of the Week: ", dayOfWeek);
+    //     if (dayOfWeek == 7) { // Sunday
+    //         const sundayOpenTimeStr = `${currentDatePlus9Str}T15:00:00-05:00`;
+    //         const sundayOpenTime = parseISO(sundayOpenTimeStr);
+    //         if (isBefore(now, sundayOpenTime)) {
+    //             console.log("It's Sunday and before 3 PM.");
+    //             return false;
+    //         }
+    //     }
+
+    //     // Define restricted hours (2:40 PM - 3 PM every day)
+    //     const currentDateStr = formatInTimeZone(now, timeZone, 'yyyy-MM-dd');
+    //     const startRestrictedHoursStr = `${currentDateStr}T14:40:00-05:00`;
+    //     const endRestrictedHoursStr = `${currentDateStr}T15:00:00-05:00`;
+    //     const startRestrictedHours = parseISO(startRestrictedHoursStr);
+    //     const endRestrictedHours = parseISO(endRestrictedHoursStr);
+
+    //     if (isAfter(now, startRestrictedHours) && isBefore(now, endRestrictedHours)) {
+    //         console.log("Currently within restricted hours (2:40 PM - 3 PM).");
+    //         return false;
+    //     }
+
+    //     // All checks passed
+    //     return true;
+    // };
+
+
     const isBusinessHoursInNY = () => {
         const timeZone = 'America/New_York';
-        const hd = new Holidays('US'); // Initialize holidays for the US
-        console.log("Holidays: ", hd.getHolidays(2024));
 
-        // Get the current date and time in NY timezone as a formatted string
+        // Define the list of custom holidays (hardcoded)
+        const customHolidays = [
+            '2025-01-01', // New Year's Day
+            '2025-01-09', // Jimmy Carter Memoriam
+            '2025-01-20', // MLK Day
+            '2025-02-17', // President's Day
+            '2025-04-18', // Good Friday
+            '2025-05-26', // Memorial Day
+            '2025-06-19', // Juneteenth
+            '2025-07-04', // Independence Day
+            '2025-09-01', // Labor Day
+            '2025-10-13', // Columbus Day
+            '2025-11-11', // Veterans Day
+            '2025-11-27', // Thanksgiving
+            '2025-12-25', // Christmas
+        ];
+
+        const isCustomHoliday = (date) => {
+            // Check if the provided date (in 'yyyy-MM-dd' format) is in the list of holidays
+            return customHolidays.includes(date);
+        };
+
+        // Get the current date and time in NY timezone
         const now = new Date();
         const nyTimeStr = formatInTimeZone(now, timeZone, "yyyy-MM-dd'T'HH:mm:ssXXX");
         console.log("NY Time: ", nyTimeStr);
 
-        // Check if today is a holiday
-        const currentDateStr = formatInTimeZone(now, timeZone, 'yyyy-MM-dd');
-        console.log("Current Date: ", currentDateStr);
-        if (hd.isHoliday(currentDateStr)) return false;
+        // Get "current date + 9 hours" in NY timezone
+        const nowPlus9Hours = new Date(now.getTime() + 9 * 60 * 60 * 1000);
+        const currentDatePlus9Str = formatInTimeZone(nowPlus9Hours, timeZone, 'yyyy-MM-dd');
+        console.log("Current Date + 9 Hours: ", currentDatePlus9Str);
 
-        // Check if today is a business day (Monday to Friday)
-        const dayOfWeek = formatInTimeZone(now, timeZone, 'i'); // 'i' returns day of the week (1-7), where 1 is Monday
-        console.log("Day of the Week: ", dayOfWeek);
-        if (dayOfWeek > 5) return false;
-
-        // Define business hours (9 AM - 5 PM in NY time)
-        const startBusinessHoursStr = `${currentDateStr}T09:00:00-05:00`;
-        const endBusinessHoursStr = `${currentDateStr}T17:00:00-05:00`;
-        const startBusinessHours = parseISO(startBusinessHoursStr);
-        const endBusinessHours = parseISO(endBusinessHoursStr);
-
-        console.log("Start Business Hours: ", startBusinessHours);
-        console.log("End Business Hours: ", endBusinessHours);
-
-        // Check if within general business hours
-        if (!(isAfter(now, startBusinessHours) && isBefore(now, endBusinessHours))) {
+        // Check if "current date + 9 hours" is a holiday
+        if (isCustomHoliday(currentDatePlus9Str)) {
+            console.log("It's a holiday based on +9 hours logic.");
             return false;
+        } else {
+            console.log("It's not a holiday based on +9 hours logic.");
         }
 
-        // Define restricted time period (2:45 PM - 3:45 PM in NY time)
-        const startRestrictedHoursStr = `${currentDateStr}T14:45:00-05:00`;
-        const endRestrictedHoursStr = `${currentDateStr}T15:45:00-05:00`;
+        // Check if today is Sunday and before 3 PM
+        const dayOfWeek = formatInTimeZone(now, timeZone, 'i'); // 'i' returns day of the week (1-7), where 1 is Monday
+        console.log("Day of the Week: ", dayOfWeek);
+        if (dayOfWeek == 7) { // Sunday
+            const sundayOpenTimeStr = `${currentDatePlus9Str}T15:00:00-05:00`;
+            const sundayOpenTime = parseISO(sundayOpenTimeStr);
+            if (isBefore(now, sundayOpenTime)) {
+                console.log("It's Sunday and before 3 PM.");
+                return false;
+            }
+        }
+
+        // Define restricted hours (2:40 PM - 3 PM every day)
+        const currentDateStr = formatInTimeZone(now, timeZone, 'yyyy-MM-dd');
+        const startRestrictedHoursStr = `${currentDateStr}T14:40:00-05:00`;
+        const endRestrictedHoursStr = `${currentDateStr}T15:00:00-05:00`;
         const startRestrictedHours = parseISO(startRestrictedHoursStr);
         const endRestrictedHours = parseISO(endRestrictedHoursStr);
 
-        console.log("Start Restricted Hours: ", startRestrictedHours);
-        console.log("End Restricted Hours: ", endRestrictedHours);
-
-        // Check if within restricted hours
         if (isAfter(now, startRestrictedHours) && isBefore(now, endRestrictedHours)) {
+            console.log("Currently within restricted hours (2:40 PM - 3 PM).");
             return false;
         }
 
+        // All checks passed
         return true;
     };
-
-    console.groupCollapsed('Holidays Group');
-    const businessHours = isBusinessHoursInNY();
-    console.log(`%cBusiness Hours in NY: ${businessHours}`, 'color: red; background-color: yellow;');
-    console.groupEnd();
 
     useEffect(() => {
         setFromNetwork(network1);
@@ -232,68 +301,73 @@ const Bridge = ({ network1, network2 }) => {
 
     async function handleTransaction(fromNetwork, toNetwork) {
         try {
-            // if (!isBusinessHoursInNY && !BRIDGE_PRODUCTION_VERSION) {
-            //     setNotBusinessHoursDialogOpen(true);
-            //     return;
-            // }
+            console.groupCollapsed('Holidays Group');
+            const businessHours = isBusinessHoursInNY();
+            console.log(`%cBusiness Hours in NY: ${businessHours}`, 'color: red; background-color: yellow;');
+            console.groupEnd();
+
+            if (businessHours === false) {
+                setNotBusinessHoursDialogOpen(true);
+                return;
+            }
             console.group('Handling transaction');
             setLoading(true);  // Start loading
             setSnackbarMessage('Initiating transaction...');
             setSnackbarSeverity('info');
             setSnackbarOpen(true);
-    
+
             let contractSourceAddress = fromNetwork.bridgeContractAddress;
             let contractTargetAddress = toNetwork.bridgeContractAddress;
             let sourceChainId = fromNetwork.chainId;
             let targetChainId = toNetwork.chainId;
             let wormholeSourceChainId = fromNetwork.wormholeChainId;
             let wormholeTargetChainId = toNetwork.wormholeChainId;
-    
+
             // Check and switch network if needed
             if (sourceChainId !== chainId) {
                 setButtonLabelStatus("Switching to correct blockchain");
                 await switchNetwork(sourceChainId);
             }
-    
+
             const balance = await getNativeTokenBalanceWithBackoff();
             console.log("Native Balance: ", balance);
-    
+
             // getethersProvider & Signer as well as the Bridge Contract
             const ethersProvider = await new ethers.BrowserProvider(walletProvider);
             await ethersProvider.send("eth_requestAccounts", []);
             const signer = await ethersProvider.getSigner();
             const bridgeContract = await new ethers.Contract(contractSourceAddress, BridgeABI, signer);
-    
+
             // Get the quote for the transaction
             setButtonLabelStatus("Getting quote");
             const numberOfAssets = ethers.parseUnits(amount.toString(), 6);
-    
+
             const quote = await bridgeContract.quoteBridge(wormholeTargetChainId);
             setQuote(quote);
-    
+
             setSnackbarMessage('Processing transaction...');
             setSnackbarOpen(true);
-    
+
             // Check if the native balance is sufficient
             if (balance < quote) {
                 setBalanceDialogOpen(true);  // Show dialog if native balance is insufficient
                 setLoading(false);
                 return;  // Cancel the transaction
             }
-    
+
             // Sign and send the bridging transaction
             setButtonLabelStatus(`Signing bridging transaction. Estimated cost: ${formatUnits(quote, 18)} ${fromNetwork.nativeCurrencySymbol}`);
             const bridgeTx = await bridgeContract.bridgeDSTokens(wormholeTargetChainId, numberOfAssets, {
                 value: quote, // Pass the quote value as the payment
             });
             await bridgeTx.wait();
-    
+
             setSnackbarMessage('Transaction successful!');
             setSnackbarSeverity('success');
-    
+
             setTxHash(bridgeTx.hash);
             setDialogOpen(true);  // Open the transaction dialog
-    
+
         } catch (err) {
             console.error("Transaction failed: ", err);
             const errorMessage = err.info?.error?.message || err.message || "Transaction failed.";
