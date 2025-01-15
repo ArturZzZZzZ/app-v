@@ -1,0 +1,34 @@
+# Bitbucket Pipeline para Despliegue de Sitio Estático React en S3
+
+# Variables de Entorno:
+# - AWS_ACCESS_KEY_ID: Configurado en las Variables del Repositorio
+# - AWS_SECRET_ACCESS_KEY: Configurado en las Variables del Repositorio
+# - AWS_DEFAULT_REGION: Región donde se encuentra tu bucket S3 (e.g., us-east-1)
+# - S3_BUCKET: Nombre de tu bucket S3 (e.g., buidl-bridge-securitize-prod)
+# - CLOUDFRONT_DISTRIBUTION_ID: ID de la distribución de CloudFront para invalidar caché
+
+image: node:18
+
+pipelines:
+  default:
+    - step:
+        name: Build React App
+        script:
+          # Desactivar source maps para evitar errores ENOENT
+          - apt-get update && apt-get install -y sudo
+          - echo "Instalando AWS CLI"
+          - curl "https://awscli.amazonaws.com/awscli-exe-linux-x86_64.zip" -o "awscliv2.zip"
+          - unzip awscliv2.zip
+          - sudo ./aws/install
+          - aws --version
+          - echo "AWS CLI instalada correctamente"
+          - echo "Construyendo la aplicación..."
+          - npm ci
+          - export GENERATE_SOURCEMAP=false
+          - npm run build
+          - echo "Desplegando archivos al bucket S3..."
+          - aws s3 sync build/ s3://$S3_BUCKET/ --delete
+          - echo "Despliegue a S3 completado con éxito."
+          - echo "Invalidando caché de CloudFront..."
+          - aws cloudfront create-invalidation --distribution-id $CLOUDFRONT_DISTRIBUTION_ID --paths "/*"
+          - echo "Invalidación de caché completada."
