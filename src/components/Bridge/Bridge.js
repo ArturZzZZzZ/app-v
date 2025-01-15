@@ -92,6 +92,7 @@ const Bridge = ({ network1, network2 }) => {
         }
     }
 
+    // Function to get the native token balance with exponential backoff
     async function getNativeTokenBalanceWithBackoff(retries = 5, delay = 1000) {
         try {
             return await getNativeTokenBalance();
@@ -128,60 +129,6 @@ const Bridge = ({ network1, network2 }) => {
             return (0n);
         }
     }
-
-    // const isBusinessHoursInNY = () => {
-    //     const timeZone = 'America/New_York';
-    //     // const hd = new Holidays('US'); // Initialize holidays for the US
-    //     const hd = new Holidays("US","NY"); // Initialize holidays for the US
-    //     // console.log(hd.getStates("US"));
-    //     console.log("Holidays: ", hd.getHolidays());
-
-    //     // Get the current date and time in NY timezone
-    //     const now = new Date();
-    //     const nyTimeStr = formatInTimeZone(now, timeZone, "yyyy-MM-dd'T'HH:mm:ssXXX");
-    //     console.log("NY Time: ", nyTimeStr);
-
-    //     // Get "current date + 9 hours" in NY timezone
-    //     const nowPlus9Hours = new Date(now.getTime() + 9 * 60 * 60 * 1000);
-    //     const currentDatePlus9Str = formatInTimeZone(nowPlus9Hours, timeZone, 'yyyy-MM-dd');
-    //     console.log("Current Date + 9 Hours: ", currentDatePlus9Str);
-
-    //     // Check if "current date + 9 hours" is a holiday
-    //     if (hd.isHoliday(currentDatePlus9Str)) {
-    //         console.log("It's a holiday based on +9 hours logic.");
-    //         return false;
-    //     } else {
-    //         console.log("It's not a holiday based on +9 hours logic.");
-    //     }
-
-    //     // Check if today is Sunday and before 3 PM
-    //     const dayOfWeek = formatInTimeZone(now, timeZone, 'i'); // 'i' returns day of the week (1-7), where 1 is Monday
-    //     console.log("Day of the Week: ", dayOfWeek);
-    //     if (dayOfWeek == 7) { // Sunday
-    //         const sundayOpenTimeStr = `${currentDatePlus9Str}T15:00:00-05:00`;
-    //         const sundayOpenTime = parseISO(sundayOpenTimeStr);
-    //         if (isBefore(now, sundayOpenTime)) {
-    //             console.log("It's Sunday and before 3 PM.");
-    //             return false;
-    //         }
-    //     }
-
-    //     // Define restricted hours (2:40 PM - 3 PM every day)
-    //     const currentDateStr = formatInTimeZone(now, timeZone, 'yyyy-MM-dd');
-    //     const startRestrictedHoursStr = `${currentDateStr}T14:40:00-05:00`;
-    //     const endRestrictedHoursStr = `${currentDateStr}T15:00:00-05:00`;
-    //     const startRestrictedHours = parseISO(startRestrictedHoursStr);
-    //     const endRestrictedHours = parseISO(endRestrictedHoursStr);
-
-    //     if (isAfter(now, startRestrictedHours) && isBefore(now, endRestrictedHours)) {
-    //         console.log("Currently within restricted hours (2:40 PM - 3 PM).");
-    //         return false;
-    //     }
-
-    //     // All checks passed
-    //     return true;
-    // };
-
 
     const isBusinessHoursInNY = () => {
         const timeZone = 'America/New_York';
@@ -226,11 +173,11 @@ const Bridge = ({ network1, network2 }) => {
             console.log("It's not a holiday based on +9 hours logic.");
         }
 
-        // Check if today is Sunday and before 3 PM
+        // Check if today is Sunday and before 3:05 PM
         const dayOfWeek = formatInTimeZone(now, timeZone, 'i'); // 'i' returns day of the week (1-7), where 1 is Monday
         console.log("Day of the Week: ", dayOfWeek);
         if (dayOfWeek == 7) { // Sunday
-            const sundayOpenTimeStr = `${currentDatePlus9Str}T15:00:00-05:00`;
+            const sundayOpenTimeStr = `${currentDatePlus9Str}T15:05:00-05:00`;
             const sundayOpenTime = parseISO(sundayOpenTimeStr);
             if (isBefore(now, sundayOpenTime)) {
                 console.log("It's Sunday and before 3 PM.");
@@ -238,10 +185,10 @@ const Bridge = ({ network1, network2 }) => {
             }
         }
 
-        // Define restricted hours (2:40 PM - 3 PM every day)
+        // Define restricted hours (2:40 PM - 3:05 PM every day)
         const currentDateStr = formatInTimeZone(now, timeZone, 'yyyy-MM-dd');
         const startRestrictedHoursStr = `${currentDateStr}T14:40:00-05:00`;
-        const endRestrictedHoursStr = `${currentDateStr}T15:00:00-05:00`;
+        const endRestrictedHoursStr = `${currentDateStr}T15:05:00-05:00`;
         const startRestrictedHours = parseISO(startRestrictedHoursStr);
         const endRestrictedHours = parseISO(endRestrictedHoursStr);
 
@@ -299,6 +246,12 @@ const Bridge = ({ network1, network2 }) => {
 
     }, [fromNetwork, toNetwork, network1, network2]);
 
+    // Function to handle the bridging transaction
+    // This function is called when the user clicks the "Bridge" button
+    // It handles the entire transaction process, including network switching, balance checks, and transaction signing
+    // It also displays feedback messages to the user via Snackbars
+    // It also displays dialogs for insufficient balance and transaction progress
+    // It also checks if the transaction is initiated during business hours
     async function handleTransaction(fromNetwork, toNetwork) {
         try {
             console.groupCollapsed('Holidays Group');
