@@ -15,23 +15,22 @@ import CryptoInput from './components/CryptoInput';
 import TransactionProgressDialog from './components/TransactionProgressDialog';
 import InsufficientBalanceDialog from './components/InsufficientBalanceDialog';
 import bridgeStyles from './styles/bridgeStyles';
-import { format, isBefore, isAfter, parseISO } from 'date-fns';
+import { format, isBefore, isAfter, parseISO, set } from 'date-fns';
 import { formatInTimeZone, toDate } from 'date-fns-tz';
 import Holidays from 'date-holidays';
 import NotBusinessDayDialog from './components/NotBusinessDayDialog';
 import { BRIDGE_PRODUCTION_VERSION } from '../../utils/globals';
 
-
 const Bridge = ({ network1, network2 }) => {
     // Asset-related states
     const [amount, setAmount] = useState(0);  // Amount to bridge
+    const [expectedAmount, setExpectedAmount] = useState(0);  // Expected amount to receive after bridging
     const [sourceAssetAddress, setSourceAssetAddress] = useState(network1.assets[0].address);  // Source asset address
     const [targetAssetAddress, setTargetAssetAddress] = useState(network2.assets[0].address);  // Target asset address
     const [sourceAsset, setSourceAsset] = useState(network1.assets[0]);  // Source asset
     const [targetAsset, setTargetAsset] = useState(network2.assets[0]);  // Target asset
     const [sourceAssetBalance, setSourceAssetBalance] = useState(0);  // Balance of source asset
     const [targetAssetBalance, setTargetAssetBalance] = useState(0);  // Balance of target asset
-    const [expectedAmount, setExpectedAmount] = useState(0);  // Expected amount to receive after bridging
 
     // Network-related states
     const [fromNetwork, setFromNetwork] = useState(network1);  // Initial from network
@@ -63,6 +62,7 @@ const Bridge = ({ network1, network2 }) => {
     const { walletProvider } = useWeb3ModalProvider();  // Web3 provider
     const { switchNetwork } = useSwitchNetwork();  // Network switcher function
 
+    const [selectedAsset, setSelectedAsset] = useState(null);
 
     // Snackbar handler
     const handleSnackbarClose = (event, reason) => {
@@ -106,25 +106,53 @@ const Bridge = ({ network1, network2 }) => {
 
 
     // Function to get token balance
-    async function getTokenBalance(network, assetAddress, setBalance) {
+    async function getTokenBalance(network, token, setBalance) {
         if (!isConnected || !walletProvider) {
-            console.log('User disconnected');
+            console.log("User disconnected");
             setBalance(0);
             return;
         }
+
+        if (!token) {
+            console.error("TOKEN IS NULL");
+            return;
+        }
+        console.log("Getting token balance for: ", token.symbol);
+
+        // Find the asset in the network
+        const asset = network.assets.find(a => a.symbol === token.symbol);
+
+        console.log("These are the assets: ", network.assets);
+        if (!asset) {
+            console.error(`Asset ${token.symbol} not found in network ${network.name}.`);
+            setBalance(0);
+            return;
+        } else {
+            console.log("Asset found: ", asset);
+        }
+
         try {
-            console.log("------> Network: ", network);
             const ethersProvider = new ethers.JsonRpcProvider(network.rpcUrl);
             console.log("Ethers Provider: ", ethersProvider);
-            const contract = new Contract(assetAddress, ERC20ABI, ethersProvider);
+
+            const contract = new Contract(asset.address, ERC20ABI, ethersProvider);
             console.log("Contract: ", contract);
+
             const tokenBalance = await contract.balanceOf(address);
+            console.log("<----------------------------------------------------------->");
+            console.log("------> Network: ", network);
+            console.log("------> Asset: ", token);
             console.log("Token Balance: ", tokenBalance);
-            const formattedBalance = ethers.formatUnits(tokenBalance, 6);  // Adjust decimals as needed
+
+            const formattedBalance = ethers.formatUnits(tokenBalance, 6); // Adjust decimals as needed
             console.log("Formatted Balance: ", formattedBalance);
+            console.log("<----------------------------------------------------------->");
+
             setBalance(formattedBalance);
         } catch (error) {
             console.error("Failed to fetch balance: ", error);
+            console.error("Network: ", network);
+            console.error("Asset Symbol: ", token.symbol);
             setBalance(0);
             return (0n);
         }
@@ -201,25 +229,29 @@ const Bridge = ({ network1, network2 }) => {
         return true;
     };
 
+    const getAssetInfo = (network, assetSymbol) => {
+        if (!network || !network.assets) {
+            console.warn("Invalid network object or missing assets array.");
+            return null;
+        }
+
+        // Find the asset by symbol
+        const asset = network.assets.find(asset => asset.symbol === assetSymbol);
+
+        if (!asset) {
+            console.warn(`Asset ${assetSymbol} not found in network ${network.name}.`);
+            return null;
+        }
+
+        return asset;
+    };
+
     useEffect(() => {
         setFromNetwork(network1);
         setToNetwork(network2);
 
     }, [network1, network2]);
 
-    // Fetch token balances on load
-    useEffect(() => {
-        if (fromNetwork?.assets) {
-            setSourceAssetAddress(fromNetwork.assets[0].address);
-            getTokenBalance(fromNetwork, fromNetwork.assets[0].address, setSourceAssetBalance);
-        } else
-            setSourceAssetBalance(0);
-        if (toNetwork?.assets) {
-            setTargetAssetAddress(toNetwork.assets[0].address);
-            getTokenBalance(toNetwork, toNetwork.assets[0].address, setTargetAssetBalance);
-        } else
-            setTargetAssetBalance(0);
-    }, [address, isConnected, fromNetwork, toNetwork]);
 
     // Synchronize amounts after switching or when the amount changes
     useEffect(() => {
@@ -231,20 +263,103 @@ const Bridge = ({ network1, network2 }) => {
         }
     }, [amount, expectedAmount, isSwitched]);
 
-    // Synchronize assets after switching networks
     useEffect(() => {
-        console.log("New Netwoks; changing assets: ");
-        console.log("From Network: ", fromNetwork);
-        console.log("To Network: ", toNetwork);
-        if (isSwitched) {
-            setSourceAsset(toNetwork.assets[0]);
-            setTargetAsset(fromNetwork.assets[0]);
+        console.log("Connected: ", isConnected);
+        if (isConnected) {
+            getTokenBalance(fromNetwork, getAssetInfo(fromNetwork, selectedAsset?.symbol), setSourceAssetBalance);
+            getTokenBalance(toNetwork, getAssetInfo(toNetwork, selectedAsset?.symbol), setTargetAssetBalance);
         } else {
-            setSourceAsset(fromNetwork.assets[0]);
-            setTargetAsset(toNetwork.assets[0]);
+            setSourceAssetBalance(0);
+            setTargetAssetBalance(0);
         }
+    }, [isConnected]);
 
-    }, [fromNetwork, toNetwork, network1, network2]);
+
+    // Synchronize assets after selecting an asset
+    // This effect is triggered when the user selects an asset from the dropdown
+    useEffect(() => {
+        // Function to find networks that support the selected asset
+        // It returns an array of networks that support the asset
+        const findNetworksForAsset = (blockchainInfo, assetSymbol) => {
+            let foundNetworks = [];
+
+            Object.keys(blockchainInfo).forEach(networkKey => {
+                const network = blockchainInfo[networkKey];
+
+                if (network.assets && network.assets.some(asset => asset.symbol === assetSymbol)) {
+                    foundNetworks.push({
+                        name: network.name,
+                        chainId: network.chainId,
+                        nativeCurrency: network.nativeCurrencySymbol,
+                        rpcUrl: network.rpcUrl,
+                        icon: network.icon,
+                    });
+                }
+
+                // Stop searching once we find 2 networks
+                if (foundNetworks.length === 2) {
+                    return;
+                }
+            });
+
+            return foundNetworks;
+        };
+
+        // Function to set the source and target networks based on the selected asset
+        // It sets the source and target networks based on the found networks
+        const setNetworksForAsset = (blockchainInfo, assetSymbol, setSourceNetwork, setTargetNetwork) => {
+            const foundNetworks = findNetworksForAsset(blockchainInfo, assetSymbol);
+            let sourceNetwork = null;
+            let targetNetwork = null;
+
+            if (foundNetworks.length >= 1) {
+                const sourceNetworkKey = Object.keys(blockchainInfo).find(
+                    key => blockchainInfo[key].name === foundNetworks[0].name
+                );
+                setSourceNetwork(blockchainInfo[sourceNetworkKey]);
+                sourceNetwork = blockchainInfo[sourceNetworkKey];
+            }
+
+            if (foundNetworks.length >= 2) {
+                const targetNetworkKey = Object.keys(blockchainInfo).find(
+                    key => blockchainInfo[key].name === foundNetworks[1].name
+                );
+                setTargetNetwork(blockchainInfo[targetNetworkKey]);
+                targetNetwork = blockchainInfo[targetNetworkKey];
+            }
+            return [sourceNetwork, targetNetwork];
+        };
+
+        if (selectedAsset) {
+            console.log("Selected Asset: ", selectedAsset);
+            // Find the networks that support the selected asset
+            const networksWithAsset = findNetworksForAsset(blockchainInfo, selectedAsset?.symbol);
+
+            console.log("++++++++++++++++++++++++++++>  Networks with", selectedAsset?.symbol, " : ", networksWithAsset);
+
+            const nets = setNetworksForAsset(blockchainInfo, selectedAsset?.symbol, setFromNetwork, setToNetwork);
+            setSourceAsset(getAssetInfo(fromNetwork, selectedAsset?.symbol));
+            setTargetAsset(getAssetInfo(toNetwork, selectedAsset?.symbol));
+
+            getTokenBalance(nets[0], getAssetInfo(nets[0], selectedAsset?.symbol), setSourceAssetBalance);
+            getTokenBalance(nets[1], getAssetInfo(nets[1], selectedAsset?.symbol), setTargetAssetBalance);
+        }
+    }, [selectedAsset]);
+
+    useEffect(() => {
+        if (dialogOpen === false)
+            getTokenBalance(fromNetwork, getAssetInfo(fromNetwork, selectedAsset?.symbol), setSourceAssetBalance);
+    }, [fromNetwork, dialogOpen]);
+
+    useEffect(() => {
+        if (dialogOpen === false)
+            getTokenBalance(toNetwork, getAssetInfo(toNetwork, selectedAsset?.symbol), setTargetAssetBalance);
+    }, [toNetwork, dialogOpen]);
+
+    useEffect(() => {
+        setAmount(0);
+        setExpectedAmount(0);
+    }, [fromNetwork, toNetwork, selectedAsset]);
 
     // Function to handle the bridging transaction
     // This function is called when the user clicks the "Bridge" button
@@ -259,21 +374,19 @@ const Bridge = ({ network1, network2 }) => {
             console.log(`%cBusiness Hours in NY: ${businessHours}`, 'color: red; background-color: yellow;');
             console.groupEnd();
 
-            if (businessHours === false) {
-                setNotBusinessHoursDialogOpen(true);
-                return;
-            }
+            // if (businessHours === false) {
+            //     setNotBusinessHoursDialogOpen(true);
+            //     return;
+            // }
             console.group('Handling transaction');
             setLoading(true);  // Start loading
             setSnackbarMessage('Initiating transaction...');
             setSnackbarSeverity('info');
             setSnackbarOpen(true);
 
-            let contractSourceAddress = fromNetwork.bridgeContractAddress;
-            let contractTargetAddress = toNetwork.bridgeContractAddress;
+            let contractSourceAddress = getAssetInfo(fromNetwork, selectedAsset.symbol).bridgeContractAddress;
+            console.log("Contract Source Address: ", contractSourceAddress);
             let sourceChainId = fromNetwork.chainId;
-            let targetChainId = toNetwork.chainId;
-            let wormholeSourceChainId = fromNetwork.wormholeChainId;
             let wormholeTargetChainId = toNetwork.wormholeChainId;
 
             // Check and switch network if needed
@@ -285,16 +398,16 @@ const Bridge = ({ network1, network2 }) => {
             const balance = await getNativeTokenBalanceWithBackoff();
             console.log("Native Balance: ", balance);
 
-            // getethersProvider & Signer as well as the Bridge Contract
-            const ethersProvider = await new ethers.BrowserProvider(walletProvider);
-            await ethersProvider.send("eth_requestAccounts", []);
-            const signer = await ethersProvider.getSigner();
-            const bridgeContract = await new ethers.Contract(contractSourceAddress, BridgeABI, signer);
+            const ethersProvider = new ethers.JsonRpcProvider(fromNetwork.rpcUrl);
 
+            // ethersProvider.on('debug', (info) => {
+            //     console.log("DEBUG EVENT: ", info);
+            // });
+
+            const bridgeContract = new Contract(contractSourceAddress, BridgeABI, ethersProvider);
             // Get the quote for the transaction
             setButtonLabelStatus("Getting quote");
             const numberOfAssets = ethers.parseUnits(amount.toString(), 6);
-
             const quote = await bridgeContract.quoteBridge(wormholeTargetChainId);
             setQuote(quote);
 
@@ -308,9 +421,14 @@ const Bridge = ({ network1, network2 }) => {
                 return;  // Cancel the transaction
             }
 
+            const ethersProviderToSign = await new ethers.BrowserProvider(walletProvider);
+            await ethersProviderToSign.send("eth_requestAccounts", []);
+            const signer = await ethersProviderToSign.getSigner();
+            const bridgeContractToSign = new Contract(contractSourceAddress, BridgeABI, signer);
+
             // Sign and send the bridging transaction
             setButtonLabelStatus(`Signing bridging transaction. Estimated cost: ${formatUnits(quote, 18)} ${fromNetwork.nativeCurrencySymbol}`);
-            const bridgeTx = await bridgeContract.bridgeDSTokens(wormholeTargetChainId, numberOfAssets, {
+            const bridgeTx = await bridgeContractToSign.bridgeDSTokens(wormholeTargetChainId, numberOfAssets, {
                 value: quote, // Pass the quote value as the payment
             });
             await bridgeTx.wait();
@@ -320,7 +438,6 @@ const Bridge = ({ network1, network2 }) => {
 
             setTxHash(bridgeTx.hash);
             setDialogOpen(true);  // Open the transaction dialog
-
         } catch (err) {
             console.error("Transaction failed: ", err);
             const errorMessage = err.info?.error?.message || err.message || "Transaction failed.";
@@ -331,10 +448,7 @@ const Bridge = ({ network1, network2 }) => {
             setLoading(false);  // End loading
             setSnackbarOpen(true);
             setAmount(0);  // Reset the amount after transaction
-            if (walletProvider) {
-                getTokenBalance(fromNetwork, sourceAssetAddress, setSourceAssetBalance);
-                getTokenBalance(toNetwork, targetAssetAddress, setTargetAssetBalance);
-            }
+            setExpectedAmount(0);
             setButtonLabelStatus(null);
             console.groupEnd();
         }
@@ -349,6 +463,7 @@ const Bridge = ({ network1, network2 }) => {
     };
 
 
+
     return (
         <Box sx={bridgeStyles.container}>
             <CryptoInput
@@ -360,8 +475,10 @@ const Bridge = ({ network1, network2 }) => {
                 setAmount={isSwitched ? setExpectedAmount : setAmount}
                 editable={true}
                 label="From:"
-                assetSymbol={isSwitched ? toNetwork.assets[0].symbol : fromNetwork.assets[0].symbol}
-                assetIcon={isSwitched ? toNetwork.assets[0].icon : fromNetwork.assets[0].icon}
+                assetSymbol={selectedAsset?.symbol}
+                assetIcon={selectedAsset?.icon}
+                selectedAsset={selectedAsset}
+                setSelectedAsset={setSelectedAsset}
             />
 
             <Box display="flex" justifyContent="center" marginY={-2} marginBottom={-7}>
@@ -385,8 +502,10 @@ const Bridge = ({ network1, network2 }) => {
                 setAmount={isSwitched ? setAmount : setExpectedAmount}
                 editable={false}
                 label="To:"
-                assetSymbol={isSwitched ? fromNetwork.assets[0].symbol : toNetwork.assets[0].symbol}
-                assetIcon={isSwitched ? fromNetwork.assets[0].icon : toNetwork.assets[0].icon}
+                assetSymbol={selectedAsset?.symbol}
+                assetIcon={selectedAsset?.icon}
+                selectedAsset={selectedAsset}
+                setSelectedAsset={setSelectedAsset}
             />
 
             <Button

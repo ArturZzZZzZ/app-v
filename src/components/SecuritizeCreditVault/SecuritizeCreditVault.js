@@ -16,6 +16,7 @@ import { useSwitchNetwork } from '@web3modal/ethers/react';
 import BlockchainSwitcher from './components/BlockchainSwitcher';
 
 import { useAppContext } from '../../utils/AppContext'; // Import AppContext.js
+import AssetDisplay from '../Bridge/components/AssetDisplay';
 
 
 function SecuritizeCreditVault() {
@@ -36,6 +37,8 @@ function SecuritizeCreditVault() {
   const VaultAddress = vaultAddress;
 
   const isOnCorrectBlockchain = chainId === TargetBlockchainChainId;
+
+  const [selectedAsset, setSelectedAsset] = useState(null);
 
   useEffect(() => {
     if (provider) {
@@ -68,6 +71,7 @@ function SecuritizeCreditVault() {
 
   return (
     <>
+      {/* <AssetDisplay onAssetChange={setSelectedAsset} /> */}
       <BlockchainSwitcher />
       {isOnCorrectBlockchain ? (
         <>

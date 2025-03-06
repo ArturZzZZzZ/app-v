@@ -78,8 +78,22 @@ export const walletConnectTargetBlockchainConfig = [
         rpcUrl: 'https://alfajores-forno.celo-testnet.org'  // Not using Infura
     },
     {
+        chainId: 57073,
+        name: 'Ink ',
+        currency: 'ETH',
+        explorerUrl: 'https://explorer.inkonchain.com/',
+        rpcUrl: "https://ink.drpc.org",
+    },
+    {
+        chainId: 763373,
+        name: 'Ink Sepolia',
+        currency: 'ETH',
+        explorerUrl: 'https://explorer-sepolia.inkonchain.com/',
+        rpcUrl: "https://rpc-gel-sepolia.inkonchain.com",
+    },
+    {
         chainId: 421614,
-        name: 'Arbitrum Sepolia',
+        name: "Arbitrum Sepolia",
         currency: 'ETH',
         explorerUrl: 'https://sepolia.arbiscan.io/',
         rpcUrl: `https://arbitrum-sepolia.infura.io/v3/${INFURA_PROJECT_ID}`
