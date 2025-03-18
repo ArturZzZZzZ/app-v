@@ -24,7 +24,7 @@ const App = () => {
 
 
   const views = TEST_VERSION
-  ? [
+    ? [
       {
         label: "Vault",
         component: <SecuritizeCreditVault />,
@@ -36,34 +36,34 @@ const App = () => {
         ),
       },
     ]
-  : VAULT_PRODUCTION_VERSION
-  ? [
-      {
-        label: "Vault",
-        component: <SecuritizeCreditVault />,
-      },
-    ]
-  : BRIDGE_PRODUCTION_VERSION
-  ? [
-      {
-        label: "BUIDL Bridge",
-        component: (
-          <Bridge network1={sourceNetwork} network2={targetNetwork} />
-        ),
-      },
-    ]
-  : [
-      {
-        label: "Vault",
-        component: <SecuritizeCreditVault />,
-      },
-      {
-        label: "Bridge",
-        component: (
-          <Bridge network1={sourceNetwork} network2={targetNetwork} />
-        ),
-      },
-    ];
+    : VAULT_PRODUCTION_VERSION
+      ? [
+        {
+          label: "Vault",
+          component: <SecuritizeCreditVault />,
+        },
+      ]
+      : BRIDGE_PRODUCTION_VERSION
+        ? [
+          {
+            label: "BUIDL Bridge",
+            component: (
+              <Bridge network1={sourceNetwork} network2={targetNetwork} />
+            ),
+          },
+        ]
+        : [
+          {
+            label: "Vault",
+            component: <SecuritizeCreditVault />,
+          },
+          {
+            label: "Bridge",
+            component: (
+              <Bridge network1={sourceNetwork} network2={targetNetwork} />
+            ),
+          },
+        ];
 
 
   // Set the source and target networks based on the showMainNets flag
@@ -81,41 +81,45 @@ const App = () => {
     <ThemeProvider theme={theme}>
       <AppBar position="sticky" sx={{ backgroundColor: 'grey', marginBottom: '12px' }}>
         <Toolbar sx={{ justifyContent: 'space-between', backgroundColor: "#2b2d42" }}>
-          <Box sx={{ display: 'flex', gap: 2 }}>
-            {views.map((view, index) => (
-              <Button
-                variant='contained'
-                key={index}
-                className={selectedView === index ? 'Mui-selected' : ''}
-                color="primary"
-                onClick={() => setSelectedView(index)}
-                sx={{
-                  backgroundColor: selectedView === index ? 'primary.main' : 'inherit',
-                  color: selectedView === index ? 'white' : 'inherit',
-                  ':hover': {
-                    backgroundColor: selectedView === index ? 'primary.dark' : 'grey.300',
-                  },
-                }}
-              >
-                {view.label}
-              </Button>
-            ))}
-          </Box>
-          {/* {TEST_VERSION && selectedView === views.findIndex(view => view.label === "Bridge") && ( */}
           {TEST_VERSION && (
-            <Box sx={{ display: 'flex', alignItems: 'center', gap: 1 }}>
-              <Typography variant="body2">
-                {showMainNets ? 'Main Nets' : 'Test Nets'}
-              </Typography>
-              <Switch
-                checked={showMainNets}
-                onChange={handleToggleNetwork}
-                color="primary"
-                inputProps={{ 'aria-label': 'Toggle between main nets and test nets' }}
-              />
+            <Box sx={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', gap: 10 }}>
+              <Box sx={{ display: 'flex', alignItems: 'center', gap: 1 }}>
+
+                {views.map((view, index) => (
+                  <Button
+                    variant='contained'
+                    key={index}
+                    className={selectedView === index ? 'Mui-selected' : ''}
+                    color="primary"
+                    onClick={() => setSelectedView(index)}
+                    sx={{
+                      backgroundColor: selectedView === index ? 'primary.main' : 'inherit',
+                      color: selectedView === index ? 'white' : 'inherit',
+                      ':hover': {
+                        backgroundColor: selectedView === index ? 'primary.dark' : 'grey.300',
+                      },
+                    }}
+                  >
+                    {view.label}
+                  </Button>
+                ))}
+              </Box>
+              <Box sx={{ display: 'flex', alignItems: 'center', gap: 1 }}>
+                <Typography variant="body2">
+                  {showMainNets ? 'Main Nets' : 'Test Nets'}
+                </Typography>
+                <Switch
+                  checked={showMainNets}
+                  onChange={handleToggleNetwork}
+                  color="primary"
+                  inputProps={{ 'aria-label': 'Toggle between main nets and test nets' }}
+                />
+              </Box>
             </Box>
           )}
-          <WalletDisplay />
+          <Box sx={{ ml: "auto", display: "flex", gap: 2 }}>
+            <WalletDisplay />
+          </Box>
         </Toolbar>
       </AppBar>
       <Box>{views[selectedView].component}</Box>

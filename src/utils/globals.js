@@ -347,6 +347,15 @@ export const blockchainInfo = {
     rpcUrl: "https://ink.drpc.org",
     icon: inkChainIcon, // Variable representing the icon
     wormholeChainId: 46,
+    assets: [
+      {
+        bridgeContractAddress: "0x9A0460445E9B3E859F3C91A1b3f318354a0b11B6",
+        address: "0x53Ad50D3B6FCaCB8965d3A49cB722917C7DAE1F3",
+        name: "Apollo Diversified Credit Securitize Fund",
+        symbol: "ACRED",
+        icon: "https://etherscan.io/token/images/securitizeapollo_64.png"
+      },
+    ]
   },
 
   inkChainSepolia: {

@@ -21,6 +21,18 @@ import Holidays from 'date-holidays';
 import NotBusinessDayDialog from './components/NotBusinessDayDialog';
 import { BRIDGE_PRODUCTION_VERSION } from '../../utils/globals';
 
+
+//////////////////////////////////////////////////////
+/// // ____                       _ _   _         
+// // / ___|  ___  ___ _   _ _ __(_) |_(_)_______ 
+// // \___ \ / _ \/ __| | | | '__| | __| |_  / _ \
+// //  ___) |  __/ (__| |_| | |  | | |_| |/ /  __/
+// // |____/ \___|\___|\__,_|_|  |_|\__|_/___\___|
+/////////////////////////////////////////////////////
+// Securitize Bridge for BUIDL
+// Version: 1.0.0
+/////////////////////////////////////////////////////
+
 const Bridge = ({ network1, network2 }) => {
     // Asset-related states
     const [amount, setAmount] = useState(0);  // Amount to bridge
@@ -374,10 +386,10 @@ const Bridge = ({ network1, network2 }) => {
             console.log(`%cBusiness Hours in NY: ${businessHours}`, 'color: red; background-color: yellow;');
             console.groupEnd();
 
-            // if (businessHours === false) {
-            //     setNotBusinessHoursDialogOpen(true);
-            //     return;
-            // }
+            if (BRIDGE_PRODUCTION_VERSION===true && businessHours === false) {
+                setNotBusinessHoursDialogOpen(true);
+                return;
+            }
             console.group('Handling transaction');
             setLoading(true);  // Start loading
             setSnackbarMessage('Initiating transaction...');
