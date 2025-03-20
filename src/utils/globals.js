@@ -22,9 +22,9 @@ import inkChainIcon from '../assets/InkChain.svg'; // InkChain icon
 // If in testing mode, testnets will be shown in the network selector as well as the rest of components (e.g. Vault)
 
 // ONLY ONE OF THE FOLLOWING VARIABLES SHOULD BE TRUE
-export const BRIDGE_PRODUCTION_VERSION = false;
+export const BRIDGE_PRODUCTION_VERSION = true;
 export const VAULT_PRODUCTION_VERSION = false;
-export const TEST_VERSION = true;
+export const TEST_VERSION = false;
 
 const INFURA_PROJECT_ID = 'ac240982f9804e358d1f59fc60a5c451';  // Miguel's Infura Project ID
 // const INFURA_PROJECT_ID = '7ca398da04ce4502b8697478309756bf'; // Chema Infura Project ID
