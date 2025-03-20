@@ -4,10 +4,11 @@ import buidlIcon from '../../../assets/buidl_32.png'; // Default BUIDL icon
 import NetworkSelector from './NetworkSelector';
 
 import { blockchainInfo } from '../../../utils/globals';
+import AssetDisplay from './AssetDisplay';
 
-const CryptoInput = ({ network, otherNetwork, setNetwork, amount, balance, setAmount, editable = true, label = "From", assetSymbol = "BUIDL", assetIcon = buidlIcon }) => {
+const CryptoInput = ({ network, otherNetwork, setNetwork, amount, balance, setAmount, editable = true, label = "From", assetSymbol = "BUIDL", assetIcon = buidlIcon, selectedAsset, setSelectedAsset, showBalanceInFiat = false, assetPrice=1 }) => {
     // Mock price data for assets
-    const assetPrice = 1; // Assuming 1 BUIDL = 1 USD
+    // const assetPrice = 1; // Assuming 1 BUIDL = 1 USD
 
     // Function to format numbers as USD
     const formatCurrency = (value) => {
@@ -17,7 +18,13 @@ const CryptoInput = ({ network, otherNetwork, setNetwork, amount, balance, setAm
             minimumFractionDigits: 2,
         }).format(value);
     };
-
+    const formatCurrencyWithoutSymbol = (value) => {
+        return new Intl.NumberFormat('en-US', {
+            style: 'currency',
+            currency: 'USD',
+            minimumFractionDigits: 2,
+        }).format(value).replace(/[\$\£\€]/g, '').trim();
+    };
 
     const handleAmountChange = (e) => {
         const value = e.target.value;
@@ -28,8 +35,26 @@ const CryptoInput = ({ network, otherNetwork, setNetwork, amount, balance, setAm
         }
     };
 
+    const getAssetInfo = (network, assetSymbol) => {
+        if (!network || !network.assets) {
+            console.warn("Invalid network object or missing assets array.");
+            return null;
+        }
+
+        // Find the asset by symbol
+        const asset = network.assets.find(asset => asset.symbol === assetSymbol);
+
+        if (!asset) {
+            console.warn(`Asset ${assetSymbol} not found in network ${network.name}.`);
+            return null;
+        }
+
+        return asset;
+    };
+
     const getNetworkIcon = (network) => {
         // Loop through the blockchainInfo object and find the matching network name
+
         for (const key in blockchainInfo) {
             if (blockchainInfo[key].name === network) {
                 return blockchainInfo[key].icon;
@@ -72,17 +97,19 @@ const CryptoInput = ({ network, otherNetwork, setNetwork, amount, balance, setAm
             display: 'flex',
             flexDirection: 'column',
             alignItems: 'center',
-            justifyContent: 'center',
+            // justifyContent: 'center',
+            justifyContent: 'space-between',
             backgroundColor: '#3a3d5b',
             padding: 2,
             borderRadius: 2,
             width: '33%',
         },
         label: {
-            position: 'absolute',
-            top: 8,
-            left: 8,
-            fontSize: '1.4em',
+            // position: 'absolute',
+            // top: 8,
+            // left: 8,
+            alignSelf: 'flex-start',
+            fontSize: '1.2em',
             fontWeight: 'bold'
 
         },
@@ -91,6 +118,8 @@ const CryptoInput = ({ network, otherNetwork, setNetwork, amount, balance, setAm
             marginBottom: 1,
         },
         assetBox: {
+            display: 'flex',
+            alignItems: 'center',
             backgroundColor: '#3a3d5b',
             padding: 2,
             borderRadius: 2,
@@ -161,7 +190,7 @@ const CryptoInput = ({ network, otherNetwork, setNetwork, amount, balance, setAm
                 >
                     {/* Label Inside Network Box aligned top left */}
                     <Typography sx={{ ...cryptoInputStyles.label }}>{label}</Typography>
-                    <Typography sx={cryptoInputStyles.typography}>Network</Typography>
+                    {/* <Typography sx={cryptoInputStyles.typography}>Network</Typography> */}
                     <img
                         src={getNetworkIcon(network)}
                         alt={`${network} Icon`}
@@ -175,10 +204,7 @@ const CryptoInput = ({ network, otherNetwork, setNetwork, amount, balance, setAm
                     {/* Asset Display */}
                     <Box sx={cryptoInputStyles.assetBox}>
                         <Typography sx={cryptoInputStyles.typography}>Asset</Typography>
-                        <Box sx={{ display: 'flex', alignItems: 'center' }}>
-                            <img src={assetIcon} width={'32px'} />
-                            <Typography sx={{ color: '#fff', padding: '8px' }}>{assetSymbol}</Typography>
-                        </Box>
+                        <AssetDisplay onAssetChange={setSelectedAsset} theAsset={selectedAsset} />
                     </Box>
 
                     {/* Amount and Balance */}
@@ -195,18 +221,24 @@ const CryptoInput = ({ network, otherNetwork, setNetwork, amount, balance, setAm
                                 sx={cryptoInputStyles.amountInput}
                                 fullWidth
                             />
-                            <Typography sx={{ color: '#9fa4c4', marginTop: 1 }}>
-                                {!isNaN(amount) ? `(~${formatCurrency(amount * assetPrice)})` : '(~$0.00)'}
-                            </Typography>
+                            {showBalanceInFiat &&
+                                <Typography sx={{ color: '#9fa4c4', marginTop: 1, fontSize: '0.8em' }}>
+                                    {!isNaN(amount) ? `(~${formatCurrency(amount * assetPrice)})` : '(~$0.00)'}
+                                </Typography>
+                            }
                         </Box>
 
                         {/* Balance Section */}
                         <Box sx={cryptoInputStyles.balanceBox}>
                             <Typography sx={cryptoInputStyles.typography}>Balance</Typography>
-                            <Typography sx={{ fontWeight: 'bold', color: '#fff' }}>{balance}</Typography>
-                            <Typography sx={{ color: '#9fa4c4', marginTop: 0 }}>
-                                {`(~${formatCurrency(balance * assetPrice)})`}
+                            <Typography sx={{ fontWeight: 'bold', color: '#fff' }}>
+                                {formatCurrencyWithoutSymbol(balance)}
                             </Typography>
+                            {showBalanceInFiat &&
+                                <Typography sx={{ color: '#9fa4c4', marginTop: 1, fontSize: '0.8em' }}>
+                                    {!isNaN(amount) ? `(~${formatCurrency(balance * assetPrice)})` : '(~$0.00)'}
+                                </Typography>
+                            }
                         </Box>
                     </Box>
                 </Box>
@@ -218,6 +250,7 @@ const CryptoInput = ({ network, otherNetwork, setNetwork, amount, balance, setAm
                 label="Choose Your Blockchain Network"
                 currentNetwork={network}
                 otherNetwork={otherNetwork}
+                assetSymbol={assetSymbol}
             />
         </>
     );

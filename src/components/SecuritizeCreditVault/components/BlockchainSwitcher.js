@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { Box, FormControl, InputLabel, MenuItem, Select, Typography, CardMedia } from '@mui/material';
 import { blockchainInfo } from '../../../utils/globals'; // Import blockchain info
 
@@ -20,6 +20,12 @@ function BlockchainSwitcher() {
         ([, chain]) => chain.vaultAddress &&
             chain.mainnet === showMainNets // false: Testing mode: only show testnets
     );
+
+    useEffect(() => {
+        const defaultChain = availableBlockchains[0];
+        setSelectedChain(defaultChain[0]);
+        handleChange({ target: { value: defaultChain[0] } });
+    }, [availableBlockchains]);
 
     const handleChange = async (event) => {
         const chainKey = event.target.value;
