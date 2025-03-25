@@ -74,7 +74,7 @@ export const blockchainInfo = {
         address: "0x17418038ecF73BA4026c4f428547BF099706F27B",
         name: "Apollo Diversified Credit Securitize Fund",
         symbol: "ACRED",
-        icon: "https://etherscan.io/token/images/securitizeapollo_64.png"
+        icon: "https://etherscan.io/token/images/apolloacred_64.png"
       },
     ]
   },
@@ -117,7 +117,7 @@ export const blockchainInfo = {
         address: "0xFCe60bBc52a5705CeC5B445501FBAf3274Dc43D0",
         name: "Apollo Diversified Credit Securitize Fund",
         symbol: "ACRED",
-        icon: "https://etherscan.io/token/images/securitizeapollo_64.png"
+        icon: "https://etherscan.io/token/images/apolloacred_64.png"
       },
     ]
   },
@@ -219,7 +219,7 @@ export const blockchainInfo = {
         address: "0x7C64925002BFA705834B118a923E9911BeE32875",
         name: "Apollo Diversified Credit Securitize Fund",
         symbol: "ACRED",
-        icon: "https://etherscan.io/token/images/securitizeapollo_64.png"
+        icon: "https://etherscan.io/token/images/apolloacred_64.png"
       },
       {
         bridgeContractAddress: "0xcbB5B950A76B82Ec7982bABa99F5D4a92bA2288E",
@@ -353,7 +353,7 @@ export const blockchainInfo = {
         address: "0x53Ad50D3B6FCaCB8965d3A49cB722917C7DAE1F3",
         name: "Apollo Diversified Credit Securitize Fund",
         symbol: "ACRED",
-        icon: "https://etherscan.io/token/images/securitizeapollo_64.png"
+        icon: "https://etherscan.io/token/images/apolloacred_64.png"
       },
     ]
   },
