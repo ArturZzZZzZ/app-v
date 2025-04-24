@@ -17,7 +17,7 @@ import BlockchainSwitcher from './components/BlockchainSwitcher';
 
 import { useAppContext } from '../../utils/AppContext'; // Import AppContext.js
 import AssetDisplay from '../Bridge/components/AssetDisplay';
-
+import AssetSwitcher from './components/AssetSwitcher';
 
 function SecuritizeCreditVault() {
   const { address, chainId, isConnected } = useWeb3ModalAccount();
@@ -72,7 +72,8 @@ function SecuritizeCreditVault() {
   return (
     <>
       {/* <AssetDisplay onAssetChange={setSelectedAsset} /> */}
-      <BlockchainSwitcher />
+      <AssetSwitcher />
+      {/* <BlockchainSwitcher /> */}
       {isOnCorrectBlockchain ? (
         <>
           <Box elevation={3} sx={{ padding: '16px', textAlign: 'center' }}>

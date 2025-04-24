@@ -22,8 +22,8 @@ import inkChainIcon from '../assets/InkChain.svg'; // InkChain icon
 // If in testing mode, testnets will be shown in the network selector as well as the rest of components (e.g. Vault)
 
 // ONLY ONE OF THE FOLLOWING VARIABLES SHOULD BE TRUE
-export const BRIDGE_PRODUCTION_VERSION = false;
-export const VAULT_PRODUCTION_VERSION = true;
+export const BRIDGE_PRODUCTION_VERSION = true;
+export const VAULT_PRODUCTION_VERSION = false;
 export const TEST_VERSION = false;
 
 const INFURA_PROJECT_ID = 'ac240982f9804e358d1f59fc60a5c451';  // Miguel's Infura Project ID
@@ -63,6 +63,8 @@ export const blockchainInfo = {
     // bridgeContractAddress: "0xcbB5B950A76B82Ec7982bABa99F5D4a92bA2288E",
     assets: [
       {
+        vaultAddress: "0x07a36C630e3F072637da3445Da733B29958D8cAB",
+        RepresentationTokenName:"sBUIDL",
         bridgeContractAddress: "0xcbB5B950A76B82Ec7982bABa99F5D4a92bA2288E",
         address: "0x7712c34205737192402172409a8F7ccef8aA2AEc",
         name: "BUIDL",
@@ -200,6 +202,8 @@ export const blockchainInfo = {
         icon: "https://etherscan.io/token/images/apolloacred_64.png"
       },
       {
+        vaultAddress: "0xaEb1FA0853c7C98EAb10fcF0EA669aE3d07FBB10",
+        RepresentationTokenName:"sBUIDL",
         bridgeContractAddress: "0xcbB5B950A76B82Ec7982bABa99F5D4a92bA2288E",
         address: "0x53FC82f14F009009b440a706e31c9021E1196A2F",
         name: "BUIDL",
@@ -224,6 +228,8 @@ export const blockchainInfo = {
     // bridgeContractAddress: "0xA4280e41fAa1DDbE00275781C8baAc2aFa103bDc",
     assets: [
       {
+        vaultAddress: "0xd7aa8784Ca4E234332cEe8f036434DE82651B992",
+        RepresentationTokenName:"sNOV5",
         bridgeContractAddress: "0xA4280e41fAa1DDbE00275781C8baAc2aFa103bDc",
         address: "0x3454B9699fe19cf9219A3fe9D1F9956676eBA7Db",
         name: "NOV5",
@@ -382,6 +388,8 @@ export const blockchainInfo = {
     // bridgeContractAddress: "0xcbB5B950A76B82Ec7982bABa99F5D4a92bA2288E",
     assets: [
       {
+        vaultAssetAddress: "0x2893Ef551B6dD69F661Ac00F11D93E5Dc5Dc0e99",
+        RepresentationTokenName:"sBUIDL",
         bridgeContractAddress: "0xcbB5B950A76B82Ec7982bABa99F5D4a92bA2288E",
         address: "0x2893Ef551B6dD69F661Ac00F11D93E5Dc5Dc0e99",
         name: "BUIDL",
@@ -389,6 +397,16 @@ export const blockchainInfo = {
         icon: "https://s3.us-east-2.amazonaws.com/securitize-public-files/perm/8ca7c16b-de67-43f3-8d04-037bf2bd9c8d/0a6c7446-567e-4456-b722-f52f5cea942c-token-icon"
       },
       {
+        vaultAssetAddress: "0xA482Bec6614f3b923cC0079D5C27EE70B5791c5C",
+        RepresentationTokenName:"sSCOPE",
+        address: "0xA482Bec6614f3b923cC0079D5C27EE70B5791c5C",
+        name: "SCOPE",
+        symbol: "SCOPE",
+        icon: "https://polygonscan.com/token/images/hlscope_32.png"
+      },
+      {
+        vaultAddress: "0x9d60947D49911E3c262C108f97FE07cde209f9a7",
+        RepresentationTokenName:"sACRED",
         bridgeContractAddress: "0x9A0460445E9B3E859F3C91A1b3f318354a0b11B6",
         address: "0xFCe60bBc52a5705CeC5B445501FBAf3274Dc43D0",
         name: "Apollo Diversified Credit Securitize Fund",
