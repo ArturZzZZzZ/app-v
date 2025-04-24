@@ -1,4 +1,3 @@
-// import { VaultAddress, AssetAddress, AssetName, RepresentationTokenName } from '../../../utils/globals';
 import { AssetName, RepresentationTokenName } from '../../../utils/globals';
 import { VaultABI, ERC20ABI } from '../../../utils/ABIs';
 import React, { useState, useEffect } from 'react';
@@ -91,19 +90,6 @@ function VaultTransaction() {
                 setSnackbarMessage('Tokens deposited successfully!');
                 setSnackbarSeverity('success');
             } else if (action === 'redeem') {
-                // const isRedeemer = await vaultContract.isRedeemer(address);
-                // console.log("isRedeemer: ", isRedeemer);
-                // if (isRedeemer) {
-                //     const redeemTx = await vaultContract.redeem(numberOfAssets, address, address);
-                //     setTransactionHash(redeemTx.hash);
-                //     await redeemTx.wait();
-                //     setSnackbarMessage('Tokens redeemed successfully!');
-                //     setSnackbarSeverity('success');
-                // } else {
-                //     // show dialog to say wallet is not redeemer
-                //     setSnackbarMessage('Wallet is not a redeemer');
-                //     setSnackbarSeverity('error');
-                // }
                 const redeemTx = await vaultContract.redeem(numberOfAssets, address, address);
                 setTransactionHash(redeemTx.hash);
                 await redeemTx.wait();

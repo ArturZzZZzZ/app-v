@@ -36,6 +36,13 @@ export const walletConnectTargetBlockchainConfig = [
         rpcUrl: `https://mainnet.infura.io/v3/${INFURA_PROJECT_ID}`
     },
     {
+        chainId: 11155111,
+        name: 'Ethereum Sepolia',
+        currency: 'ETH',
+        explorerUrl: 'https://sepolia.etherscan.io/',
+        rpcUrl: `https://sepolia.infura.io/v3/${INFURA_PROJECT_ID}`
+    },
+    {
         chainId: 137,
         name: 'Polygon Mainnet',
         currency: 'MATIC',
