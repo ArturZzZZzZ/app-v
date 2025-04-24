@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import { Box, FormControl, InputLabel, MenuItem, Select, Typography, CardMedia } from '@mui/material';
-import { blockchainInfo } from '../../../utils/globals'; // Import blockchain info
+import { AssetAddress, blockchainInfo, VaultAddress } from '../../../utils/globals'; // Import blockchain info
 
 import { useSwitchNetwork } from '@web3modal/ethers/react';
 import { useAppContext } from '../../../utils/AppContext'; // Import AppContext.js
@@ -41,6 +41,8 @@ function BlockchainSwitcher() {
         try {
             await switchNetwork(chain.chainId);
             setSelectedChainId(chainKey);
+            // setVaultAddress(chain.vaultAddress); // Set the vault address
+            // setVaultAssetAddress(chain.vaultAssetAddress); // Set the vault asset address
             setVaultAddress(chain.vaultAddress); // Set the vault address
             setVaultAssetAddress(chain.vaultAssetAddress); // Set the vault asset address
             setTargetBlockchainChainId(chain.chainId); // Set the target blockchain chain ID

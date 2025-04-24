@@ -22,8 +22,8 @@ import inkChainIcon from '../assets/InkChain.svg'; // InkChain icon
 // If in testing mode, testnets will be shown in the network selector as well as the rest of components (e.g. Vault)
 
 // ONLY ONE OF THE FOLLOWING VARIABLES SHOULD BE TRUE
-export const BRIDGE_PRODUCTION_VERSION = true;
-export const VAULT_PRODUCTION_VERSION = false;
+export const BRIDGE_PRODUCTION_VERSION = false;
+export const VAULT_PRODUCTION_VERSION = true;
 export const TEST_VERSION = false;
 
 const INFURA_PROJECT_ID = 'ac240982f9804e358d1f59fc60a5c451';  // Miguel's Infura Project ID
@@ -85,61 +85,25 @@ export const blockchainInfo = {
     chainId: 11155111,
     rpcUrl: "https://sepolia.infura.io/v3/" + INFURA_PROJECT_ID,
     icon: ethereumIcon, // Same variable for Sepolia testnet
-  },
-
-  // Polygon Mainnet and Amoy Testnet
-  polygon: {
-    mainnet: true,
-    name: "Polygon",
-    nativeCurrencySymbol: "POL",
-    chainId: 137,
-    rpcUrl: "https://polygon-mainnet.infura.io/v3/" + INFURA_PROJECT_ID,
-    icon: polygonIcon, // Variable representing the Polygon icon
-    // BUIDL
-    // vaultAddress: "0x4C1e5e780269186A4FBb31c913b11B1a8922B830",
-    // vaultAssetAddress: "0x2893Ef551B6dD69F661Ac00F11D93E5Dc5Dc0e99",
-    // SCOPE
-    vaultAddress: "0xA482Bec6614f3b923cC0079D5C27EE70B5791c5C",
-    vaultAssetAddress: "0x4C5cA366e26409845624E29B62C388a06961A792",
-
-    wormholeChainId: 5,
-    // bridgeContractAddress: "0xcbB5B950A76B82Ec7982bABa99F5D4a92bA2288E",
+    wormholeChainId: 10002,
     assets: [
       {
-        bridgeContractAddress: "0xcbB5B950A76B82Ec7982bABa99F5D4a92bA2288E",
-        address: "0x2893Ef551B6dD69F661Ac00F11D93E5Dc5Dc0e99",
-        name: "BUIDL",
-        symbol: "BUIDL",
-        icon: "https://s3.us-east-2.amazonaws.com/securitize-public-files/perm/8ca7c16b-de67-43f3-8d04-037bf2bd9c8d/0a6c7446-567e-4456-b722-f52f5cea942c-token-icon"
+        bridgeContractAddress: "0x80961d8e682139D04bC437276F6981874320E6fD",
+        address: "0x704f0AEACd3e730cE7D1d4cD93f55979df90AeA1",
+        name: "BLKAUTRC",
+        symbol: "BLKAUTRC",
+        icon: "https://cdn-icons-png.freepik.com/256/12921/12921529.png"
       },
       {
-        bridgeContractAddress: "0x9A0460445E9B3E859F3C91A1b3f318354a0b11B6",
-        address: "0xFCe60bBc52a5705CeC5B445501FBAf3274Dc43D0",
-        name: "Apollo Diversified Credit Securitize Fund",
-        symbol: "ACRED",
-        icon: "https://etherscan.io/token/images/apolloacred_64.png"
-      },
+        bridgeContractAddress: "0xa54494B7ebc8b87b8E7Bf8499CEb9c3BFdbE9773",
+        address: "0xefCEb816f050C26adE27E71a0BC2F91d7c10b207",
+        name: "BLKAUTSB",
+        symbol: "BLKAUTSB",
+        icon: "https://png.pngtree.com/element_our/png/20180921/token-png_105802.jpg"
+      }
     ]
   },
-  polygonAmoy: {
-    mainnet: false,
-    name: "Polygon Amoy",
-    nativeCurrencySymbol: "POL",
-    chainId: 80002,
-    rpcUrl: "https://rpc-amoy.polygon.technology",
-    icon: polygonIcon,
-    wormholeChainId: 10007,
-    // bridgeContractAddress: "0xA4280e41fAa1DDbE00275781C8baAc2aFa103bDc",
-    // assets: [
-    //   {
-    //     bridgeContractAddress: "0xA4280e41fAa1DDbE00275781C8baAc2aFa103bDc",
-    //     address: "0xf4bCF42f7BB98EA33210cC72c6EFB5D6Fa9A631F",
-    //     name: "NOV5",
-    //     symbol: "NOV5",
-    //     icon: "https://s3.us-east-2.amazonaws.com/sandbox-public-files/perm/8202afe0-3a3c-4bd4-a8fc-53396b1e176d/7e5f9fe0-c188-46f1-ab3d-97f7c2f9cf42-token-icon"
-    //   }
-    // ]
-  },
+
 
   // Arbitrum Mainnet and Goerli Testnet
   arbitrum: {
@@ -178,7 +142,7 @@ export const blockchainInfo = {
         icon: "https://s3.us-east-2.amazonaws.com/sandbox-public-files/perm/8202afe0-3a3c-4bd4-a8fc-53396b1e176d/7e5f9fe0-c188-46f1-ab3d-97f7c2f9cf42-token-icon"
       },
       {
-        bridgeContractAddress:"0x9A0460445E9B3E859F3C91A1b3f318354a0b11B6",
+        bridgeContractAddress: "0x9A0460445E9B3E859F3C91A1b3f318354a0b11B6",
         address: "0x36174e2676051dbC2c5A5125b67b46193bd56C6c",
         name: "FEB6",
         symbol: "FEB6",
@@ -197,6 +161,20 @@ export const blockchainInfo = {
         symbol: "TBAR",
         icon: "https://s3.us-east-2.amazonaws.com/sandbox-public-files/perm/8202afe0-3a3c-4bd4-a8fc-53396b1e176d/8c897c59-58ee-4f41-8ca0-c2e080704539-token-icon"
       },
+      {
+        bridgeContractAddress: "0x80961d8e682139D04bC437276F6981874320E6fD",
+        address: "0xFD00165b9EA4BC7764b885fEaF4937a7683Db838",
+        name: "BLKAUTRC",
+        symbol: "BLKAUTRC",
+        icon: "https://cdn-icons-png.freepik.com/256/12921/12921529.png"
+      },
+      {
+        bridgeContractAddress: "0x1A41a3025330C5c835d13470A635471F4B4052A6",
+        address: "0x11189AdD9aa0dF840aF7778Cd16fD21f2D2f5D70",
+        name: "BLKAUTSB",
+        symbol: "BLKAUTSB",
+        icon: "https://png.pngtree.com/element_our/png/20180921/token-png_105802.jpg"
+      }
     ]
   },
 
@@ -238,7 +216,7 @@ export const blockchainInfo = {
     chainId: 43113,
     rpcUrl: "https://avalanche-fuji.infura.io/v3/" + INFURA_PROJECT_ID,
     icon: avalancheIcon, // Same variable for Fuji testnet
-    vaultAddress:"0xd7aa8784Ca4E234332cEe8f036434DE82651B992",
+    vaultAddress: "0xd7aa8784Ca4E234332cEe8f036434DE82651B992",
     vaultAssetAddress: "0x3454B9699fe19cf9219A3fe9D1F9956676eBA7Db",
     wormholeChainId: 6,
     // bridgeContractAddress: "0xA11e9c666ED79456951807334B290e0ee422D215",
@@ -253,7 +231,7 @@ export const blockchainInfo = {
         icon: "https://s3.us-east-2.amazonaws.com/sandbox-public-files/perm/8202afe0-3a3c-4bd4-a8fc-53396b1e176d/e3be35d8-40c8-43a3-aa00-3f6e23285941-token-icon"
       },
       {
-        bridgeContractAddress:"0x9A0460445E9B3E859F3C91A1b3f318354a0b11B6",
+        bridgeContractAddress: "0x9A0460445E9B3E859F3C91A1b3f318354a0b11B6",
         address: "0x28277DF5BDb175CeCEc7F21feaaCF2C836d81D50",
         name: "FEB6",
         symbol: "FEB6",
@@ -315,7 +293,7 @@ export const blockchainInfo = {
         icon: "https://s3.us-east-2.amazonaws.com/sandbox-public-files/perm/8202afe0-3a3c-4bd4-a8fc-53396b1e176d/e3be35d8-40c8-43a3-aa00-3f6e23285941-token-icon"
       },
       {
-        bridgeContractAddress:"0x9A0460445E9B3E859F3C91A1b3f318354a0b11B6",
+        bridgeContractAddress: "0x9A0460445E9B3E859F3C91A1b3f318354a0b11B6",
         address: "0x56c3e2d4c13C686772060b81B88e94ad8ee8157b",
         name: "FEB6",
         symbol: "FEB6",
@@ -372,7 +350,7 @@ export const blockchainInfo = {
 
     assets: [
       {
-        bridgeContractAddress:"0xBe5Ff9533B30917472Ac96F18A594Aa140d5C656",
+        bridgeContractAddress: "0xBe5Ff9533B30917472Ac96F18A594Aa140d5C656",
         address: "0x9d219e45E8A6e1273D017a9c5f016092f8081011",
         name: "FEB6",
         symbol: "FEB6",
@@ -381,6 +359,80 @@ export const blockchainInfo = {
 
     ]
   },
+
+  // Polygon Mainnet and Amoy Testnet
+  polygon: {
+    mainnet: true,
+    name: "Polygon",
+    nativeCurrencySymbol: "POL",
+    chainId: 137,
+    rpcUrl: "https://polygon-mainnet.infura.io/v3/" + INFURA_PROJECT_ID,
+    icon: polygonIcon, // Variable representing the Polygon icon
+    // BUIDL
+    // vaultAddress: "0x4C1e5e780269186A4FBb31c913b11B1a8922B830",
+    // vaultAssetAddress: "0x2893Ef551B6dD69F661Ac00F11D93E5Dc5Dc0e99",
+    // // SCOPE
+    // vaultAddress: "0xA482Bec6614f3b923cC0079D5C27EE70B5791c5C",
+    // vaultAssetAddress: "0x4C5cA366e26409845624E29B62C388a06961A792",
+    // ACRED
+    vaultAddress: "0x9d60947D49911E3c262C108f97FE07cde209f9a7",
+    vaultAssetAddress: "0xFCe60bBc52a5705CeC5B445501FBAf3274Dc43D0",
+
+    wormholeChainId: 5,
+    // bridgeContractAddress: "0xcbB5B950A76B82Ec7982bABa99F5D4a92bA2288E",
+    assets: [
+      {
+        bridgeContractAddress: "0xcbB5B950A76B82Ec7982bABa99F5D4a92bA2288E",
+        address: "0x2893Ef551B6dD69F661Ac00F11D93E5Dc5Dc0e99",
+        name: "BUIDL",
+        symbol: "BUIDL",
+        icon: "https://s3.us-east-2.amazonaws.com/securitize-public-files/perm/8ca7c16b-de67-43f3-8d04-037bf2bd9c8d/0a6c7446-567e-4456-b722-f52f5cea942c-token-icon"
+      },
+      {
+        bridgeContractAddress: "0x9A0460445E9B3E859F3C91A1b3f318354a0b11B6",
+        address: "0xFCe60bBc52a5705CeC5B445501FBAf3274Dc43D0",
+        name: "Apollo Diversified Credit Securitize Fund",
+        symbol: "ACRED",
+        icon: "https://etherscan.io/token/images/apolloacred_64.png"
+      },
+    ]
+  },
+  polygonAmoy: {
+    mainnet: false,
+    name: "Polygon Amoy",
+    nativeCurrencySymbol: "POL",
+    chainId: 80002,
+    rpcUrl: "https://rpc-amoy.polygon.technology",
+    icon: polygonIcon,
+    wormholeChainId: 10007,
+    assets: [
+      {
+        bridgeContractAddress: "0x80961d8e682139D04bC437276F6981874320E6fD",
+        address: "0xa08aE23BeA455352Ba6b5f63C0B0636b72a90E31",
+        name: "BLKAUTRC",
+        symbol: "BLKAUTRC",
+        icon: "https://cdn-icons-png.freepik.com/256/12921/12921529.png"
+      },
+      {
+        bridgeContractAddress: "0xa54494B7ebc8b87b8E7Bf8499CEb9c3BFdbE9773",
+        address: "0xb5Eaf38ECffFd70774ff7a6008046D0a2A4857c9",
+        name: "BLKAUTSB",
+        symbol: "BLKAUTSB",
+        icon: "https://png.pngtree.com/element_our/png/20180921/token-png_105802.jpg"
+      }
+    ]
+    // bridgeContractAddress: "0xA4280e41fAa1DDbE00275781C8baAc2aFa103bDc",
+    // assets: [
+    //   {
+    //     bridgeContractAddress: "0xA4280e41fAa1DDbE00275781C8baAc2aFa103bDc",
+    //     address: "0xf4bCF42f7BB98EA33210cC72c6EFB5D6Fa9A631F",
+    //     name: "NOV5",
+    //     symbol: "NOV5",
+    //     icon: "https://s3.us-east-2.amazonaws.com/sandbox-public-files/perm/8202afe0-3a3c-4bd4-a8fc-53396b1e176d/7e5f9fe0-c188-46f1-ab3d-97f7c2f9cf42-token-icon"
+    //   }
+    // ]
+  },
+
 
   // Base Mainnet and Goerli Testnet
   base: {
@@ -486,9 +538,24 @@ export const blockchainInfo = {
 // export const RepresentationTokenName = "sBUIDL";
 // export const TargetBlockchainChainId = 43114;
 
-// For Vault in Poloygon Production (sBUIDL)
-export const VaultAddress = "0xA482Bec6614f3b923cC0079D5C27EE70B5791c5C";
-export const AssetAddress = "0x4C5cA366e26409845624E29B62C388a06961A792";
-export const AssetName = "HLSCOPE";
-export const RepresentationTokenName = "sHLSCOPE";
+// // For Vault in Poloygon Production (SCOPE)
+// export const VaultAddress = "0xA482Bec6614f3b923cC0079D5C27EE70B5791c5C";
+// export const AssetAddress = "0x4C5cA366e26409845624E29B62C388a06961A792";
+// export const AssetName = "HLSCOPE";
+// export const RepresentationTokenName = "sHLSCOPE";
+// export const TargetBlockchainChainId = 137;
+
+// For Vault in Poloygon Production (sACRED)
+
+
+// NOTICE!!!!!!!!!!
+// THIS IS NOT THE ADDRESS OF THE VAULT IN PRODUCTION
+// export const VaultAddress = "0x9d60947D49911E3c262C108f97FE07cde209f9a7";
+// export const AssetAddress = "0xFCe60bBc52a5705CeC5B445501FBAf3274Dc43D0";
+// EBD THIS IS NOT THE ADDRESS OF THE VAULT IN PRODUCTION
+// To configure the VaultAddress and AssetAddress in production, you need edit the config above. 
+
+// export const
+export const AssetName = "ACRED";
+export const RepresentationTokenName = "sACRED";
 export const TargetBlockchainChainId = 137;

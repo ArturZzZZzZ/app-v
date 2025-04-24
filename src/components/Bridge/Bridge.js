@@ -91,16 +91,19 @@ const Bridge = ({ network1, network2 }) => {
     async function getNativeTokenBalance() {
         if (!isConnected || !walletProvider) return;
 
+        console.groupCollapsed('%c🔍 Fetching Native Token Balance', 'color: #2e86de; font-weight: bold;');
         try {
             const ethersProvider = new ethers.BrowserProvider(walletProvider);
             const balance = await ethersProvider.getBalance(address);
             setNativeBalance(balance);
-            console.log("Native Balance: ", balance);
-            console.log("Native Balance: ", formatUnits(balance, 18));
+            console.log('%c✅ Raw Native Balance:', 'color: green; font-weight: bold;', balance);
+            console.log('%c💱 Formatted Native Balance:', 'color: #27ae60; font-weight: bold;', formatUnits(balance, 18));
             return balance;
         } catch (error) {
-            console.error("Failed to fetch native token balance:", error);
+            console.error('%c❌ Failed to fetch native token balance:', 'color: red; font-weight: bold;', error);
             setNativeBalance(0);
+        } finally {
+            console.groupEnd();
         }
     }
 
@@ -109,8 +112,11 @@ const Bridge = ({ network1, network2 }) => {
         try {
             return await getNativeTokenBalance();
         } catch (error) {
-            if (retries === 0) throw error;
-            console.warn(`Retrying in ${delay / 1000} seconds...`);
+            if (retries === 0) {
+                console.error('%c🛑 All retries failed. Giving up.', 'color: red; font-weight: bold;');
+                throw error;
+            }
+            console.warn(`%c⏳ Retrying in ${delay / 1000}s... (${retries} retries left)`, 'color: orange; font-weight: bold;');
             await new Promise(resolve => setTimeout(resolve, delay));
             return getNativeTokenBalanceWithBackoff(retries - 1, delay * 2); // Exponential backoff
         }
@@ -120,47 +126,43 @@ const Bridge = ({ network1, network2 }) => {
     // Function to get token balance
     async function getTokenBalance(network, token, setBalance) {
         if (!isConnected || !walletProvider) {
-            console.log("User disconnected");
+            console.warn('%c⚠️ User disconnected', 'color: orange; font-weight: bold;');
             setBalance(0);
             return;
         }
 
         if (!token) {
-            console.error("TOKEN IS NULL");
+            console.error('%c❌ TOKEN IS NULL', 'color: red; font-weight: bold;');
             return;
         }
-        console.log("Getting token balance for: ", token.symbol);
 
         // Find the asset in the network
         const asset = network.assets.find(a => a.symbol === token.symbol);
 
-        console.log("These are the assets: ", network.assets);
+        console.log('%c📋 Assets:', 'color: #8e44ad; font-weight: bold;', network.assets);
         if (!asset) {
-            console.error(`Asset ${token.symbol} not found in network ${network.name}.`);
+            console.error('%c❌ Asset ' + token.symbol + ' not found in network ' + network.name + '.', 'color: red; font-weight: bold;');
             setBalance(0);
             return;
         } else {
-            console.log("Asset found: ", asset);
+            console.log('%c✅ Asset found:', 'color: green; font-weight: bold;', asset);
         }
 
         try {
             const ethersProvider = new ethers.JsonRpcProvider(network.rpcUrl);
-            console.log("Ethers Provider: ", ethersProvider);
-
             const contract = new Contract(asset.address, ERC20ABI, ethersProvider);
-            console.log("Contract: ", contract);
-
             const tokenBalance = await contract.balanceOf(address);
-            console.log("<----------------------------------------------------------->");
-            console.log("------> Network: ", network);
-            console.log("------> Asset: ", token);
-            console.log("Token Balance: ", tokenBalance);
-
             const formattedBalance = ethers.formatUnits(tokenBalance, 6); // Adjust decimals as needed
-            console.log("Formatted Balance: ", formattedBalance);
-            console.log("<----------------------------------------------------------->");
-
             setBalance(formattedBalance);
+
+            console.log('%c🎯 Getting token balance for:', 'color: #8e44ad; font-weight: bold;', token.symbol);
+            console.groupCollapsed('%c🔗 Asset Details', 'color: #2ecc71; font-weight: bold;');
+            console.log('%c🔌 Provider:', 'color: #3498db; font-weight: bold;', ethersProvider);
+            console.log('%c📜 Contract:', 'color: #9b59b6; font-weight: bold;', contract);
+            console.log('%c💰 Token Balance:', 'color: #34495e; font-weight: bold;', tokenBalance);
+            console.log('%c💱 Formatted Balance:', 'color: #27ae60; font-weight: bold;', formattedBalance);
+            console.groupEnd();
+
         } catch (error) {
             console.error("Failed to fetch balance: ", error);
             console.error("Network: ", network);
@@ -198,29 +200,29 @@ const Bridge = ({ network1, network2 }) => {
         // Get the current date and time in NY timezone
         const now = new Date();
         const nyTimeStr = formatInTimeZone(now, timeZone, "yyyy-MM-dd'T'HH:mm:ssXXX");
-        console.log("NY Time: ", nyTimeStr);
+        console.log('%c🕒 NY Time:', 'color: #8e44ad; font-weight: bold;', nyTimeStr);
 
         // Get "current date + 9 hours" in NY timezone
         const nowPlus9Hours = new Date(now.getTime() + 9 * 60 * 60 * 1000);
         const currentDatePlus9Str = formatInTimeZone(nowPlus9Hours, timeZone, 'yyyy-MM-dd');
-        console.log("Current Date + 9 Hours: ", currentDatePlus9Str);
+        console.log('%c🕒 Current Date + 9 Hours:', 'color: #8e44ad; font-weight: bold;', currentDatePlus9Str);
 
         // Check if "current date + 9 hours" is a holiday
         if (isCustomHoliday(currentDatePlus9Str)) {
-            console.log("It's a holiday based on +9 hours logic.");
+            console.log('%c🎉 It\'s a holiday based on +9 hours logic.', 'color: #e67e22; font-weight: bold;');
             return false;
         } else {
-            console.log("It's not a holiday based on +9 hours logic.");
+            console.log('%c✅ It\'s not a holiday based on +9 hours logic.', 'color: green; font-weight: bold;');
         }
 
         // Check if today is Sunday and before 3:05 PM
         const dayOfWeek = formatInTimeZone(now, timeZone, 'i'); // 'i' returns day of the week (1-7), where 1 is Monday
-        console.log("Day of the Week: ", dayOfWeek);
+        console.log('%c📆 Day of the Week:', 'color: #8e44ad; font-weight: bold;', dayOfWeek);
         if (dayOfWeek == 7) { // Sunday
             const sundayOpenTimeStr = `${currentDatePlus9Str}T15:05:00-05:00`;
             const sundayOpenTime = parseISO(sundayOpenTimeStr);
             if (isBefore(now, sundayOpenTime)) {
-                console.log("It's Sunday and before 3 PM.");
+                console.log('%c⚠️ It\'s Sunday and before 3 PM.', 'color: orange; font-weight: bold;');
                 return false;
             }
         }
@@ -233,7 +235,7 @@ const Bridge = ({ network1, network2 }) => {
         const endRestrictedHours = parseISO(endRestrictedHoursStr);
 
         if (isAfter(now, startRestrictedHours) && isBefore(now, endRestrictedHours)) {
-            console.log("Currently within restricted hours (2:40 PM - 3 PM).");
+            console.log('%c⚠️ Currently within restricted hours (2:40 PM - 3 PM).', 'color: orange; font-weight: bold;');
             return false;
         }
 
@@ -267,7 +269,7 @@ const Bridge = ({ network1, network2 }) => {
 
     // Synchronize amounts after switching or when the amount changes
     useEffect(() => {
-        console.log("The blockchain Info: ", blockchainInfo)
+        // console.log('%c🗂️ The blockchain Info:', 'color: #8e44ad; font-weight: bold;', blockchainInfo)
         if (!isSwitched) {
             setExpectedAmount(amount);  // When not switched, update expectedAmount with amount
         } else {
@@ -276,7 +278,7 @@ const Bridge = ({ network1, network2 }) => {
     }, [amount, expectedAmount, isSwitched]);
 
     useEffect(() => {
-        console.log("Connected: ", isConnected);
+        console.log('%c🔌 Connected:', 'color: #8e44ad; font-weight: bold;', isConnected);
         if (isConnected) {
             getTokenBalance(fromNetwork, getAssetInfo(fromNetwork, selectedAsset?.symbol), setSourceAssetBalance);
             getTokenBalance(toNetwork, getAssetInfo(toNetwork, selectedAsset?.symbol), setTargetAssetBalance);
@@ -343,11 +345,11 @@ const Bridge = ({ network1, network2 }) => {
         };
 
         if (selectedAsset) {
-            console.log("Selected Asset: ", selectedAsset);
+            console.log('%c🎯 Selected Asset:', 'color: #8e44ad; font-weight: bold;', selectedAsset);
             // Find the networks that support the selected asset
             const networksWithAsset = findNetworksForAsset(blockchainInfo, selectedAsset?.symbol);
 
-            console.log("++++++++++++++++++++++++++++>  Networks with", selectedAsset?.symbol, " : ", networksWithAsset);
+            console.log('%c🔗 Networks with ' + selectedAsset?.symbol + ':', 'color: #8e44ad; font-weight: bold;', networksWithAsset);
 
             const nets = setNetworksForAsset(blockchainInfo, selectedAsset?.symbol, setFromNetwork, setToNetwork);
             setSourceAsset(getAssetInfo(fromNetwork, selectedAsset?.symbol));
@@ -381,23 +383,23 @@ const Bridge = ({ network1, network2 }) => {
     // It also checks if the transaction is initiated during business hours
     async function handleTransaction(fromNetwork, toNetwork) {
         try {
-            console.groupCollapsed('Holidays Group');
+            console.groupCollapsed('%c🗓️ Holidays Group', 'color: #2980b9; font-weight: bold;');
             const businessHours = isBusinessHoursInNY();
             console.log(`%cBusiness Hours in NY: ${businessHours}`, 'color: red; background-color: yellow;');
             console.groupEnd();
 
-            if (BRIDGE_PRODUCTION_VERSION===true && businessHours === false) {
+            if (BRIDGE_PRODUCTION_VERSION === true && businessHours === false) {
                 setNotBusinessHoursDialogOpen(true);
                 return;
             }
-            console.group('Handling transaction');
+            console.groupCollapsed('%c⚙️ Handling Transaction', 'color: #2980b9; font-weight: bold;');
             setLoading(true);  // Start loading
             setSnackbarMessage('Initiating transaction...');
             setSnackbarSeverity('info');
             setSnackbarOpen(true);
 
             let contractSourceAddress = getAssetInfo(fromNetwork, selectedAsset.symbol).bridgeContractAddress;
-            console.log("Contract Source Address: ", contractSourceAddress);
+            console.log('%c🏦 Contract Source Address:', 'color: #8e44ad; font-weight: bold;', contractSourceAddress);
             let sourceChainId = fromNetwork.chainId;
             let wormholeTargetChainId = toNetwork.wormholeChainId;
 
@@ -408,13 +410,9 @@ const Bridge = ({ network1, network2 }) => {
             }
 
             const balance = await getNativeTokenBalanceWithBackoff();
-            console.log("Native Balance: ", balance);
+            console.log('%c💰 Native Balance:', 'color: #27ae60; font-weight: bold;', balance);
 
             const ethersProvider = new ethers.JsonRpcProvider(fromNetwork.rpcUrl);
-
-            // ethersProvider.on('debug', (info) => {
-            //     console.log("DEBUG EVENT: ", info);
-            // });
 
             const bridgeContract = new Contract(contractSourceAddress, BridgeABI, ethersProvider);
             // Get the quote for the transaction
@@ -451,8 +449,14 @@ const Bridge = ({ network1, network2 }) => {
             setTxHash(bridgeTx.hash);
             setDialogOpen(true);  // Open the transaction dialog
         } catch (err) {
-            console.error("Transaction failed: ", err);
-            const errorMessage = err.info?.error?.message || err.message || "Transaction failed.";
+            console.error('%c❌ Transaction failed:', 'color: red; font-weight: bold;', err);
+            let errorMessage = err?.reason || err?.info?.error?.message || err?.message || "Transaction failed.";
+            if (errorMessage.includes('execution reverted:')) {
+                const match = errorMessage.match(/execution reverted:\s*"?([^"]+)"?/);
+                if (match && match[1]) {
+                    errorMessage = match[1];
+                }
+            }
             setSnackbarMessage(`Error: ${errorMessage}`);
             setSnackbarSeverity('error');
             setSnackbarOpen(true);

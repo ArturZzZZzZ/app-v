@@ -23,48 +23,52 @@ const App = () => {
   };
 
 
+  // Define the views based on the application version and environment
   const views = TEST_VERSION
     ? [
-      {
-        label: "Vault",
-        component: <SecuritizeCreditVault />,
-      },
-      {
-        label: "Bridge",
-        component: (
-          <Bridge network1={sourceNetwork} network2={targetNetwork} />
-        ),
-      },
-    ]
-    : VAULT_PRODUCTION_VERSION
-      ? [
+        // If in test version, show both Vault and Bridge views
         {
           label: "Vault",
-          component: <SecuritizeCreditVault />,
+          component: <SecuritizeCreditVault />, // Vault component
+        },
+        {
+          label: "Bridge",
+          component: (
+            <Bridge network1={sourceNetwork} network2={targetNetwork} /> // Bridge component with dynamic networks
+          ),
         },
       ]
-      : BRIDGE_PRODUCTION_VERSION
-        ? [
-          {
-            label: "BUIDL Bridge",
-            component: (
-              <Bridge network1={sourceNetwork} network2={targetNetwork} />
-            ),
-          },
-        ]
-        : [
+    : VAULT_PRODUCTION_VERSION
+      ? [
+          // If in production and Vault version, show only the Vault view
           {
             label: "Vault",
-            component: <SecuritizeCreditVault />,
+            component: <SecuritizeCreditVault />, // Vault component
           },
-          {
-            label: "Bridge",
-            component: (
-              <Bridge network1={sourceNetwork} network2={targetNetwork} />
-            ),
-          },
-        ];
-
+        ]
+      : BRIDGE_PRODUCTION_VERSION
+        ? [
+            // If in production and Bridge version, show only the Bridge view
+            {
+              label: "BUIDL Bridge",
+              component: (
+                <Bridge network1={sourceNetwork} network2={targetNetwork} /> // Bridge component with dynamic networks
+              ),
+            },
+          ]
+        : [
+            // Default case: show both Vault and Bridge views
+            {
+              label: "Vault",
+              component: <SecuritizeCreditVault />, // Vault component
+            },
+            {
+              label: "Bridge",
+              component: (
+                <Bridge network1={sourceNetwork} network2={targetNetwork} /> // Bridge component with dynamic networks
+              ),
+            },
+          ];
 
   // Set the source and target networks based on the showMainNets flag
   useEffect(() => {
