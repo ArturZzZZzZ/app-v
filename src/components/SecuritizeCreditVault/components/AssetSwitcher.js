@@ -16,8 +16,6 @@ function AssetSwitcher() {
     const ctx = useAppContext();
     const { switchNetwork } = useSwitchNetwork();
 
-    console.log('Context contents:', ctx);
-
     const {
         selectedAssetKey,
         setSelectedAssetKey,
@@ -25,6 +23,8 @@ function AssetSwitcher() {
         setVaultAssetAddress,
         setTargetBlockchainChainId,
         showMainNets,
+        selectedAsset,
+        setSelectedAsset,
     } = ctx;
 
     const availableAssets = [];
@@ -32,15 +32,15 @@ function AssetSwitcher() {
     Object.entries(blockchainInfo).forEach(([chainKey, chain]) => {
         if (chain.mainnet === showMainNets && chain.assets) {
             chain.assets.forEach((asset, idx) => {
-                const resolvedVaultAddress = asset.vaultAddress || chain.vaultAddress;
-                if (resolvedVaultAddress) {
+                if (asset.vaultAddress) { // ONLY CHECK vaultAddress
                     availableAssets.push({
                         key: `${chainKey}-${idx}`,
                         chainName: chain.name,
                         chainIcon: chain.icon,
                         chainId: chain.chainId,
-                        vaultAddress: resolvedVaultAddress,
-                        vaultAssetAddress: asset.address,
+                        vaultAddress: asset.vaultAddress, // important
+                        address: asset.address, // important
+                        representationTokenName: asset.RepresentationTokenName,
                         assetName: asset.name,
                         assetSymbol: asset.symbol,
                         assetIcon: asset.icon,
@@ -54,8 +54,9 @@ function AssetSwitcher() {
         if (availableAssets.length > 0 && !selectedAssetKey) {
             const defaultAsset = availableAssets[0];
             setSelectedAssetKey(defaultAsset.key);
+            setSelectedAsset(defaultAsset);
             setVaultAddress(defaultAsset.vaultAddress);
-            setVaultAssetAddress(defaultAsset.vaultAssetAddress);
+            setVaultAssetAddress(defaultAsset.address);
             setTargetBlockchainChainId(defaultAsset.chainId);
         }
     }, [
@@ -64,22 +65,21 @@ function AssetSwitcher() {
         setSelectedAssetKey,
         setVaultAddress,
         setVaultAssetAddress,
-        setTargetBlockchainChainId
+        setTargetBlockchainChainId,
+        selectedAsset,
+        setSelectedAsset,
+        showMainNets
     ]);
 
     const handleChange = async (event) => {
         const selected = availableAssets.find((a) => a.key === event.target.value);
         setSelectedAssetKey(selected.key);
         setVaultAddress(selected.vaultAddress);
-        setVaultAssetAddress(selected.vaultAssetAddress);
+        setVaultAssetAddress(selected.address);
         setTargetBlockchainChainId(selected.chainId);
-
-        console.log("Selected Asset:", selected);
-        console.log("blockchainInfo:", blockchainInfo);
-        console.log("selected.chainId:", selected.chainId);
+        setSelectedAsset(selected);
 
         try {
-            // Resolve the chain object using chainId instead of name
             const chain = Object.values(blockchainInfo).find(c => c.chainId === selected.chainId);
             if (!chain) throw new Error(`Chain with ID ${selected.chainId} not found in blockchainInfo`);
 
@@ -87,7 +87,7 @@ function AssetSwitcher() {
             console.group("Switched Network");
             console.log(`Switched to chain: ${chain.name} (ID: ${chain.chainId})`);
             console.log(`Vault Address: ${selected.vaultAddress}`);
-            console.log(`Vault Asset: ${selected.vaultAssetAddress}`);
+            console.log(`Vault Asset: ${selected.address}`);
             console.log(`Target Blockchain Chain ID: ${chain.chainId}`);
             console.groupEnd();
 
@@ -95,6 +95,7 @@ function AssetSwitcher() {
             console.error('Error switching network:', error);
         }
     };
+
     return (
         <Box sx={{ display: 'flex', flexDirection: 'column', alignItems: 'center', mt: 3 }}>
             <Typography variant="h6" gutterBottom>

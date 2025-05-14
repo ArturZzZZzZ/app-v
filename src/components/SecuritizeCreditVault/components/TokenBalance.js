@@ -1,12 +1,13 @@
 import React, { useEffect, useState } from 'react';
 import { BrowserProvider, Contract, formatUnits } from 'ethers'
 import { useWeb3ModalProvider, useWeb3ModalAccount } from '@web3modal/ethers/react'
-
+// import { useAppContext } from '../../../utils/AppContext'; // Import AppContext.js
 
 function TokenBalance({ contractAddress, abi, label, refresh }) {
     const { address, isConnected } = useWeb3ModalAccount();
     const [balance, setBalance] = useState(null);
     const { walletProvider } = useWeb3ModalProvider();
+    // const { selectedAsset } = useAppContext();
 
     async function getTokenBalance() {
         if (!isConnected || !walletProvider) {
@@ -25,6 +26,7 @@ function TokenBalance({ contractAddress, abi, label, refresh }) {
             setBalance(formattedBalance);
         } catch (error) {
             console.log('Failed to fetch balance:', error);
+            console.log("assetAddress: ", contractAddress);
         }
     }
     useEffect(() => {

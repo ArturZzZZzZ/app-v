@@ -23,6 +23,7 @@ const SmartContractInterface = () => {
     const { TargetBlockchainChainId, setTargetBlockchainChainId } = useAppContext();
     const AssetAddress = vaultAssetAddress;
     const VaultAddress = vaultAddress;
+    const { selectedAsset } = useAppContext();
 
     useEffect(() => {
         if (isConnected && walletProvider) {
@@ -33,7 +34,7 @@ const SmartContractInterface = () => {
             };
             loadContract();
         }
-    }, [isConnected, walletProvider]);
+    }, [isConnected, walletProvider, selectedAsset]);
 
     const handleExecute = async (method) => {
         if (!contract) return;

@@ -38,7 +38,7 @@ function SecuritizeCreditVault() {
 
   const isOnCorrectBlockchain = chainId === TargetBlockchainChainId;
 
-  const [selectedAsset, setSelectedAsset] = useState(null);
+  const {selectedAsset} = useAppContext();
 
   useEffect(() => {
     if (provider) {
@@ -74,7 +74,9 @@ function SecuritizeCreditVault() {
       {/* <AssetDisplay onAssetChange={setSelectedAsset} /> */}
       <AssetSwitcher />
       {/* <BlockchainSwitcher /> */}
-      {isOnCorrectBlockchain ? (
+      {/* {isOnCorrectBlockchain ? ( */}
+      {selectedAsset ? (
+
         <>
           <Box elevation={3} sx={{ padding: '16px', textAlign: 'center' }}>
             <Tabs value={tabValue} onChange={handleTabChange} centered>
