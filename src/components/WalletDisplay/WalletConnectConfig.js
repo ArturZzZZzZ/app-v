@@ -119,6 +119,13 @@ export const walletConnectTargetBlockchainConfig = [
         explorerUrl: 'https://amoy.polygonscan.com/',
         rpcUrl: 'https://rpc-amoy.polygon.technology'  // Not using Infura
     },
+    {
+        chainId: 56,
+        name: 'BNB Chain',
+        currency: 'BNB',
+        explorerUrl: 'https://bscscan.com/',
+        rpcUrl: "https://binance.llamarpc.com",
+    }
 ];
 
 
