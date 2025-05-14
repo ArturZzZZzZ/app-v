@@ -11,12 +11,14 @@ export const AppProvider = ({ children }) => {
     const [vaultAssetAddress, setVaultAssetAddress] = useState('');
     const [TargetBlockchainChainId, setTargetBlockchainChainId] = useState(0);
     const [selectedAssetKey, setSelectedAssetKey] = useState('');
+    const [selectedAsset, setSelectedAsset] = useState(null);
     return (
         <AppContext.Provider value={{ showMainNets, setShowMainNets,
                                         vaultAddress, setVaultAddress,
                                         vaultAssetAddress, setVaultAssetAddress,
                                         TargetBlockchainChainId, setTargetBlockchainChainId,
-                                        selectedAssetKey, setSelectedAssetKey
+                                        selectedAssetKey, setSelectedAssetKey,
+                                        selectedAsset, setSelectedAsset
          }}>
             {children}
         </AppContext.Provider>

@@ -7,6 +7,7 @@ import baseIcon from '../assets/Base.svg'; // Base icon
 import xdcIcon from '../assets/XDC.svg'; // XDC icon
 import celoIcon from '../assets/Celo.svg'
 import inkChainIcon from '../assets/InkChain.svg'; // InkChain icon
+import bnbIcon from '../assets/BNB.svg'; // BNB Chain icon
 
 //////////////////////////////////////////
 //////////////////////////////////////////
@@ -64,7 +65,7 @@ export const blockchainInfo = {
     assets: [
       {
         vaultAddress: "0x07a36C630e3F072637da3445Da733B29958D8cAB",
-        RepresentationTokenName:"sBUIDL",
+        RepresentationTokenName: "sBUIDL",
         bridgeContractAddress: "0xcbB5B950A76B82Ec7982bABa99F5D4a92bA2288E",
         address: "0x7712c34205737192402172409a8F7ccef8aA2AEc",
         name: "BUIDL",
@@ -77,6 +78,13 @@ export const blockchainInfo = {
         name: "Apollo Diversified Credit Securitize Fund",
         symbol: "ACRED",
         icon: "https://etherscan.io/token/images/apolloacred_64.png"
+      },
+      {
+        bridgeContractAddress: "0x1FCcE143F8A1822466a0012e1e6f70C0894a60BE",
+        address: "0x2255718832bC9fD3bE1CaF75084F4803DA14FF01",
+        name: "VanEck Treasury Fund ",
+        symbol: "VBILL",
+        icon: "https://etherscan.io/token/images/vbill_64.svg"
       },
     ]
   },
@@ -203,12 +211,19 @@ export const blockchainInfo = {
       },
       {
         vaultAddress: "0xaEb1FA0853c7C98EAb10fcF0EA669aE3d07FBB10",
-        RepresentationTokenName:"sBUIDL",
+        RepresentationTokenName: "sBUIDL",
         bridgeContractAddress: "0xcbB5B950A76B82Ec7982bABa99F5D4a92bA2288E",
         address: "0x53FC82f14F009009b440a706e31c9021E1196A2F",
         name: "BUIDL",
         symbol: "BUIDL",
         icon: "https://s3.us-east-2.amazonaws.com/securitize-public-files/perm/8ca7c16b-de67-43f3-8d04-037bf2bd9c8d/0a6c7446-567e-4456-b722-f52f5cea942c-token-icon"
+      },
+      {
+        bridgeContractAddress: "0x1FCcE143F8A1822466a0012e1e6f70C0894a60BE",
+        address: "0x7F4546eF315Efc65336187Fe3765ea779Ac90183",
+        name: "VanEck Treasury Fund ",
+        symbol: "VBILL",
+        icon: "https://etherscan.io/token/images/vbill_64.svg"
       },
 
     ]
@@ -220,8 +235,8 @@ export const blockchainInfo = {
     chainId: 43113,
     rpcUrl: "https://avalanche-fuji.infura.io/v3/" + INFURA_PROJECT_ID,
     icon: avalancheIcon, // Same variable for Fuji testnet
-    vaultAddress: "0xd7aa8784Ca4E234332cEe8f036434DE82651B992",
-    vaultAssetAddress: "0x3454B9699fe19cf9219A3fe9D1F9956676eBA7Db",
+    // vaultAddress: "0xd7aa8784Ca4E234332cEe8f036434DE82651B992",
+    // vaultAssetAddress: "0x3454B9699fe19cf9219A3fe9D1F9956676eBA7Db",
     wormholeChainId: 6,
     // bridgeContractAddress: "0xA11e9c666ED79456951807334B290e0ee422D215",
     // bridgeContractAddress: "0x9281F9c872803cb6C5A3576dFba7210F23Ce24E4",
@@ -229,7 +244,7 @@ export const blockchainInfo = {
     assets: [
       {
         vaultAddress: "0xd7aa8784Ca4E234332cEe8f036434DE82651B992",
-        RepresentationTokenName:"sNOV5",
+        RepresentationTokenName: "sNOV5",
         bridgeContractAddress: "0xA4280e41fAa1DDbE00275781C8baAc2aFa103bDc",
         address: "0x3454B9699fe19cf9219A3fe9D1F9956676eBA7Db",
         name: "NOV5",
@@ -381,15 +396,15 @@ export const blockchainInfo = {
     // vaultAddress: "0xA482Bec6614f3b923cC0079D5C27EE70B5791c5C",
     // vaultAssetAddress: "0x4C5cA366e26409845624E29B62C388a06961A792",
     // ACRED
-    vaultAddress: "0x9d60947D49911E3c262C108f97FE07cde209f9a7",
-    vaultAssetAddress: "0xFCe60bBc52a5705CeC5B445501FBAf3274Dc43D0",
+    // vaultAddress: "0x9d60947D49911E3c262C108f97FE07cde209f9a7",
+    // vaultAssetAddress: "0xFCe60bBc52a5705CeC5B445501FBAf3274Dc43D0",
 
     wormholeChainId: 5,
     // bridgeContractAddress: "0xcbB5B950A76B82Ec7982bABa99F5D4a92bA2288E",
     assets: [
       {
-        vaultAssetAddress: "0x2893Ef551B6dD69F661Ac00F11D93E5Dc5Dc0e99",
-        RepresentationTokenName:"sBUIDL",
+        vaultAddress: "0x4C1e5e780269186A4FBb31c913b11B1a8922B830",
+        RepresentationTokenName: "sBUIDL",
         bridgeContractAddress: "0xcbB5B950A76B82Ec7982bABa99F5D4a92bA2288E",
         address: "0x2893Ef551B6dD69F661Ac00F11D93E5Dc5Dc0e99",
         name: "BUIDL",
@@ -397,8 +412,8 @@ export const blockchainInfo = {
         icon: "https://s3.us-east-2.amazonaws.com/securitize-public-files/perm/8ca7c16b-de67-43f3-8d04-037bf2bd9c8d/0a6c7446-567e-4456-b722-f52f5cea942c-token-icon"
       },
       {
-        vaultAssetAddress: "0xA482Bec6614f3b923cC0079D5C27EE70B5791c5C",
-        RepresentationTokenName:"sSCOPE",
+        vaultAddress: "0xA482Bec6614f3b923cC0079D5C27EE70B5791c5C",
+        RepresentationTokenName: "sSCOPE",
         address: "0xA482Bec6614f3b923cC0079D5C27EE70B5791c5C",
         name: "SCOPE",
         symbol: "SCOPE",
@@ -406,7 +421,7 @@ export const blockchainInfo = {
       },
       {
         vaultAddress: "0x9d60947D49911E3c262C108f97FE07cde209f9a7",
-        RepresentationTokenName:"sACRED",
+        RepresentationTokenName: "sACRED",
         bridgeContractAddress: "0x9A0460445E9B3E859F3C91A1b3f318354a0b11B6",
         address: "0xFCe60bBc52a5705CeC5B445501FBAf3274Dc43D0",
         name: "Apollo Diversified Credit Securitize Fund",
@@ -415,6 +430,8 @@ export const blockchainInfo = {
       },
     ]
   },
+
+
   polygonAmoy: {
     mainnet: false,
     name: "Polygon Amoy",
@@ -452,6 +469,26 @@ export const blockchainInfo = {
   },
 
 
+  // BNB Mainnet 
+  bnb: {
+    mainnet: true,
+    name: "BNB Chain",
+    nativeCurrencySymbol: "BNB",
+    chainId: 56,
+    rpcUrl: "https://binance.llamarpc.com",
+    icon: bnbIcon, // Variable representing the BNB Chain icon
+    wormholeChainId: 4,
+
+    assets: [
+      {
+        bridgeContractAddress: "0x1FCcE143F8A1822466a0012e1e6f70C0894a60BE",
+        address: "0x14d72634328C4D03bBA184A48081Df65F1911279",
+        name: "VanEck Treasury Fund ",
+        symbol: "VBILL",
+        icon: "https://etherscan.io/token/images/vbill_64.svg"
+      },
+    ]
+  },
   // Base Mainnet and Goerli Testnet
   base: {
     mainnet: true,
@@ -574,6 +611,6 @@ export const blockchainInfo = {
 // To configure the VaultAddress and AssetAddress in production, you need edit the config above. 
 
 // export const
-export const AssetName = "ACRED";
-export const RepresentationTokenName = "sACRED";
-export const TargetBlockchainChainId = 137;
+// export const AssetName = "ACRED";
+// export const RepresentationTokenName = "sACRED";
+// export const TargetBlockchainChainId = 137;

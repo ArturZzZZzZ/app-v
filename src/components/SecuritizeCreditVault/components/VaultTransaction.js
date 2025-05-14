@@ -27,6 +27,9 @@ function VaultTransaction() {
     const { vaultAddress, setVaultAddress } = useAppContext();
     const { vaultAssetAddress, setVaultAssetAddress } = useAppContext();
     const { TargetBlockchainChainId, setTargetBlockchainChainId } = useAppContext();
+    const { selectedAssetKey, setSelectedAssetKey } = useAppContext();
+    const {selectedAsset, setSelectedAsset} = useAppContext();
+
     const AssetAddress = vaultAssetAddress;
     const VaultAddress = vaultAddress;
 
@@ -41,7 +44,7 @@ function VaultTransaction() {
         try {
             const ethersProvider = await new ethers.BrowserProvider(walletProvider);
             const signer = await ethersProvider.getSigner();
-            const contractAddress = action === 'deposit' ? AssetAddress : VaultAddress;
+            const contractAddress = action === 'deposit' ? selectedAsset.address : selectedAsset.vaultAddress;
             const contractABI = action === 'deposit' ? ERC20ABI : VaultABI;
             const assetContract = await new ethers.Contract(contractAddress, contractABI, signer);
             const assetBalance = await assetContract.balanceOf(address);
@@ -58,7 +61,7 @@ function VaultTransaction() {
 
     useEffect(() => {
         fetchMaxAssets();
-    }, [refresh, action]); // Trigger balance fetch when refresh state or action changes
+    }, [refresh, action, selectedAsset]); // Trigger balance fetch when refresh state or action changes
 
     async function handleTransaction() {
         try {
@@ -188,9 +191,9 @@ function VaultTransaction() {
                         disabled={loading} // Disable input when loading
                     />
                     <TokenBalance
-                        contractAddress={action === 'deposit' ? AssetAddress : VaultAddress}
+                        contractAddress={action === 'deposit' ? selectedAsset.address : selectedAsset.vaultAddress}
                         abi={action === 'deposit' ? ERC20ABI : VaultABI}
-                        label={action === 'deposit' ? AssetName : RepresentationTokenName}
+                        label={action === 'deposit' ? selectedAsset.assetSymbol : selectedAsset.representationTokenName}
                         refresh={refresh} // Pass the refresh state as a prop
                     />
                     <Button
