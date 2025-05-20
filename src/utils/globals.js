@@ -1,11 +1,11 @@
 import ethereumIcon from '../assets/Ethereum.svg'; // Ethereum icon
-import polygonIcon from '../assets/Polygon.svg';  // Polygon icon
+import polygonIcon from '../assets/Polygon.svg'; // Polygon icon
 import arbitrumIcon from '../assets/Arbitrum.svg'; // Arbitrum icon
 import avalancheIcon from '../assets/Avalanche.svg'; // Avalanche icon
 import optimismIcon from '../assets/Optimism.svg'; // Optimism icon
 import baseIcon from '../assets/Base.svg'; // Base icon
 import xdcIcon from '../assets/XDC.svg'; // XDC icon
-import celoIcon from '../assets/Celo.svg'
+import celoIcon from '../assets/Celo.svg';
 import inkChainIcon from '../assets/InkChain.svg'; // InkChain icon
 import bnbIcon from '../assets/BNB.svg'; // BNB Chain icon
 
@@ -18,7 +18,7 @@ import bnbIcon from '../assets/BNB.svg'; // BNB Chain icon
 //////////////////////////////////////////
 
 // Define the production version of the bridge
-// false: Testing mode 
+// false: Testing mode
 // true: Production mode
 // If in testing mode, testnets will be shown in the network selector as well as the rest of components (e.g. Vault)
 
@@ -27,7 +27,7 @@ export const BRIDGE_PRODUCTION_VERSION = true;
 export const VAULT_PRODUCTION_VERSION = false;
 export const TEST_VERSION = false;
 
-const INFURA_PROJECT_ID = 'ac240982f9804e358d1f59fc60a5c451';  // Miguel's Infura Project ID
+const INFURA_PROJECT_ID = 'ac240982f9804e358d1f59fc60a5c451'; // Miguel's Infura Project ID
 // const INFURA_PROJECT_ID = '7ca398da04ce4502b8697478309756bf'; // Chema Infura Project ID
 
 // Define the blockchain information
@@ -52,10 +52,10 @@ export const blockchainInfo = {
   // Ethereum Mainnet and Sepolia Testnet
   ethereum: {
     mainnet: true,
-    name: "Ethereum",
-    nativeCurrencySymbol: "ETH",
+    name: 'Ethereum',
+    nativeCurrencySymbol: 'ETH',
     chainId: 1,
-    rpcUrl: "https://mainnet.infura.io/v3/" + INFURA_PROJECT_ID, // Replace with your RPC URL
+    rpcUrl: 'https://mainnet.infura.io/v3/' + INFURA_PROJECT_ID, // Replace with your RPC URL
     icon: ethereumIcon, // Variable representing the Ethereum icon
     // BUIDL
     // vaultAddress: "0x07a36C630e3F072637da3445Da733B29958D8cAB",
@@ -64,137 +64,136 @@ export const blockchainInfo = {
     // bridgeContractAddress: "0xcbB5B950A76B82Ec7982bABa99F5D4a92bA2288E",
     assets: [
       {
-        vaultAddress: "0x07a36C630e3F072637da3445Da733B29958D8cAB",
-        RepresentationTokenName: "sBUIDL",
-        bridgeContractAddress: "0xcbB5B950A76B82Ec7982bABa99F5D4a92bA2288E",
-        address: "0x7712c34205737192402172409a8F7ccef8aA2AEc",
-        name: "BUIDL",
-        symbol: "BUIDL",
-        icon: "https://s3.us-east-2.amazonaws.com/securitize-public-files/perm/8ca7c16b-de67-43f3-8d04-037bf2bd9c8d/0a6c7446-567e-4456-b722-f52f5cea942c-token-icon"
+        vaultAddress: '0x07a36C630e3F072637da3445Da733B29958D8cAB',
+        RepresentationTokenName: 'sBUIDL',
+        bridgeContractAddress: '0xcbB5B950A76B82Ec7982bABa99F5D4a92bA2288E',
+        address: '0x7712c34205737192402172409a8F7ccef8aA2AEc',
+        name: 'BUIDL',
+        symbol: 'BUIDL',
+        icon: 'https://s3.us-east-2.amazonaws.com/securitize-public-files/perm/8ca7c16b-de67-43f3-8d04-037bf2bd9c8d/0a6c7446-567e-4456-b722-f52f5cea942c-token-icon',
       },
       {
-        bridgeContractAddress: "0x9A0460445E9B3E859F3C91A1b3f318354a0b11B6",
-        address: "0x17418038ecF73BA4026c4f428547BF099706F27B",
-        name: "Apollo Diversified Credit Securitize Fund",
-        symbol: "ACRED",
-        icon: "https://etherscan.io/token/images/apolloacred_64.png"
+        bridgeContractAddress: '0x9A0460445E9B3E859F3C91A1b3f318354a0b11B6',
+        address: '0x17418038ecF73BA4026c4f428547BF099706F27B',
+        name: 'Apollo Diversified Credit Securitize Fund',
+        symbol: 'ACRED',
+        icon: 'https://etherscan.io/token/images/apolloacred_64.png',
       },
       {
-        bridgeContractAddress: "0x1FCcE143F8A1822466a0012e1e6f70C0894a60BE",
-        address: "0x2255718832bC9fD3bE1CaF75084F4803DA14FF01",
-        name: "VanEck Treasury Fund ",
-        symbol: "VBILL",
-        icon: "https://etherscan.io/token/images/vbill_64.svg"
+        bridgeContractAddress: '0x1FCcE143F8A1822466a0012e1e6f70C0894a60BE',
+        address: '0x2255718832bC9fD3bE1CaF75084F4803DA14FF01',
+        name: 'VanEck Treasury Fund ',
+        symbol: 'VBILL',
+        icon: 'https://etherscan.io/token/images/vbill_64.svg',
       },
-    ]
+    ],
   },
   ethereumSepolia: {
     mainnet: false,
-    name: "Ethereum Sepolia",
-    nativeCurrencySymbol: "ETH",
+    name: 'Ethereum Sepolia',
+    nativeCurrencySymbol: 'ETH',
     chainId: 11155111,
-    rpcUrl: "https://sepolia.infura.io/v3/" + INFURA_PROJECT_ID,
+    rpcUrl: 'https://sepolia.infura.io/v3/' + INFURA_PROJECT_ID,
     icon: ethereumIcon, // Same variable for Sepolia testnet
     wormholeChainId: 10002,
     assets: [
       {
-        bridgeContractAddress: "0x80961d8e682139D04bC437276F6981874320E6fD",
-        address: "0x704f0AEACd3e730cE7D1d4cD93f55979df90AeA1",
-        name: "BLKAUTRC",
-        symbol: "BLKAUTRC",
-        icon: "https://cdn-icons-png.freepik.com/256/12921/12921529.png"
+        bridgeContractAddress: '0x80961d8e682139D04bC437276F6981874320E6fD',
+        address: '0x704f0AEACd3e730cE7D1d4cD93f55979df90AeA1',
+        name: 'BLKAUTRC',
+        symbol: 'BLKAUTRC',
+        icon: 'https://cdn-icons-png.freepik.com/256/12921/12921529.png',
       },
       {
-        bridgeContractAddress: "0xa54494B7ebc8b87b8E7Bf8499CEb9c3BFdbE9773",
-        address: "0xefCEb816f050C26adE27E71a0BC2F91d7c10b207",
-        name: "BLKAUTSB",
-        symbol: "BLKAUTSB",
-        icon: "https://png.pngtree.com/element_our/png/20180921/token-png_105802.jpg"
-      }
-    ]
+        bridgeContractAddress: '0xa54494B7ebc8b87b8E7Bf8499CEb9c3BFdbE9773',
+        address: '0xefCEb816f050C26adE27E71a0BC2F91d7c10b207',
+        name: 'BLKAUTSB',
+        symbol: 'BLKAUTSB',
+        icon: 'https://png.pngtree.com/element_our/png/20180921/token-png_105802.jpg',
+      },
+    ],
   },
-
 
   // Arbitrum Mainnet and Goerli Testnet
   arbitrum: {
     mainnet: true,
-    name: "Arbitrum",
-    nativeCurrencySymbol: "ETH",
+    name: 'Arbitrum',
+    nativeCurrencySymbol: 'ETH',
     chainId: 42161,
-    rpcUrl: "https://arbitrum-mainnet.infura.io/v3/" + INFURA_PROJECT_ID,
+    rpcUrl: 'https://arbitrum-mainnet.infura.io/v3/' + INFURA_PROJECT_ID,
     icon: arbitrumIcon, // Variable representing the Arbitrum icon
     wormholeChainId: 23,
     assets: [
       {
-        bridgeContractAddress: "0xcbB5B950A76B82Ec7982bABa99F5D4a92bA2288E",
-        address: "0xA6525Ae43eDCd03dC08E775774dCAbd3bb925872",
-        name: "BUIDL",
-        symbol: "BUIDL",
-        icon: "https://s3.us-east-2.amazonaws.com/securitize-public-files/perm/8ca7c16b-de67-43f3-8d04-037bf2bd9c8d/0a6c7446-567e-4456-b722-f52f5cea942c-token-icon"
+        bridgeContractAddress: '0xcbB5B950A76B82Ec7982bABa99F5D4a92bA2288E',
+        address: '0xA6525Ae43eDCd03dC08E775774dCAbd3bb925872',
+        name: 'BUIDL',
+        symbol: 'BUIDL',
+        icon: 'https://s3.us-east-2.amazonaws.com/securitize-public-files/perm/8ca7c16b-de67-43f3-8d04-037bf2bd9c8d/0a6c7446-567e-4456-b722-f52f5cea942c-token-icon',
       },
-    ]
+    ],
   },
   arbitrumSepolia: {
     mainnet: false,
-    name: "Arbitrum Sepolia",
-    nativeCurrencySymbol: "ETH",
+    name: 'Arbitrum Sepolia',
+    nativeCurrencySymbol: 'ETH',
     chainId: 421614,
-    rpcUrl: "https://arbitrum-sepolia.infura.io/v3/" + INFURA_PROJECT_ID,
+    rpcUrl: 'https://arbitrum-sepolia.infura.io/v3/' + INFURA_PROJECT_ID,
     icon: arbitrumIcon, // Same variable for Sepolia testnet
     wormholeChainId: 10003,
     // bridgeContractAddress: "0x9e2Cc840CF4d163b1A9AfdBBeD11D04ACa91BC30",
     assets: [
       {
-        bridgeContractAddress: "0x9e2Cc840CF4d163b1A9AfdBBeD11D04ACa91BC30",
-        address: "0x1A925055FA634A991f48e7827AD8B14c92D4581A",
-        name: "NOV5",
-        symbol: "NOV5",
-        icon: "https://s3.us-east-2.amazonaws.com/sandbox-public-files/perm/8202afe0-3a3c-4bd4-a8fc-53396b1e176d/7e5f9fe0-c188-46f1-ab3d-97f7c2f9cf42-token-icon"
+        bridgeContractAddress: '0x9e2Cc840CF4d163b1A9AfdBBeD11D04ACa91BC30',
+        address: '0x1A925055FA634A991f48e7827AD8B14c92D4581A',
+        name: 'NOV5',
+        symbol: 'NOV5',
+        icon: 'https://s3.us-east-2.amazonaws.com/sandbox-public-files/perm/8202afe0-3a3c-4bd4-a8fc-53396b1e176d/7e5f9fe0-c188-46f1-ab3d-97f7c2f9cf42-token-icon',
       },
       {
-        bridgeContractAddress: "0x9A0460445E9B3E859F3C91A1b3f318354a0b11B6",
-        address: "0x36174e2676051dbC2c5A5125b67b46193bd56C6c",
-        name: "FEB6",
-        symbol: "FEB6",
-        icon: "https://s3.us-east-2.amazonaws.com/sandbox-public-files/perm/8202afe0-3a3c-4bd4-a8fc-53396b1e176d/8c897c59-58ee-4f41-8ca0-c2e080704539-token-icon"
+        bridgeContractAddress: '0x9A0460445E9B3E859F3C91A1b3f318354a0b11B6',
+        address: '0x36174e2676051dbC2c5A5125b67b46193bd56C6c',
+        name: 'FEB6',
+        symbol: 'FEB6',
+        icon: 'https://s3.us-east-2.amazonaws.com/sandbox-public-files/perm/8202afe0-3a3c-4bd4-a8fc-53396b1e176d/8c897c59-58ee-4f41-8ca0-c2e080704539-token-icon',
       },
       {
         // bridgeContractAddress:"0x4580B27ABc8915F4dFaea70F9A8163a7b91e3FD4",
-        address: "0x4888Ae13fa5589E30e25b4ac8A34Aefdc06b3901",
-        name: "AUG9",
-        symbol: "AUG9",
-        icon: "https://s3.us-east-2.amazonaws.com/sandbox-public-files/perm/8202afe0-3a3c-4bd4-a8fc-53396b1e176d/8c897c59-58ee-4f41-8ca0-c2e080704539-token-icon"
+        address: '0x4888Ae13fa5589E30e25b4ac8A34Aefdc06b3901',
+        name: 'AUG9',
+        symbol: 'AUG9',
+        icon: 'https://s3.us-east-2.amazonaws.com/sandbox-public-files/perm/8202afe0-3a3c-4bd4-a8fc-53396b1e176d/8c897c59-58ee-4f41-8ca0-c2e080704539-token-icon',
       },
       {
-        address: "0x01695B0b5087597a85A4AB6bE0054f0Bd7c5312A",
-        name: "TBAR",
-        symbol: "TBAR",
-        icon: "https://s3.us-east-2.amazonaws.com/sandbox-public-files/perm/8202afe0-3a3c-4bd4-a8fc-53396b1e176d/8c897c59-58ee-4f41-8ca0-c2e080704539-token-icon"
+        address: '0x01695B0b5087597a85A4AB6bE0054f0Bd7c5312A',
+        name: 'TBAR',
+        symbol: 'TBAR',
+        icon: 'https://s3.us-east-2.amazonaws.com/sandbox-public-files/perm/8202afe0-3a3c-4bd4-a8fc-53396b1e176d/8c897c59-58ee-4f41-8ca0-c2e080704539-token-icon',
       },
       {
-        bridgeContractAddress: "0x80961d8e682139D04bC437276F6981874320E6fD",
-        address: "0xFD00165b9EA4BC7764b885fEaF4937a7683Db838",
-        name: "BLKAUTRC",
-        symbol: "BLKAUTRC",
-        icon: "https://cdn-icons-png.freepik.com/256/12921/12921529.png"
+        bridgeContractAddress: '0x80961d8e682139D04bC437276F6981874320E6fD',
+        address: '0xFD00165b9EA4BC7764b885fEaF4937a7683Db838',
+        name: 'BLKAUTRC',
+        symbol: 'BLKAUTRC',
+        icon: 'https://cdn-icons-png.freepik.com/256/12921/12921529.png',
       },
       {
-        bridgeContractAddress: "0x1A41a3025330C5c835d13470A635471F4B4052A6",
-        address: "0x11189AdD9aa0dF840aF7778Cd16fD21f2D2f5D70",
-        name: "BLKAUTSB",
-        symbol: "BLKAUTSB",
-        icon: "https://png.pngtree.com/element_our/png/20180921/token-png_105802.jpg"
-      }
-    ]
+        bridgeContractAddress: '0x1A41a3025330C5c835d13470A635471F4B4052A6',
+        address: '0x11189AdD9aa0dF840aF7778Cd16fD21f2D2f5D70',
+        name: 'BLKAUTSB',
+        symbol: 'BLKAUTSB',
+        icon: 'https://png.pngtree.com/element_our/png/20180921/token-png_105802.jpg',
+      },
+    ],
   },
 
   // Avalanche Mainnet and Fuji Testnet
   avalanche: {
     mainnet: true,
-    name: "Avalanche",
-    nativeCurrencySymbol: "AVAX",
+    name: 'Avalanche',
+    nativeCurrencySymbol: 'AVAX',
     chainId: 43114,
-    rpcUrl: "https://avalanche-mainnet.infura.io/v3/" + INFURA_PROJECT_ID,
+    rpcUrl: 'https://avalanche-mainnet.infura.io/v3/' + INFURA_PROJECT_ID,
     icon: avalancheIcon, // Variable representing the Avalanche icon
     // BUIDL
     // vaultAddress: "0xaEb1FA0853c7C98EAb10fcF0EA669aE3d07FBB10",
@@ -203,37 +202,36 @@ export const blockchainInfo = {
     // bridgeContractAddress: "0xcbB5B950A76B82Ec7982bABa99F5D4a92bA2288E",
     assets: [
       {
-        bridgeContractAddress: "0x9A0460445E9B3E859F3C91A1b3f318354a0b11B6",
-        address: "0x7C64925002BFA705834B118a923E9911BeE32875",
-        name: "Apollo Diversified Credit Securitize Fund",
-        symbol: "ACRED",
-        icon: "https://etherscan.io/token/images/apolloacred_64.png"
+        bridgeContractAddress: '0x9A0460445E9B3E859F3C91A1b3f318354a0b11B6',
+        address: '0x7C64925002BFA705834B118a923E9911BeE32875',
+        name: 'Apollo Diversified Credit Securitize Fund',
+        symbol: 'ACRED',
+        icon: 'https://etherscan.io/token/images/apolloacred_64.png',
       },
       {
-        vaultAddress: "0xaEb1FA0853c7C98EAb10fcF0EA669aE3d07FBB10",
-        RepresentationTokenName: "sBUIDL",
-        bridgeContractAddress: "0xcbB5B950A76B82Ec7982bABa99F5D4a92bA2288E",
-        address: "0x53FC82f14F009009b440a706e31c9021E1196A2F",
-        name: "BUIDL",
-        symbol: "BUIDL",
-        icon: "https://s3.us-east-2.amazonaws.com/securitize-public-files/perm/8ca7c16b-de67-43f3-8d04-037bf2bd9c8d/0a6c7446-567e-4456-b722-f52f5cea942c-token-icon"
+        vaultAddress: '0xaEb1FA0853c7C98EAb10fcF0EA669aE3d07FBB10',
+        RepresentationTokenName: 'sBUIDL',
+        bridgeContractAddress: '0xcbB5B950A76B82Ec7982bABa99F5D4a92bA2288E',
+        address: '0x53FC82f14F009009b440a706e31c9021E1196A2F',
+        name: 'BUIDL',
+        symbol: 'BUIDL',
+        icon: 'https://s3.us-east-2.amazonaws.com/securitize-public-files/perm/8ca7c16b-de67-43f3-8d04-037bf2bd9c8d/0a6c7446-567e-4456-b722-f52f5cea942c-token-icon',
       },
       {
-        bridgeContractAddress: "0x1FCcE143F8A1822466a0012e1e6f70C0894a60BE",
-        address: "0x7F4546eF315Efc65336187Fe3765ea779Ac90183",
-        name: "VanEck Treasury Fund ",
-        symbol: "VBILL",
-        icon: "https://etherscan.io/token/images/vbill_64.svg"
+        bridgeContractAddress: '0x1FCcE143F8A1822466a0012e1e6f70C0894a60BE',
+        address: '0x7F4546eF315Efc65336187Fe3765ea779Ac90183',
+        name: 'VanEck Treasury Fund ',
+        symbol: 'VBILL',
+        icon: 'https://etherscan.io/token/images/vbill_64.svg',
       },
-
-    ]
+    ],
   },
   avalancheFuji: {
     mainnet: false,
-    name: "Avalanche Fuji",
-    nativeCurrencySymbol: "AVAX",
+    name: 'Avalanche Fuji',
+    nativeCurrencySymbol: 'AVAX',
     chainId: 43113,
-    rpcUrl: "https://avalanche-fuji.infura.io/v3/" + INFURA_PROJECT_ID,
+    rpcUrl: 'https://avalanche-fuji.infura.io/v3/' + INFURA_PROJECT_ID,
     icon: avalancheIcon, // Same variable for Fuji testnet
     // vaultAddress: "0xd7aa8784Ca4E234332cEe8f036434DE82651B992",
     // vaultAssetAddress: "0x3454B9699fe19cf9219A3fe9D1F9956676eBA7Db",
@@ -243,63 +241,63 @@ export const blockchainInfo = {
     // bridgeContractAddress: "0xA4280e41fAa1DDbE00275781C8baAc2aFa103bDc",
     assets: [
       {
-        vaultAddress: "0xd7aa8784Ca4E234332cEe8f036434DE82651B992",
-        RepresentationTokenName: "sNOV5",
-        bridgeContractAddress: "0xA4280e41fAa1DDbE00275781C8baAc2aFa103bDc",
-        address: "0x3454B9699fe19cf9219A3fe9D1F9956676eBA7Db",
-        name: "NOV5",
-        symbol: "NOV5",
-        icon: "https://s3.us-east-2.amazonaws.com/sandbox-public-files/perm/8202afe0-3a3c-4bd4-a8fc-53396b1e176d/e3be35d8-40c8-43a3-aa00-3f6e23285941-token-icon"
+        vaultAddress: '0xd7aa8784Ca4E234332cEe8f036434DE82651B992',
+        RepresentationTokenName: 'sNOV5',
+        bridgeContractAddress: '0xA4280e41fAa1DDbE00275781C8baAc2aFa103bDc',
+        address: '0x3454B9699fe19cf9219A3fe9D1F9956676eBA7Db',
+        name: 'NOV5',
+        symbol: 'NOV5',
+        icon: 'https://s3.us-east-2.amazonaws.com/sandbox-public-files/perm/8202afe0-3a3c-4bd4-a8fc-53396b1e176d/e3be35d8-40c8-43a3-aa00-3f6e23285941-token-icon',
       },
       {
-        bridgeContractAddress: "0x9A0460445E9B3E859F3C91A1b3f318354a0b11B6",
-        address: "0x28277DF5BDb175CeCEc7F21feaaCF2C836d81D50",
-        name: "FEB6",
-        symbol: "FEB6",
-        icon: "https://s3.us-east-2.amazonaws.com/sandbox-public-files/perm/8202afe0-3a3c-4bd4-a8fc-53396b1e176d/8c897c59-58ee-4f41-8ca0-c2e080704539-token-icon"
+        bridgeContractAddress: '0x9A0460445E9B3E859F3C91A1b3f318354a0b11B6',
+        address: '0x28277DF5BDb175CeCEc7F21feaaCF2C836d81D50',
+        name: 'FEB6',
+        symbol: 'FEB6',
+        icon: 'https://s3.us-east-2.amazonaws.com/sandbox-public-files/perm/8202afe0-3a3c-4bd4-a8fc-53396b1e176d/8c897c59-58ee-4f41-8ca0-c2e080704539-token-icon',
       },
       {
         // bridgeContractAddress:"0x4580B27ABc8915F4dFaea70F9A8163a7b91e3FD4",
-        address: "0xa0e3E3A377522Cb33CdCF9a20918A996C3457e23",
-        name: "AUG9",
-        symbol: "AUG9",
-        icon: "https://s3.us-east-2.amazonaws.com/sandbox-public-files/perm/8202afe0-3a3c-4bd4-a8fc-53396b1e176d/8c897c59-58ee-4f41-8ca0-c2e080704539-token-icon"
+        address: '0xa0e3E3A377522Cb33CdCF9a20918A996C3457e23',
+        name: 'AUG9',
+        symbol: 'AUG9',
+        icon: 'https://s3.us-east-2.amazonaws.com/sandbox-public-files/perm/8202afe0-3a3c-4bd4-a8fc-53396b1e176d/8c897c59-58ee-4f41-8ca0-c2e080704539-token-icon',
       },
       {
-        address: "0xdAD351E06D689f4A48F3033e2Ddcd3474ef89E8b",
-        name: "TBAV",
-        symbol: "TBAV",
-        icon: "https://s3.us-east-2.amazonaws.com/sandbox-public-files/perm/8202afe0-3a3c-4bd4-a8fc-53396b1e176d/8c897c59-58ee-4f41-8ca0-c2e080704539-token-icon"
-      }
-    ]
+        address: '0xdAD351E06D689f4A48F3033e2Ddcd3474ef89E8b',
+        name: 'TBAV',
+        symbol: 'TBAV',
+        icon: 'https://s3.us-east-2.amazonaws.com/sandbox-public-files/perm/8202afe0-3a3c-4bd4-a8fc-53396b1e176d/8c897c59-58ee-4f41-8ca0-c2e080704539-token-icon',
+      },
+    ],
   },
 
   // Optimism Mainnet and Sepolia Testnet
   optimism: {
     mainnet: true,
-    name: "Optimism",
-    nativeCurrencySymbol: "ETH",
+    name: 'Optimism',
+    nativeCurrencySymbol: 'ETH',
     chainId: 10,
-    rpcUrl: "https://optimism-mainnet.infura.io/v3/" + INFURA_PROJECT_ID,
+    rpcUrl: 'https://optimism-mainnet.infura.io/v3/' + INFURA_PROJECT_ID,
     icon: optimismIcon, // Variable representing the Optimism icon
     wormholeChainId: 24,
     // bridgeContractAddress: "0xcbB5B950A76B82Ec7982bABa99F5D4a92bA2288E",
     assets: [
       {
-        bridgeContractAddress: "0xcbB5B950A76B82Ec7982bABa99F5D4a92bA2288E",
-        address: "0xa1CDAb15bBA75a80dF4089CaFbA013e376957cF5",
-        name: "BUIDL",
-        symbol: "BUIDL",
-        icon: "https://s3.us-east-2.amazonaws.com/securitize-public-files/perm/8ca7c16b-de67-43f3-8d04-037bf2bd9c8d/0a6c7446-567e-4456-b722-f52f5cea942c-token-icon"
+        bridgeContractAddress: '0xcbB5B950A76B82Ec7982bABa99F5D4a92bA2288E',
+        address: '0xa1CDAb15bBA75a80dF4089CaFbA013e376957cF5',
+        name: 'BUIDL',
+        symbol: 'BUIDL',
+        icon: 'https://s3.us-east-2.amazonaws.com/securitize-public-files/perm/8ca7c16b-de67-43f3-8d04-037bf2bd9c8d/0a6c7446-567e-4456-b722-f52f5cea942c-token-icon',
       },
-    ]
+    ],
   },
   optimismSepolia: {
     mainnet: false,
-    name: "Optimism Sepolia",
-    nativeCurrencySymbol: "ETH",
+    name: 'Optimism Sepolia',
+    nativeCurrencySymbol: 'ETH',
     chainId: 11155420,
-    rpcUrl: "https://optimism-sepolia.infura.io/v3/" + INFURA_PROJECT_ID,
+    rpcUrl: 'https://optimism-sepolia.infura.io/v3/' + INFURA_PROJECT_ID,
     icon: optimismIcon, // Variable representing the Optimism icon
     wormholeChainId: 10005,
 
@@ -307,62 +305,62 @@ export const blockchainInfo = {
     // bridgeContractAddress: "0xA84793e88F4816cb82093b74532c3DA7791e276c",
     assets: [
       {
-        bridgeContractAddress: "0xA84793e88F4816cb82093b74532c3DA7791e276c",
-        address: "0xa42A16AAe02Fd5bD0CeAb2a84485B74289eCc877",
-        name: "NOV5",
-        symbol: "NOV5",
-        icon: "https://s3.us-east-2.amazonaws.com/sandbox-public-files/perm/8202afe0-3a3c-4bd4-a8fc-53396b1e176d/e3be35d8-40c8-43a3-aa00-3f6e23285941-token-icon"
+        bridgeContractAddress: '0xA84793e88F4816cb82093b74532c3DA7791e276c',
+        address: '0xa42A16AAe02Fd5bD0CeAb2a84485B74289eCc877',
+        name: 'NOV5',
+        symbol: 'NOV5',
+        icon: 'https://s3.us-east-2.amazonaws.com/sandbox-public-files/perm/8202afe0-3a3c-4bd4-a8fc-53396b1e176d/e3be35d8-40c8-43a3-aa00-3f6e23285941-token-icon',
       },
       {
-        bridgeContractAddress: "0x9A0460445E9B3E859F3C91A1b3f318354a0b11B6",
-        address: "0x56c3e2d4c13C686772060b81B88e94ad8ee8157b",
-        name: "FEB6",
-        symbol: "FEB6",
-        icon: "https://s3.us-east-2.amazonaws.com/sandbox-public-files/perm/8202afe0-3a3c-4bd4-a8fc-53396b1e176d/8c897c59-58ee-4f41-8ca0-c2e080704539-token-icon"
+        bridgeContractAddress: '0x9A0460445E9B3E859F3C91A1b3f318354a0b11B6',
+        address: '0x56c3e2d4c13C686772060b81B88e94ad8ee8157b',
+        name: 'FEB6',
+        symbol: 'FEB6',
+        icon: 'https://s3.us-east-2.amazonaws.com/sandbox-public-files/perm/8202afe0-3a3c-4bd4-a8fc-53396b1e176d/8c897c59-58ee-4f41-8ca0-c2e080704539-token-icon',
       },
       {
         // bridgeContractAddress:"0x4580B27ABc8915F4dFaea70F9A8163a7b91e3FD4",
-        address: "0x55AEF1F1fE0eA4BB7887d9AdB84714FAA0076B82",
-        name: "AUG9",
-        symbol: "AUG9",
-        icon: "https://s3.us-east-2.amazonaws.com/sandbox-public-files/perm/8202afe0-3a3c-4bd4-a8fc-53396b1e176d/8c897c59-58ee-4f41-8ca0-c2e080704539-token-icon"
+        address: '0x55AEF1F1fE0eA4BB7887d9AdB84714FAA0076B82',
+        name: 'AUG9',
+        symbol: 'AUG9',
+        icon: 'https://s3.us-east-2.amazonaws.com/sandbox-public-files/perm/8202afe0-3a3c-4bd4-a8fc-53396b1e176d/8c897c59-58ee-4f41-8ca0-c2e080704539-token-icon',
       },
       {
-        address: "0xdAD351E06D689f4A48F3033e2Ddcd3474ef89E8b",
-        name: "TBAV",
-        symbol: "TBAV",
-        icon: "https://s3.us-east-2.amazonaws.com/sandbox-public-files/perm/8202afe0-3a3c-4bd4-a8fc-53396b1e176d/8c897c59-58ee-4f41-8ca0-c2e080704539-token-icon"
+        address: '0xdAD351E06D689f4A48F3033e2Ddcd3474ef89E8b',
+        name: 'TBAV',
+        symbol: 'TBAV',
+        icon: 'https://s3.us-east-2.amazonaws.com/sandbox-public-files/perm/8202afe0-3a3c-4bd4-a8fc-53396b1e176d/8c897c59-58ee-4f41-8ca0-c2e080704539-token-icon',
       },
-
-    ]
+    ],
   },
 
   // InkChain Mainnet and Sepolia Testnet
   inkChain: {
     mainnet: true,
-    name: "Ink Chain",
-    nativeCurrencySymbol: "ETH",
+    name: 'Ink Chain',
+    nativeCurrencySymbol: 'ETH',
     chainId: 57073,
-    rpcUrl: "https://ink.drpc.org",
+    rpcUrl: 'https://ink.drpc.org',
     icon: inkChainIcon, // Variable representing the icon
     wormholeChainId: 46,
     assets: [
       {
-        bridgeContractAddress: "0x9A0460445E9B3E859F3C91A1b3f318354a0b11B6",
-        address: "0x53Ad50D3B6FCaCB8965d3A49cB722917C7DAE1F3",
-        name: "Apollo Diversified Credit Securitize Fund",
-        symbol: "ACRED",
-        icon: "https://etherscan.io/token/images/apolloacred_64.png"
+        bridgeContractAddress: '0x9A0460445E9B3E859F3C91A1b3f318354a0b11B6',
+        address: '0x53Ad50D3B6FCaCB8965d3A49cB722917C7DAE1F3',
+        name: 'Apollo Diversified Credit Securitize Fund',
+        symbol: 'ACRED',
+        icon: 'https://etherscan.io/token/images/apolloacred_64.png',
       },
-    ]
+    ],
   },
 
   inkChainSepolia: {
     mainnet: false,
-    name: "Ink Sepolia",
-    nativeCurrencySymbol: "ETH",
+    name: 'Ink Sepolia',
+    nativeCurrencySymbol: 'ETH',
     chainId: 763373,
-    rpcUrl: "https://newest-wiser-replica.ink-sepolia.quiknode.pro/0d55a359ccc307be2b1fc478adca9b2f8b00c802",
+    rpcUrl:
+      'https://newest-wiser-replica.ink-sepolia.quiknode.pro/0d55a359ccc307be2b1fc478adca9b2f8b00c802',
 
     // rpcUrl: "https://rpc-gel-sepolia.inkonchain.com",
     // rpcUrl: "https://ink-sepolia.g.alchemy.com/v2/MPp5oGWLR7Ri5O0LtgQoihUI8uEyIHPV",
@@ -371,23 +369,22 @@ export const blockchainInfo = {
 
     assets: [
       {
-        bridgeContractAddress: "0xBe5Ff9533B30917472Ac96F18A594Aa140d5C656",
-        address: "0x9d219e45E8A6e1273D017a9c5f016092f8081011",
-        name: "FEB6",
-        symbol: "FEB6",
-        icon: "https://s3.us-east-2.amazonaws.com/sandbox-public-files/perm/8202afe0-3a3c-4bd4-a8fc-53396b1e176d/8c897c59-58ee-4f41-8ca0-c2e080704539-token-icon"
+        bridgeContractAddress: '0xBe5Ff9533B30917472Ac96F18A594Aa140d5C656',
+        address: '0x9d219e45E8A6e1273D017a9c5f016092f8081011',
+        name: 'FEB6',
+        symbol: 'FEB6',
+        icon: 'https://s3.us-east-2.amazonaws.com/sandbox-public-files/perm/8202afe0-3a3c-4bd4-a8fc-53396b1e176d/8c897c59-58ee-4f41-8ca0-c2e080704539-token-icon',
       },
-
-    ]
+    ],
   },
 
   // Polygon Mainnet and Amoy Testnet
   polygon: {
     mainnet: true,
-    name: "Polygon",
-    nativeCurrencySymbol: "POL",
+    name: 'Polygon',
+    nativeCurrencySymbol: 'POL',
     chainId: 137,
-    rpcUrl: "https://polygon-mainnet.infura.io/v3/" + INFURA_PROJECT_ID,
+    rpcUrl: 'https://polygon-mainnet.infura.io/v3/' + INFURA_PROJECT_ID,
     icon: polygonIcon, // Variable representing the Polygon icon
     // BUIDL
     // vaultAddress: "0x4C1e5e780269186A4FBb31c913b11B1a8922B830",
@@ -403,59 +400,58 @@ export const blockchainInfo = {
     // bridgeContractAddress: "0xcbB5B950A76B82Ec7982bABa99F5D4a92bA2288E",
     assets: [
       {
-        vaultAddress: "0x4C1e5e780269186A4FBb31c913b11B1a8922B830",
-        RepresentationTokenName: "sBUIDL",
-        bridgeContractAddress: "0xcbB5B950A76B82Ec7982bABa99F5D4a92bA2288E",
-        address: "0x2893Ef551B6dD69F661Ac00F11D93E5Dc5Dc0e99",
-        name: "BUIDL",
-        symbol: "BUIDL",
-        icon: "https://s3.us-east-2.amazonaws.com/securitize-public-files/perm/8ca7c16b-de67-43f3-8d04-037bf2bd9c8d/0a6c7446-567e-4456-b722-f52f5cea942c-token-icon"
+        vaultAddress: '0x4C1e5e780269186A4FBb31c913b11B1a8922B830',
+        RepresentationTokenName: 'sBUIDL',
+        bridgeContractAddress: '0xcbB5B950A76B82Ec7982bABa99F5D4a92bA2288E',
+        address: '0x2893Ef551B6dD69F661Ac00F11D93E5Dc5Dc0e99',
+        name: 'BUIDL',
+        symbol: 'BUIDL',
+        icon: 'https://s3.us-east-2.amazonaws.com/securitize-public-files/perm/8ca7c16b-de67-43f3-8d04-037bf2bd9c8d/0a6c7446-567e-4456-b722-f52f5cea942c-token-icon',
       },
       {
-        vaultAddress: "0xA482Bec6614f3b923cC0079D5C27EE70B5791c5C",
-        RepresentationTokenName: "sSCOPE",
-        address: "0xA482Bec6614f3b923cC0079D5C27EE70B5791c5C",
-        name: "SCOPE",
-        symbol: "SCOPE",
-        icon: "https://polygonscan.com/token/images/hlscope_32.png"
+        vaultAddress: '0xA482Bec6614f3b923cC0079D5C27EE70B5791c5C',
+        RepresentationTokenName: 'sSCOPE',
+        address: '0xA482Bec6614f3b923cC0079D5C27EE70B5791c5C',
+        name: 'SCOPE',
+        symbol: 'SCOPE',
+        icon: 'https://polygonscan.com/token/images/hlscope_32.png',
       },
       {
-        vaultAddress: "0x9d60947D49911E3c262C108f97FE07cde209f9a7",
-        RepresentationTokenName: "sACRED",
-        bridgeContractAddress: "0x9A0460445E9B3E859F3C91A1b3f318354a0b11B6",
-        address: "0xFCe60bBc52a5705CeC5B445501FBAf3274Dc43D0",
-        name: "Apollo Diversified Credit Securitize Fund",
-        symbol: "ACRED",
-        icon: "https://etherscan.io/token/images/apolloacred_64.png"
+        vaultAddress: '0x9d60947D49911E3c262C108f97FE07cde209f9a7',
+        RepresentationTokenName: 'sACRED',
+        bridgeContractAddress: '0x9A0460445E9B3E859F3C91A1b3f318354a0b11B6',
+        address: '0xFCe60bBc52a5705CeC5B445501FBAf3274Dc43D0',
+        name: 'Apollo Diversified Credit Securitize Fund',
+        symbol: 'ACRED',
+        icon: 'https://etherscan.io/token/images/apolloacred_64.png',
       },
-    ]
+    ],
   },
-
 
   polygonAmoy: {
     mainnet: false,
-    name: "Polygon Amoy",
-    nativeCurrencySymbol: "POL",
+    name: 'Polygon Amoy',
+    nativeCurrencySymbol: 'POL',
     chainId: 80002,
-    rpcUrl: "https://rpc-amoy.polygon.technology",
+    rpcUrl: 'https://rpc-amoy.polygon.technology',
     icon: polygonIcon,
     wormholeChainId: 10007,
     assets: [
       {
-        bridgeContractAddress: "0x80961d8e682139D04bC437276F6981874320E6fD",
-        address: "0xa08aE23BeA455352Ba6b5f63C0B0636b72a90E31",
-        name: "BLKAUTRC",
-        symbol: "BLKAUTRC",
-        icon: "https://cdn-icons-png.freepik.com/256/12921/12921529.png"
+        bridgeContractAddress: '0x80961d8e682139D04bC437276F6981874320E6fD',
+        address: '0xa08aE23BeA455352Ba6b5f63C0B0636b72a90E31',
+        name: 'BLKAUTRC',
+        symbol: 'BLKAUTRC',
+        icon: 'https://cdn-icons-png.freepik.com/256/12921/12921529.png',
       },
       {
-        bridgeContractAddress: "0xa54494B7ebc8b87b8E7Bf8499CEb9c3BFdbE9773",
-        address: "0xb5Eaf38ECffFd70774ff7a6008046D0a2A4857c9",
-        name: "BLKAUTSB",
-        symbol: "BLKAUTSB",
-        icon: "https://png.pngtree.com/element_our/png/20180921/token-png_105802.jpg"
-      }
-    ]
+        bridgeContractAddress: '0xa54494B7ebc8b87b8E7Bf8499CEb9c3BFdbE9773',
+        address: '0xb5Eaf38ECffFd70774ff7a6008046D0a2A4857c9',
+        name: 'BLKAUTSB',
+        symbol: 'BLKAUTSB',
+        icon: 'https://png.pngtree.com/element_our/png/20180921/token-png_105802.jpg',
+      },
+    ],
     // bridgeContractAddress: "0xA4280e41fAa1DDbE00275781C8baAc2aFa103bDc",
     // assets: [
     //   {
@@ -468,93 +464,91 @@ export const blockchainInfo = {
     // ]
   },
 
-
-  // BNB Mainnet 
+  // BNB Mainnet
   bnb: {
     mainnet: true,
-    name: "BNB Chain",
-    nativeCurrencySymbol: "BNB",
+    name: 'BNB Chain',
+    nativeCurrencySymbol: 'BNB',
     chainId: 56,
-    rpcUrl: "https://binance.llamarpc.com",
+    rpcUrl: 'https://binance.llamarpc.com',
     icon: bnbIcon, // Variable representing the BNB Chain icon
     wormholeChainId: 4,
 
     assets: [
       {
-        bridgeContractAddress: "0x1FCcE143F8A1822466a0012e1e6f70C0894a60BE",
-        address: "0x14d72634328C4D03bBA184A48081Df65F1911279",
-        name: "VanEck Treasury Fund ",
-        symbol: "VBILL",
-        icon: "https://etherscan.io/token/images/vbill_64.svg"
+        bridgeContractAddress: '0x1FCcE143F8A1822466a0012e1e6f70C0894a60BE',
+        address: '0x14d72634328C4D03bBA184A48081Df65F1911279',
+        name: 'VanEck Treasury Fund ',
+        symbol: 'VBILL',
+        icon: 'https://etherscan.io/token/images/vbill_64.svg',
       },
-    ]
+    ],
   },
   // Base Mainnet and Goerli Testnet
   base: {
     mainnet: true,
-    name: "Base",
-    nativeCurrencySymbol: "BASE",
+    name: 'Base',
+    nativeCurrencySymbol: 'BASE',
     chainId: 8453,
-    rpcUrl: "https://mainnet.base.org",
+    rpcUrl: 'https://mainnet.base.org',
     icon: baseIcon, // Variable representing the Base icon
   },
 
   baseGoerli: {
     mainnet: false,
-    name: "Base Goerli Testnet",
-    nativeCurrencySymbol: "BASE",
+    name: 'Base Goerli Testnet',
+    nativeCurrencySymbol: 'BASE',
     chainId: 84531,
-    rpcUrl: "https://goerli.base.org",
+    rpcUrl: 'https://goerli.base.org',
     icon: baseIcon, // Same variable for Goerli testnet
   },
 
   // XDC Mainnet and Apothem Testnet
   xdc: {
     mainnet: true,
-    name: "XDC Network",
-    nativeCurrencySymbol: "XDC",
+    name: 'XDC Network',
+    nativeCurrencySymbol: 'XDC',
     chainId: 50,
-    rpcUrl: "https://rpc.xinfin.network",
+    rpcUrl: 'https://rpc.xinfin.network',
     icon: xdcIcon, // Variable representing the XDC icon
   },
   xdcApothem: {
     mainnet: false,
-    name: "XDC Apothem Testnet",
-    nativeCurrencySymbol: "XDC",
+    name: 'XDC Apothem Testnet',
+    nativeCurrencySymbol: 'XDC',
     chainId: 51,
-    rpcUrl: "https://rpc.apothem.network",
+    rpcUrl: 'https://rpc.apothem.network',
     icon: xdcIcon, // Same variable for Apothem testnet
   },
 
   // Celo Mainnet and Alfajores Testnet
   celo: {
     mainnet: true,
-    name: "Celo",
-    nativeCurrencySymbol: "CELO",
+    name: 'Celo',
+    nativeCurrencySymbol: 'CELO',
     chainId: 42220,
-    rpcUrl: "https://forno.celo.org",
+    rpcUrl: 'https://forno.celo.org',
     icon: celoIcon, // Variable representing the Celo icon
   },
   celoAlfajores: {
     mainnet: false,
-    name: "Celo Alfajores",
-    nativeCurrencySymbol: "CELO",
+    name: 'Celo Alfajores',
+    nativeCurrencySymbol: 'CELO',
     chainId: 44787,
-    rpcUrl: "https://alfajores-forno.celo-testnet.org",
+    rpcUrl: 'https://alfajores-forno.celo-testnet.org',
     icon: celoIcon, // Same variable for Celo Alfajores testnet
     wormholeChainId: 14,
     // bridgeContractAddress: "0x2DBADe2AbFC04aB8a804C5cCDD6a5f0Ba61Db1b5",
     assets: [
       {
-        address: "0xBF84d7D218dD971e9648Ca39F62fE2164656a365",
-        name: "AUG9",
-        symbol: "AUG9",
-        icon: "https://s3.us-east-2.amazonaws.com/sandbox-public-files/perm/8202afe0-3a3c-4bd4-a8fc-53396b1e176d/8c897c59-58ee-4f41-8ca0-c2e080704539-token-icon"
+        address: '0xBF84d7D218dD971e9648Ca39F62fE2164656a365',
+        name: 'AUG9',
+        symbol: 'AUG9',
+        icon: 'https://s3.us-east-2.amazonaws.com/sandbox-public-files/perm/8202afe0-3a3c-4bd4-a8fc-53396b1e176d/8c897c59-58ee-4f41-8ca0-c2e080704539-token-icon',
       },
-    ]
+    ],
   },
 };
-
 
 //////////////////////////////////////////
 //////////////////////////////////////////
@@ -565,12 +559,11 @@ export const blockchainInfo = {
 //////////////////////////////////////////
 
 // // For Vault in Mainnet
-// export const VaultAddress = "0x07a36C630e3F072637da3445Da733B29958D8cAB"; 
+// export const VaultAddress = "0x07a36C630e3F072637da3445Da733B29958D8cAB";
 // export const AssetAddress = "0x7712c34205737192402172409a8F7ccef8aA2AEc";
 // export const AssetName = "BUIDL";
 // export const RepresentationTokenName = "sBUIDL";
 // export const TargetBlockchainChainId = 1;
-
 
 // // For Vault in Testnets
 // export const VaultAddress = "0x602B85F6e27656d2897fF6984896d9af7661939f";
@@ -602,15 +595,16 @@ export const blockchainInfo = {
 
 // For Vault in Poloygon Production (sACRED)
 
-
 // NOTICE!!!!!!!!!!
 // THIS IS NOT THE ADDRESS OF THE VAULT IN PRODUCTION
 // export const VaultAddress = "0x9d60947D49911E3c262C108f97FE07cde209f9a7";
 // export const AssetAddress = "0xFCe60bBc52a5705CeC5B445501FBAf3274Dc43D0";
 // EBD THIS IS NOT THE ADDRESS OF THE VAULT IN PRODUCTION
-// To configure the VaultAddress and AssetAddress in production, you need edit the config above. 
+// To configure the VaultAddress and AssetAddress in production, you need edit the config above.
 
 // export const
-// export const AssetName = "ACRED";
-// export const RepresentationTokenName = "sACRED";
+export const AssetName = 'BUIDL';
+export const RepresentationTokenName = 'sBUIDL';
+export const AssetAddress = '0x7712c34205737192402172409a8F7ccef8aA2AEc';
+export const VaultAddress = '0x07a36C630e3F072637da3445Da733B29958D8cAB';
 // export const TargetBlockchainChainId = 137;
