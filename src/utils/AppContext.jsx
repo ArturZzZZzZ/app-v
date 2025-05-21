@@ -1,32 +1,66 @@
 import React, {
   createContext,
+  useCallback,
   useContext,
   useEffect,
+  useMemo,
   useState,
   version
 } from "react";
 
+import { WalletAdapterNetwork } from "@solana/wallet-adapter-base";
+import {
+  ConnectionProvider,
+  WalletProvider
+} from "@solana/wallet-adapter-react";
+import { WalletModalProvider } from "@solana/wallet-adapter-react-ui";
+import { PhantomWalletAdapter } from "@solana/wallet-adapter-wallets";
+import { clusterApiUrl } from "@solana/web3.js";
+
+import { TEST_VERSION } from "./globals";
+
 const AppContext = createContext();
 export default AppContext;
 
+export function getCluster(cluster) {
+  switch (cluster) {
+    case WalletAdapterNetwork.Mainnet:
+      return {
+        name: "Mainnet Beta",
+        endpoint: "",
+        network: WalletAdapterNetwork.Mainnet
+      };
+    case WalletAdapterNetwork.Devnet:
+      return {
+        name: "Devnet",
+        endpoint: clusterApiUrl("devnet"),
+        network: WalletAdapterNetwork.Devnet
+      };
+    default:
+      return {
+        name: "Mainnet Beta",
+        endpoint: clusterApiUrl("mainnet-beta"),
+        network: WalletAdapterNetwork.Mainnet
+      };
+  }
+}
+
+const network = TEST_VERSION
+  ? WalletAdapterNetwork.Devnet
+  : WalletAdapterNetwork.Mainnet;
+
+const cluster = getCluster(network);
+const endpoint = cluster.endpoint;
+const wallets = [new PhantomWalletAdapter()];
+
 const SolanaWalletProvider = ({ children }) => {
-  const network = WalletAdapterNetwork.Mainnet;
-  const endpoint = "https://api.mainnet-beta.solana.com";
+  const onError = useCallback((error) => {
+    console.error(error);
+  }, []);
 
-  const wallets = useMemo(() => [new PhantomWalletAdapter()], []);
-
-  const LABELS = {
-    "change-wallet": "Change wallet",
-    connecting: "Connecting ...",
-    "copy-address": "Copy address",
-    copied: "Copied",
-    disconnect: "Disconnect",
-    "has-wallet": "Connect",
-    "no-wallet": "Connect Solana Wallet"
-  };
   return (
     <ConnectionProvider endpoint={endpoint}>
-      <WalletProvider wallets={wallets} autoConnect>
+      <WalletProvider wallets={wallets} onError={onError} autoConnect>
         <WalletModalProvider>{children}</WalletModalProvider>
       </WalletProvider>
     </ConnectionProvider>
@@ -59,7 +93,7 @@ export const AppProvider = ({ children }) => {
         setSelectedAsset
       }}
     >
-      {children}
+      <SolanaWalletProvider>{children}</SolanaWalletProvider>
     </AppContext.Provider>
   );
 };
