@@ -8,6 +8,7 @@ import xdcIcon from '../assets/XDC.svg'; // XDC icon
 import celoIcon from '../assets/Celo.svg';
 import inkChainIcon from '../assets/InkChain.svg'; // InkChain icon
 import bnbIcon from '../assets/BNB.svg'; // BNB Chain icon
+import solanaIcon from '../assets/Solana.svg'; // Solana icon (добавьте иконку в assets)
 
 //////////////////////////////////////////
 //////////////////////////////////////////
@@ -23,9 +24,9 @@ import bnbIcon from '../assets/BNB.svg'; // BNB Chain icon
 // If in testing mode, testnets will be shown in the network selector as well as the rest of components (e.g. Vault)
 
 // ONLY ONE OF THE FOLLOWING VARIABLES SHOULD BE TRUE
-export const BRIDGE_PRODUCTION_VERSION = true;
+export const BRIDGE_PRODUCTION_VERSION = false;
 export const VAULT_PRODUCTION_VERSION = false;
-export const TEST_VERSION = false;
+export const TEST_VERSION = true;
 
 const INFURA_PROJECT_ID = 'ac240982f9804e358d1f59fc60a5c451'; // Miguel's Infura Project ID
 // const INFURA_PROJECT_ID = '7ca398da04ce4502b8697478309756bf'; // Chema Infura Project ID
@@ -545,6 +546,25 @@ export const blockchainInfo = {
         name: 'AUG9',
         symbol: 'AUG9',
         icon: 'https://s3.us-east-2.amazonaws.com/sandbox-public-files/perm/8202afe0-3a3c-4bd4-a8fc-53396b1e176d/8c897c59-58ee-4f41-8ca0-c2e080704539-token-icon',
+      },
+    ],
+  },
+
+  // Solana Mainnet
+  solana: {
+    mainnet: true,
+    name: 'Solana',
+    nativeCurrencySymbol: 'SOL',
+    chainId: 'solana-mainnet',
+    rpcUrl: 'https://api.mainnet-beta.solana.com',
+    icon: solanaIcon,
+    wormholeChainId: 1,
+    assets: [
+      {
+        address: 'So11111111111111111111111111111111111111112', //
+        name: 'Solana',
+        symbol: 'SOL',
+        icon: 'https://cryptologos.cc/logos/solana-sol-logo.png',
       },
     ],
   },

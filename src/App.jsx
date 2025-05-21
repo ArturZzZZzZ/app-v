@@ -123,6 +123,7 @@ const App = () => {
           )}
           <Box sx={{ ml: "auto", display: "flex", gap: 2 }}>
             <WalletDisplay />
+            <WalletDisplay networkKey='solana' />
           </Box>
         </Toolbar>
       </AppBar>
