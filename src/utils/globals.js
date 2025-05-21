@@ -561,10 +561,11 @@ export const blockchainInfo = {
     wormholeChainId: 1,
     assets: [
       {
+        vaultAddress:'So11111111111111111111111111111111111111112',
         address: 'So11111111111111111111111111111111111111112', //
         name: 'Solana',
         symbol: 'SOL',
-        icon: 'https://cryptologos.cc/logos/solana-sol-logo.png',
+        icon: '/solana-sol-logo.png',
       },
     ],
   },

@@ -6,6 +6,7 @@ import { useWeb3ModalProvider, useWeb3ModalAccount } from '@web3modal/ethers/rea
 import TokenBalance from './TokenBalance'; // Assuming you have a TokenBalance component
 import { ethers } from 'ethers';
 import { useAppContext } from '../../../utils/AppContext'; // Import AppContext.js
+import VaultTransactionContainer from '../../VaultTransactionContainer'; // Import VaultTransactionContainer
 
 function VaultTransaction() {
     const { address, isConnected } = useWeb3ModalAccount();
@@ -150,86 +151,87 @@ function VaultTransaction() {
     };
 
     return (
-        <Container maxWidth="sm" sx={{ mt: 4 }}>
-            <Paper elevation={3} sx={{ padding: '12px' }}>
-                {/* <Typography variant="h5" component="h1" gutterBottom>
-                    Vault Transaction
-                </Typography> */}
-                <Stack direction="row" spacing={1} sx={{ mb: 2 }}>
-                    <Chip
-                        label="Deposit"
-                        color={action === 'deposit' ? 'primary' : 'default'}
-                        onClick={() => setAction('deposit')}
-                        disabled={loading} // Disable chip when loading
-                    />
-                    <Chip
-                        label="Redeem"
-                        color={action === 'redeem' ? 'primary' : 'default'}
-                        onClick={() => setAction('redeem')}
-                        disabled={loading} // Disable chip when loading
-                    />
-                    <Chip
-                        label="Liquidate"
-                        color={action === 'liquidate' ? 'primary' : 'default'}
-                        onClick={() => setAction('liquidate')}
-                        disabled={loading} // Disable chip when loading
-                    />
-                </Stack>
-                <Box component="form" sx={{ display: 'flex', flexDirection: 'column', gap: 2 }}>
-                    <TextField
-                        label={`Assets to ${action === 'deposit' ? 'Deposit' : action === 'redeem' ? 'Redeem' : 'Liquidate'}`}
-                        type="number"
-                        value={assets}
-                        onChange={(e) => setAssets(e.target.value)}
-                        onKeyDown={(e) => {
-                            if (e.key === 'Enter') {
-                                e.preventDefault(); // Prevent the form from submitting
-                            }
-                        }}
-                        fullWidth
-                        required
-                        disabled={loading} // Disable input when loading
-                    />
-                    <TokenBalance
-                        contractAddress={action === 'deposit' ? selectedAsset.address : selectedAsset.vaultAddress}
-                        abi={action === 'deposit' ? ERC20ABI : VaultABI}
-                        label={action === 'deposit' ? selectedAsset.assetSymbol : selectedAsset.representationTokenName}
-                        refresh={refresh} // Pass the refresh state as a prop
-                    />
-                    <Button
-                        variant="contained"
-                        color="primary"
-                        onClick={handleTransaction}
-                        disabled={
-                            loading ||
-                            !assets ||
-                            isNaN(parseFloat(assets)) ||
-                            parseFloat(assets) <= 0 ||
-                            parseFloat(assets) > parseFloat(maxAssets)
-                        }
-                        fullWidth
-                    >
-                        {loading ? (
-                            <>
-                                <CircularProgress size={24} sx={{ color: 'inherit', mr: 2 }} />
-                                {getButtonText()}
-                            </>
-                        ) : (
-                            getButtonText()
-                        )}
-                    </Button>
-                </Box>
-            </Paper>
-            <Snackbar
-                open={snackbarOpen}
-                autoHideDuration={6000}
-                onClose={handleSnackbarClose}
-            >
-                <Alert onClose={handleSnackbarClose} severity={snackbarSeverity} sx={{ width: '100%' }}>
-                    {snackbarMessage}
-                </Alert>
-            </Snackbar>
-        </Container>
+        <VaultTransactionContainer/>
+        // <Container maxWidth="sm" sx={{ mt: 4 }}>
+        //     <Paper elevation={3} sx={{ padding: '12px' }}>
+        //         {/* <Typography variant="h5" component="h1" gutterBottom>
+        //             Vault Transaction
+        //         </Typography> */}
+        //         <Stack direction="row" spacing={1} sx={{ mb: 2 }}>
+        //             <Chip
+        //                 label="Deposit"
+        //                 color={action === 'deposit' ? 'primary' : 'default'}
+        //                 onClick={() => setAction('deposit')}
+        //                 disabled={loading} // Disable chip when loading
+        //             />
+        //             <Chip
+        //                 label="Redeem"
+        //                 color={action === 'redeem' ? 'primary' : 'default'}
+        //                 onClick={() => setAction('redeem')}
+        //                 disabled={loading} // Disable chip when loading
+        //             />
+        //             <Chip
+        //                 label="Liquidate"
+        //                 color={action === 'liquidate' ? 'primary' : 'default'}
+        //                 onClick={() => setAction('liquidate')}
+        //                 disabled={loading} // Disable chip when loading
+        //             />
+        //         </Stack>
+        //         <Box component="form" sx={{ display: 'flex', flexDirection: 'column', gap: 2 }}>
+        //             <TextField
+        //                 label={`Assets to ${action === 'deposit' ? 'Deposit' : action === 'redeem' ? 'Redeem' : 'Liquidate'}`}
+        //                 type="number"
+        //                 value={assets}
+        //                 onChange={(e) => setAssets(e.target.value)}
+        //                 onKeyDown={(e) => {
+        //                     if (e.key === 'Enter') {
+        //                         e.preventDefault(); // Prevent the form from submitting
+        //                     }
+        //                 }}
+        //                 fullWidth
+        //                 required
+        //                 disabled={loading} // Disable input when loading
+        //             />
+        //             <TokenBalance
+        //                 contractAddress={action === 'deposit' ? selectedAsset.address : selectedAsset.vaultAddress}
+        //                 abi={action === 'deposit' ? ERC20ABI : VaultABI}
+        //                 label={action === 'deposit' ? selectedAsset.assetSymbol : selectedAsset.representationTokenName}
+        //                 refresh={refresh} // Pass the refresh state as a prop
+        //             />
+        //             <Button
+        //                 variant="contained"
+        //                 color="primary"
+        //                 onClick={handleTransaction}
+        //                 disabled={
+        //                     loading ||
+        //                     !assets ||
+        //                     isNaN(parseFloat(assets)) ||
+        //                     parseFloat(assets) <= 0 ||
+        //                     parseFloat(assets) > parseFloat(maxAssets)
+        //                 }
+        //                 fullWidth
+        //             >
+        //                 {loading ? (
+        //                     <>
+        //                         <CircularProgress size={24} sx={{ color: 'inherit', mr: 2 }} />
+        //                         {getButtonText()}
+        //                     </>
+        //                 ) : (
+        //                     getButtonText()
+        //                 )}
+        //             </Button>
+        //         </Box>
+        //     </Paper>
+        //     <Snackbar
+        //         open={snackbarOpen}
+        //         autoHideDuration={6000}
+        //         onClose={handleSnackbarClose}
+        //     >
+        //         <Alert onClose={handleSnackbarClose} severity={snackbarSeverity} sx={{ width: '100%' }}>
+        //             {snackbarMessage}
+        //         </Alert>
+        //     </Snackbar>
+        // </Container>
     );
 }
 
