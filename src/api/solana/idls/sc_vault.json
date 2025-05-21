@@ -1,0 +1,2652 @@
+{
+  "address": "9N3yqarWXmXJ9NQBGgN47JXV82smby8nSMffkwetgYov",
+  "metadata": {
+    "name": "sc_vault",
+    "version": "0.1.0",
+    "spec": "0.1.0",
+    "description": "Created with Anchor"
+  },
+  "instructions": [
+    {
+      "name": "add_liquidator",
+      "docs": [
+        "Adds a liquidator to the vault's list of authorized liquidators.",
+        "",
+        "* `liquidator` - The public key to add as a liquidator",
+        "",
+        "Accounts:",
+        "* `admin` - Signer. Must be the vault admin",
+        "* `vault_state` - Must be owned by this program, derived using vault's unique ID",
+        "",
+        "Emits: `LiquidatorAdded` event",
+        "",
+        "For detailed documentation, see `add_liquidator_handler`."
+      ],
+      "discriminator": [60, 33, 46, 47, 162, 22, 248, 97],
+      "accounts": [
+        {
+          "name": "admin",
+          "docs": [
+            "The admin account.",
+            "",
+            "This account must sign the transaction and must match the admin specified in the vault state."
+          ],
+          "signer": true,
+          "relations": ["vault_state"]
+        },
+        {
+          "name": "vault_state",
+          "docs": [
+            "The vault state account.",
+            "",
+            "This account is derived using the `VAULT_STATE_SEED` and the vault's unique ID.",
+            "It contains the list of liquidators and other vault-related metadata."
+          ],
+          "writable": true,
+          "pda": {
+            "seeds": [
+              {
+                "kind": "const",
+                "value": [118, 97, 117, 108, 116, 95, 115, 116, 97, 116, 101]
+              },
+              {
+                "kind": "account",
+                "path": "vault_state.id",
+                "account": "VaultState"
+              }
+            ]
+          }
+        }
+      ],
+      "args": [
+        {
+          "name": "liquidator",
+          "type": "pubkey"
+        }
+      ]
+    },
+    {
+      "name": "add_operator",
+      "docs": [
+        "Adds an operator to the vault's list of authorized operators.",
+        "",
+        "* `operator` - The public key to add as an operator",
+        "",
+        "Accounts:",
+        "* `admin` - Signer. Must be the vault admin",
+        "* `vault_state` - Must be owned by this program, derived using vault's unique ID",
+        "",
+        "Emits: `OperatorAdded` event",
+        "",
+        "For detailed documentation, see `add_operator_handler`."
+      ],
+      "discriminator": [149, 142, 187, 68, 33, 250, 87, 105],
+      "accounts": [
+        {
+          "name": "admin",
+          "docs": [
+            "The admin account.",
+            "",
+            "This account must sign the transaction and must match the admin specified in the vault state."
+          ],
+          "signer": true,
+          "relations": ["vault_state"]
+        },
+        {
+          "name": "vault_state",
+          "docs": [
+            "The vault state account.",
+            "",
+            "This account is derived using the `VAULT_STATE_SEED` and the vault's unique ID.",
+            "It contains the list of operators and other vault-related metadata."
+          ],
+          "writable": true,
+          "pda": {
+            "seeds": [
+              {
+                "kind": "const",
+                "value": [118, 97, 117, 108, 116, 95, 115, 116, 97, 116, 101]
+              },
+              {
+                "kind": "account",
+                "path": "vault_state.id",
+                "account": "VaultState"
+              }
+            ]
+          }
+        }
+      ],
+      "args": [
+        {
+          "name": "operator",
+          "type": "pubkey"
+        }
+      ]
+    },
+    {
+      "name": "add_share_metadata",
+      "docs": [
+        "Adds metadata to the vault's share token mint for proper display in wallets.",
+        "",
+        "* `args` - Contains the token's name, symbol, and metadata URI",
+        "",
+        "Accounts:",
+        "* `admin` - Signer. Must be the vault admin",
+        "* `vault_state` - The vault state account with a reference to the share mint",
+        "* `vault_authority` - PDA with authority over share tokens",
+        "* `metadata_account` - The metadata account to be created or updated",
+        "* `share_mint` - The mint account for the share tokens",
+        "* `sysvar_instructions` - Required for instruction introspection",
+        "* `share_token_program` - The token program (Token or Token-2022)",
+        "* `system_program` - Required by Metaplex to create accounts",
+        "* `rent` - Required by Metaplex for rent calculation",
+        "* `token_metadata_program` - The Metaplex program for token metadata",
+        "",
+        "For detailed documentation, see `add_share_metadata_handler`."
+      ],
+      "discriminator": [220, 49, 245, 221, 94, 252, 89, 104],
+      "accounts": [
+        {
+          "name": "admin",
+          "docs": [
+            "The admin account.",
+            "",
+            "This account must sign the transaction and must match the admin specified in the vault state."
+          ],
+          "signer": true,
+          "relations": ["vault_state"]
+        },
+        {
+          "name": "vault_state",
+          "docs": [
+            "The vault state account.",
+            "",
+            "This account is derived using the `VAULT_STATE_SEED` and the vault's unique ID.",
+            "It contains a reference to the share mint and verifies the admin."
+          ],
+          "writable": true,
+          "pda": {
+            "seeds": [
+              {
+                "kind": "const",
+                "value": [118, 97, 117, 108, 116, 95, 115, 116, 97, 116, 101]
+              },
+              {
+                "kind": "account",
+                "path": "vault_state.id",
+                "account": "VaultState"
+              }
+            ]
+          }
+        },
+        {
+          "name": "vault_authority",
+          "docs": [
+            "The derived authority account for the vault.",
+            "",
+            "This account is used to sign operations on behalf of the vault.",
+            "It is derived from the vault state using a PDA."
+          ],
+          "pda": {
+            "seeds": [
+              {
+                "kind": "const",
+                "value": [
+                  118, 97, 117, 108, 116, 95, 97, 117, 116, 104, 111, 114, 105,
+                  116, 121
+                ]
+              },
+              {
+                "kind": "account",
+                "path": "vault_state"
+              }
+            ]
+          }
+        },
+        {
+          "name": "metadata_account",
+          "docs": [
+            "The metadata account for the share token.",
+            "",
+            "This account is managed by the Metaplex token metadata program.",
+            "It stores the metadata for the share token, such as name, symbol, and URI."
+          ],
+          "writable": true,
+          "pda": {
+            "seeds": [
+              {
+                "kind": "const",
+                "value": [109, 101, 116, 97, 100, 97, 116, 97]
+              },
+              {
+                "kind": "account",
+                "path": "token_metadata_program"
+              },
+              {
+                "kind": "account",
+                "path": "share_mint"
+              }
+            ],
+            "program": {
+              "kind": "account",
+              "path": "token_metadata_program"
+            }
+          }
+        },
+        {
+          "name": "share_mint",
+          "docs": [
+            "The mint account for the vault's share tokens.",
+            "",
+            "This account must be owned by the vault authority and must match",
+            "the share mint specified in the vault state."
+          ],
+          "writable": true,
+          "relations": ["vault_state"]
+        },
+        {
+          "name": "sysvar_instructions",
+          "docs": [
+            "The sysvar instructions account.",
+            "",
+            "This account is used for instruction introspection by the metadata program."
+          ],
+          "address": "Sysvar1nstructions1111111111111111111111111"
+        },
+        {
+          "name": "share_token_program",
+          "docs": [
+            "The token program for the share token.",
+            "",
+            "This can be either the standard SPL Token program or the Token-2022 program."
+          ]
+        },
+        {
+          "name": "system_program",
+          "docs": ["The system program."],
+          "address": "11111111111111111111111111111111"
+        },
+        {
+          "name": "rent",
+          "docs": ["The rent sysvar."],
+          "address": "SysvarRent111111111111111111111111111111111"
+        },
+        {
+          "name": "token_metadata_program",
+          "docs": ["The Metaplex token metadata program."],
+          "address": "metaqbxxUerdq28cj1RbAWkYQm3ybzjb6a8bt518x1s"
+        }
+      ],
+      "args": [
+        {
+          "name": "args",
+          "type": {
+            "defined": {
+              "name": "AddShareMetadataArgs"
+            }
+          }
+        }
+      ]
+    },
+    {
+      "name": "change_admin",
+      "docs": [
+        "Changes the admin of the vault to a new account.",
+        "",
+        "* `new_admin` - The public key of the new admin",
+        "",
+        "Accounts:",
+        "* `admin` - Signer. Must be the current vault admin",
+        "* `vault_state` - Must be owned by this program",
+        "",
+        "Emits: `AdminChanged` event",
+        "",
+        "For detailed documentation, see `change_admin_handler`."
+      ],
+      "discriminator": [193, 151, 203, 161, 200, 202, 32, 146],
+      "accounts": [
+        {
+          "name": "admin",
+          "docs": [
+            "The admin account.",
+            "",
+            "This account must sign the transaction and must match the admin specified in the vault state."
+          ],
+          "signer": true,
+          "relations": ["vault_state"]
+        },
+        {
+          "name": "vault_state",
+          "docs": [
+            "The vault state account.",
+            "",
+            "This account is derived using the `VAULT_STATE_SEED` and the vault's unique ID.",
+            "It contains metadata about the vault, including the current admin."
+          ],
+          "writable": true,
+          "pda": {
+            "seeds": [
+              {
+                "kind": "const",
+                "value": [118, 97, 117, 108, 116, 95, 115, 116, 97, 116, 101]
+              },
+              {
+                "kind": "account",
+                "path": "vault_state.id",
+                "account": "VaultState"
+              }
+            ]
+          }
+        }
+      ],
+      "args": [
+        {
+          "name": "new_admin",
+          "type": "pubkey"
+        }
+      ]
+    },
+    {
+      "name": "convert_to_assets",
+      "docs": [
+        "Converts a specified number of shares to their equivalent asset value.",
+        "",
+        "* `shares` - Number of share tokens to convert",
+        "* `rounding` - Rounding direction for the conversion (Floor or Ceiling)",
+        "",
+        "Accounts:",
+        "* `vault_state` - The vault state account",
+        "* `asset_mint` - The mint account for the asset token",
+        "* `asset_vault` - The token account holding the vault's assets",
+        "* `share_mint` - The mint account for the share token",
+        "* `nav_provider_program` - The NAV provider program",
+        "",
+        "Remaining Accounts:",
+        "* NAV provider accounts - Required for rate calculation",
+        "",
+        "Returns: The amount of assets that would be received for the given shares",
+        "",
+        "For detailed documentation, see `convert_to_assets_handler`."
+      ],
+      "discriminator": [229, 109, 118, 143, 110, 190, 39, 123],
+      "accounts": [
+        {
+          "name": "asset_mint",
+          "docs": ["The mint account for the asset token."]
+        },
+        {
+          "name": "asset_vault",
+          "docs": [
+            "The token account holding the asset tokens in the vault.",
+            "Must be associated with the `asset_mint`."
+          ],
+          "relations": ["vault_state"]
+        },
+        {
+          "name": "share_mint",
+          "docs": ["The mint account for the share token."],
+          "relations": ["vault_state"]
+        },
+        {
+          "name": "liquidation_token_mint",
+          "docs": [
+            "The mint account for the liquidation token, if applicable."
+          ],
+          "optional": true
+        },
+        {
+          "name": "liquidation_token_vault",
+          "docs": [
+            "The token account holding the liquidation tokens in the vault, if applicable.",
+            "Must be associated with the `liquidation_token_mint`."
+          ],
+          "optional": true
+        },
+        {
+          "name": "vault_state",
+          "docs": [
+            "The vault state account, which holds the configuration and state of the vault.",
+            "This account must:",
+            "- Be associated with the `asset_vault`.",
+            "- Be associated with the `share_mint`.",
+            "- Be associated with the `nav_provider_program`.",
+            "- Optionally be associated with the `liquidation_token_vault`."
+          ],
+          "pda": {
+            "seeds": [
+              {
+                "kind": "const",
+                "value": [118, 97, 117, 108, 116, 95, 115, 116, 97, 116, 101]
+              },
+              {
+                "kind": "account",
+                "path": "vault_state.id",
+                "account": "VaultState"
+              }
+            ]
+          }
+        },
+        {
+          "name": "nav_provider_program",
+          "docs": [
+            "The program implementing the NAV provider interface.",
+            "that implements nav-provider-interface."
+          ],
+          "relations": ["vault_state"]
+        }
+      ],
+      "args": [
+        {
+          "name": "shares",
+          "type": "u64"
+        },
+        {
+          "name": "rounding",
+          "type": {
+            "defined": {
+              "name": "Rounding"
+            }
+          }
+        }
+      ],
+      "returns": "u64"
+    },
+    {
+      "name": "convert_to_shares",
+      "docs": [
+        "Converts a specified number of assets to their equivalent share value.",
+        "",
+        "* `assets` - Amount of asset tokens to convert",
+        "* `rounding` - Rounding direction for the conversion (Floor or Ceiling)",
+        "",
+        "Accounts:",
+        "* `vault_state` - The vault state account",
+        "* `asset_mint` - The mint account for the asset token",
+        "* `asset_vault` - The token account holding the vault's assets",
+        "* `share_mint` - The mint account for the share token",
+        "* `nav_provider_program` - The NAV provider program",
+        "",
+        "Remaining Accounts:",
+        "* NAV provider accounts - Required for rate calculation",
+        "",
+        "Returns: The number of shares that would be received for the given assets",
+        "",
+        "For detailed documentation, see `convert_to_shares_handler`."
+      ],
+      "discriminator": [105, 52, 27, 205, 69, 47, 239, 221],
+      "accounts": [
+        {
+          "name": "asset_mint",
+          "docs": ["The mint account for the asset token."]
+        },
+        {
+          "name": "asset_vault",
+          "docs": [
+            "The token account holding the asset tokens in the vault.",
+            "Must be associated with the `asset_mint`."
+          ],
+          "relations": ["vault_state"]
+        },
+        {
+          "name": "share_mint",
+          "docs": ["The mint account for the share token."],
+          "relations": ["vault_state"]
+        },
+        {
+          "name": "liquidation_token_mint",
+          "docs": [
+            "The mint account for the liquidation token, if applicable."
+          ],
+          "optional": true
+        },
+        {
+          "name": "liquidation_token_vault",
+          "docs": [
+            "The token account holding the liquidation tokens in the vault, if applicable.",
+            "Must be associated with the `liquidation_token_mint`."
+          ],
+          "optional": true
+        },
+        {
+          "name": "vault_state",
+          "docs": [
+            "The vault state account, which holds the configuration and state of the vault.",
+            "This account must:",
+            "- Be associated with the `asset_vault`.",
+            "- Be associated with the `share_mint`.",
+            "- Be associated with the `nav_provider_program`.",
+            "- Optionally be associated with the `liquidation_token_vault`."
+          ],
+          "pda": {
+            "seeds": [
+              {
+                "kind": "const",
+                "value": [118, 97, 117, 108, 116, 95, 115, 116, 97, 116, 101]
+              },
+              {
+                "kind": "account",
+                "path": "vault_state.id",
+                "account": "VaultState"
+              }
+            ]
+          }
+        },
+        {
+          "name": "nav_provider_program",
+          "docs": [
+            "The program implementing the NAV provider interface.",
+            "that implements nav-provider-interface."
+          ],
+          "relations": ["vault_state"]
+        }
+      ],
+      "args": [
+        {
+          "name": "assets",
+          "type": "u64"
+        },
+        {
+          "name": "rounding",
+          "type": {
+            "defined": {
+              "name": "Rounding"
+            }
+          }
+        }
+      ],
+      "returns": "u64"
+    },
+    {
+      "name": "deposit",
+      "docs": [
+        "Deposits assets into the vault in exchange for share tokens.",
+        "",
+        "* `assets` - Amount of asset tokens to deposit",
+        "",
+        "Accounts:",
+        "* `operator` - Signer. Must be an authorized operator",
+        "* `operator_asset_ata` - Operator's asset token account",
+        "* `operator_share_ata` - Operator's share token account",
+        "* `asset_mint` - Asset token mint",
+        "* `asset_vault` - Vault's asset token account",
+        "* `share_mint` - Share token mint",
+        "* `vault_state` - Must be owned by this program",
+        "* `vault_authority` - PDA with authority over vault tokens",
+        "* Token program accounts and NAV provider program",
+        "",
+        "Remaining Accounts:",
+        "* NAV provider accounts - Required for rate calculation",
+        "",
+        "Emits: `Deposit` event",
+        "",
+        "For detailed documentation, see `deposit_handler`."
+      ],
+      "discriminator": [242, 35, 198, 137, 82, 225, 242, 182],
+      "accounts": [
+        {
+          "name": "operator",
+          "docs": [
+            "The operator account.",
+            "",
+            "This account must sign the transaction and must be listed as an operator in the vault state."
+          ],
+          "writable": true,
+          "signer": true
+        },
+        {
+          "name": "operator_asset_ata",
+          "docs": ["The operator's associated token account for the asset."],
+          "writable": true,
+          "pda": {
+            "seeds": [
+              {
+                "kind": "account",
+                "path": "operator"
+              },
+              {
+                "kind": "account",
+                "path": "asset_token_program"
+              },
+              {
+                "kind": "account",
+                "path": "asset_mint"
+              }
+            ],
+            "program": {
+              "kind": "const",
+              "value": [
+                140, 151, 37, 143, 78, 36, 137, 241, 187, 61, 16, 41, 20, 142,
+                13, 131, 11, 90, 19, 153, 218, 255, 16, 132, 4, 142, 123, 216,
+                219, 233, 248, 89
+              ]
+            }
+          }
+        },
+        {
+          "name": "operator_share_ata",
+          "docs": ["The operator's associated token account for the shares."],
+          "writable": true,
+          "pda": {
+            "seeds": [
+              {
+                "kind": "account",
+                "path": "operator"
+              },
+              {
+                "kind": "account",
+                "path": "share_token_program"
+              },
+              {
+                "kind": "account",
+                "path": "share_mint"
+              }
+            ],
+            "program": {
+              "kind": "const",
+              "value": [
+                140, 151, 37, 143, 78, 36, 137, 241, 187, 61, 16, 41, 20, 142,
+                13, 131, 11, 90, 19, 153, 218, 255, 16, 132, 4, 142, 123, 216,
+                219, 233, 248, 89
+              ]
+            }
+          }
+        },
+        {
+          "name": "asset_mint",
+          "docs": ["The mint account for the asset token."]
+        },
+        {
+          "name": "asset_vault",
+          "docs": ["The token account holding the vault's assets."],
+          "writable": true,
+          "relations": ["vault_state"]
+        },
+        {
+          "name": "share_mint",
+          "docs": ["The mint account for the vault's shares."],
+          "writable": true,
+          "relations": ["vault_state"]
+        },
+        {
+          "name": "liquidation_token_mint",
+          "docs": ["The mint account for the liquidation token (optional)."],
+          "optional": true
+        },
+        {
+          "name": "liquidation_token_vault",
+          "docs": ["The token account for the liquidation token (optional)."],
+          "optional": true
+        },
+        {
+          "name": "vault_state",
+          "docs": ["The account representing the state of the vault."],
+          "pda": {
+            "seeds": [
+              {
+                "kind": "const",
+                "value": [118, 97, 117, 108, 116, 95, 115, 116, 97, 116, 101]
+              },
+              {
+                "kind": "account",
+                "path": "vault_state.id",
+                "account": "VaultState"
+              }
+            ]
+          }
+        },
+        {
+          "name": "vault_authority",
+          "docs": ["The derived authority account for the vault."],
+          "pda": {
+            "seeds": [
+              {
+                "kind": "const",
+                "value": [
+                  118, 97, 117, 108, 116, 95, 97, 117, 116, 104, 111, 114, 105,
+                  116, 121
+                ]
+              },
+              {
+                "kind": "account",
+                "path": "vault_state"
+              }
+            ]
+          }
+        },
+        {
+          "name": "nav_provider_program",
+          "docs": ["The program implementing the NAV provider interface."],
+          "relations": ["vault_state"]
+        },
+        {
+          "name": "asset_token_program",
+          "docs": ["The token program for the asset token."]
+        },
+        {
+          "name": "share_token_program",
+          "docs": ["The token program for the share token."]
+        }
+      ],
+      "args": [
+        {
+          "name": "assets",
+          "type": "u64"
+        }
+      ]
+    },
+    {
+      "name": "get_share_value",
+      "docs": [
+        "Returns the current value of a single share in terms of the asset token.",
+        "",
+        "Accounts:",
+        "* `vault_state` - The vault state account",
+        "* `asset_mint` - The mint account for the asset token",
+        "* `asset_vault` - The token account holding the vault's assets",
+        "* `share_mint` - The mint account for the share token",
+        "* `nav_provider_program` - The NAV provider program",
+        "",
+        "Remaining Accounts:",
+        "* NAV provider accounts - Required for rate calculation",
+        "",
+        "Returns: The value of a single share in terms of asset tokens",
+        "",
+        "For detailed documentation, see `get_share_value_handler`."
+      ],
+      "discriminator": [233, 236, 228, 122, 160, 84, 137, 41],
+      "accounts": [
+        {
+          "name": "asset_mint",
+          "docs": ["The mint account for the asset token."]
+        },
+        {
+          "name": "asset_vault",
+          "docs": [
+            "The token account holding the asset tokens in the vault.",
+            "Must be associated with the `asset_mint`."
+          ],
+          "relations": ["vault_state"]
+        },
+        {
+          "name": "share_mint",
+          "docs": ["The mint account for the share token."],
+          "relations": ["vault_state"]
+        },
+        {
+          "name": "liquidation_token_mint",
+          "docs": [
+            "The mint account for the liquidation token, if applicable."
+          ],
+          "optional": true
+        },
+        {
+          "name": "liquidation_token_vault",
+          "docs": [
+            "The token account holding the liquidation tokens in the vault, if applicable.",
+            "Must be associated with the `liquidation_token_mint`."
+          ],
+          "optional": true
+        },
+        {
+          "name": "vault_state",
+          "docs": [
+            "The vault state account, which holds the configuration and state of the vault.",
+            "This account must:",
+            "- Be associated with the `asset_vault`.",
+            "- Be associated with the `share_mint`.",
+            "- Be associated with the `nav_provider_program`.",
+            "- Optionally be associated with the `liquidation_token_vault`."
+          ],
+          "pda": {
+            "seeds": [
+              {
+                "kind": "const",
+                "value": [118, 97, 117, 108, 116, 95, 115, 116, 97, 116, 101]
+              },
+              {
+                "kind": "account",
+                "path": "vault_state.id",
+                "account": "VaultState"
+              }
+            ]
+          }
+        },
+        {
+          "name": "nav_provider_program",
+          "docs": [
+            "The program implementing the NAV provider interface.",
+            "that implements nav-provider-interface."
+          ],
+          "relations": ["vault_state"]
+        }
+      ],
+      "args": [],
+      "returns": "u64"
+    },
+    {
+      "name": "initialize",
+      "docs": [
+        "Initializes a new vault with the provided configuration.",
+        "",
+        "Accounts:",
+        "* `admin` - Signer. Will become the vault admin",
+        "* `vault_counter` - Global vault counter to assign a unique ID",
+        "* `vault_state` - Account where vault state will be stored",
+        "* `vault_authority` - PDA with authority over vault tokens",
+        "* `asset_mint` - Mint account for the asset token",
+        "* `asset_vault` - Token account for vault assets",
+        "* `share_mint` - Mint account for the share tokens",
+        "* `redemption_program` (optional) - Program implementing redemption interface",
+        "* `nav_provider_program` - Program implementing NAV provider interface",
+        "* Plus token program accounts and system program",
+        "",
+        "Emits: `Initialized` event",
+        "",
+        "For detailed documentation, see `initialize_handler`."
+      ],
+      "discriminator": [175, 175, 109, 31, 13, 152, 155, 237],
+      "accounts": [
+        {
+          "name": "admin",
+          "docs": [
+            "The admin account.",
+            "",
+            "This account must sign the transaction and is responsible for paying initialization costs."
+          ],
+          "writable": true,
+          "signer": true
+        },
+        {
+          "name": "asset_mint",
+          "docs": [
+            "The mint account for the asset token.",
+            "",
+            "This account represents the token that will be deposited into the vault."
+          ]
+        },
+        {
+          "name": "asset_vault",
+          "docs": [
+            "The token account holding the vault's assets.",
+            "",
+            "This account is initialized during the instruction and is owned by the vault authority."
+          ],
+          "writable": true,
+          "signer": true
+        },
+        {
+          "name": "share_mint",
+          "docs": [
+            "The mint account for the vault's shares.",
+            "",
+            "This account represents the shares issued to users who deposit assets into the vault."
+          ]
+        },
+        {
+          "name": "liquidation_token_mint",
+          "docs": [
+            "The mint account for the liquidation token (optional).",
+            "",
+            "This account is required only if the redemption program is provided."
+          ],
+          "optional": true
+        },
+        {
+          "name": "liquidation_token_vault",
+          "docs": [
+            "The token account for the liquidation token (optional).",
+            "",
+            "This account is required only if the redemption program is provided."
+          ],
+          "writable": true,
+          "signer": true,
+          "optional": true
+        },
+        {
+          "name": "vault_authority",
+          "docs": [
+            "The derived authority account for the vault.",
+            "",
+            "This account is used to sign transactions on behalf of the vault."
+          ],
+          "pda": {
+            "seeds": [
+              {
+                "kind": "const",
+                "value": [
+                  118, 97, 117, 108, 116, 95, 97, 117, 116, 104, 111, 114, 105,
+                  116, 121
+                ]
+              },
+              {
+                "kind": "account",
+                "path": "vault_state"
+              }
+            ]
+          }
+        },
+        {
+          "name": "vault_counter",
+          "docs": [
+            "The account tracking the number of vaults created.",
+            "",
+            "This account is initialized if needed and keeps a counter for unique vault IDs."
+          ],
+          "writable": true,
+          "pda": {
+            "seeds": [
+              {
+                "kind": "const",
+                "value": [
+                  118, 97, 117, 108, 116, 95, 99, 111, 117, 110, 116, 101, 114
+                ]
+              }
+            ]
+          }
+        },
+        {
+          "name": "vault_state",
+          "docs": [
+            "The account representing the state of the vault.",
+            "",
+            "This account is initialized during the instruction and stores metadata about the vault."
+          ],
+          "writable": true,
+          "pda": {
+            "seeds": [
+              {
+                "kind": "const",
+                "value": [118, 97, 117, 108, 116, 95, 115, 116, 97, 116, 101]
+              },
+              {
+                "kind": "account",
+                "path": "vault_counter.counter",
+                "account": "VaultCounter"
+              }
+            ]
+          }
+        },
+        {
+          "name": "redemption_program",
+          "docs": [
+            "The program implementing the redemption interface (optional).",
+            "",
+            "This account is required only if the redemption program is enabled."
+          ],
+          "optional": true
+        },
+        {
+          "name": "nav_provider_program",
+          "docs": [
+            "The program implementing the NAV provider interface.",
+            "",
+            "This account is required and must be executable."
+          ]
+        },
+        {
+          "name": "asset_token_program",
+          "docs": ["The token program for the asset token."]
+        },
+        {
+          "name": "liquidation_token_program",
+          "docs": ["The token program for the liquidation token (optional)."],
+          "optional": true
+        },
+        {
+          "name": "share_token_program",
+          "docs": ["The token program for the share token."]
+        },
+        {
+          "name": "system_program",
+          "docs": ["The system program."],
+          "address": "11111111111111111111111111111111"
+        }
+      ],
+      "args": []
+    },
+    {
+      "name": "is_admin",
+      "docs": [
+        "Checks if an account is the vault's admin.",
+        "",
+        "* `account` - The public key to check",
+        "",
+        "Accounts:",
+        "* `vault_state` - The vault state account",
+        "",
+        "Returns: `true` if the account is the admin, `false` otherwise",
+        "",
+        "For detailed documentation, see `is_admin_handler`."
+      ],
+      "discriminator": [114, 10, 83, 250, 202, 233, 53, 63],
+      "accounts": [
+        {
+          "name": "vault_state",
+          "docs": [
+            "The vault state account.",
+            "",
+            "This account is derived using the `VAULT_STATE_SEED` and the vault's unique ID.",
+            "It contains the admin's public key and other vault-related metadata."
+          ],
+          "pda": {
+            "seeds": [
+              {
+                "kind": "const",
+                "value": [118, 97, 117, 108, 116, 95, 115, 116, 97, 116, 101]
+              },
+              {
+                "kind": "account",
+                "path": "vault_state.id",
+                "account": "VaultState"
+              }
+            ]
+          }
+        }
+      ],
+      "args": [
+        {
+          "name": "account",
+          "type": "pubkey"
+        }
+      ],
+      "returns": "bool"
+    },
+    {
+      "name": "is_liquidator",
+      "docs": [
+        "Checks if an account is an authorized liquidator.",
+        "",
+        "* `account` - The public key to check",
+        "",
+        "Accounts:",
+        "* `vault_state` - The vault state account",
+        "",
+        "Returns: `true` if the account is a liquidator, `false` otherwise",
+        "",
+        "For detailed documentation, see `is_liquidator_handler`."
+      ],
+      "discriminator": [39, 19, 228, 224, 82, 160, 86, 159],
+      "accounts": [
+        {
+          "name": "vault_state",
+          "docs": [
+            "The vault state account.",
+            "",
+            "This account is derived using the `VAULT_STATE_SEED` and the vault's unique ID.",
+            "It contains the list of liquidators and other vault-related metadata."
+          ],
+          "pda": {
+            "seeds": [
+              {
+                "kind": "const",
+                "value": [118, 97, 117, 108, 116, 95, 115, 116, 97, 116, 101]
+              },
+              {
+                "kind": "account",
+                "path": "vault_state.id",
+                "account": "VaultState"
+              }
+            ]
+          }
+        }
+      ],
+      "args": [
+        {
+          "name": "account",
+          "type": "pubkey"
+        }
+      ],
+      "returns": "bool"
+    },
+    {
+      "name": "is_operator",
+      "docs": [
+        "Checks if an account is an authorized operator.",
+        "",
+        "* `account` - The public key to check",
+        "",
+        "Accounts:",
+        "* `vault_state` - The vault state account",
+        "",
+        "Returns: `true` if the account is an operator, `false` otherwise",
+        "",
+        "For detailed documentation, see `is_operator_handler`."
+      ],
+      "discriminator": [221, 227, 5, 233, 182, 150, 14, 178],
+      "accounts": [
+        {
+          "name": "vault_state",
+          "docs": [
+            "The vault state account.",
+            "",
+            "This account is derived using the `VAULT_STATE_SEED` and the vault's unique ID.",
+            "It contains the list of operators and other vault-related metadata."
+          ],
+          "pda": {
+            "seeds": [
+              {
+                "kind": "const",
+                "value": [118, 97, 117, 108, 116, 95, 115, 116, 97, 116, 101]
+              },
+              {
+                "kind": "account",
+                "path": "vault_state.id",
+                "account": "VaultState"
+              }
+            ]
+          }
+        }
+      ],
+      "args": [
+        {
+          "name": "account",
+          "type": "pubkey"
+        }
+      ],
+      "returns": "bool"
+    },
+    {
+      "name": "liquidate",
+      "docs": [
+        "Liquidates shares for assets or liquidation tokens.",
+        "",
+        "* `shares` - Number of share tokens to liquidate",
+        "* `min_output_amount` - Optional minimum amount to receive (slippage protection)",
+        "",
+        "Accounts:",
+        "* `liquidator` - Signer. Must be authorized liquidator or public liquidation enabled",
+        "* `liquidator_asset_ata` - Liquidator's asset token account",
+        "* `liquidator_share_ata` - Liquidator's share token account",
+        "* `liquidator_liquidation_ata` - Optional liquidator's liquidation token account",
+        "* `asset_mint` - Asset token mint",
+        "* `asset_vault` - Vault's asset token account",
+        "* `share_mint` - Share token mint",
+        "* `liquidation_*` - Optional liquidation accounts if redemption is used",
+        "* `vault_state` - Must be owned by this program",
+        "* `vault_authority` - PDA with authority over vault tokens",
+        "* Token program accounts",
+        "",
+        "Remaining Accounts:",
+        "* NAV provider accounts - For rate calculation",
+        "* Redemption program accounts - When redemption is enabled",
+        "",
+        "Emits: `Liquidate` event",
+        "",
+        "For detailed documentation, see `liquidate_handler`."
+      ],
+      "discriminator": [223, 179, 226, 125, 48, 46, 39, 74],
+      "accounts": [
+        {
+          "name": "liquidator",
+          "docs": [
+            "The liquidator account.",
+            "",
+            "This account must sign the transaction and must either be listed as a liquidator",
+            "in the vault state or liquidation must be open to public."
+          ],
+          "signer": true
+        },
+        {
+          "name": "liquidator_asset_ata",
+          "docs": [
+            "The liquidator's associated token account for the asset.",
+            "",
+            "This account must be associated with the asset_mint and owned by the liquidator.",
+            "It will receive the redeemed assets if redemption is not enabled."
+          ],
+          "writable": true,
+          "pda": {
+            "seeds": [
+              {
+                "kind": "account",
+                "path": "liquidator"
+              },
+              {
+                "kind": "account",
+                "path": "asset_token_program"
+              },
+              {
+                "kind": "account",
+                "path": "asset_mint"
+              }
+            ],
+            "program": {
+              "kind": "const",
+              "value": [
+                140, 151, 37, 143, 78, 36, 137, 241, 187, 61, 16, 41, 20, 142,
+                13, 131, 11, 90, 19, 153, 218, 255, 16, 132, 4, 142, 123, 216,
+                219, 233, 248, 89
+              ]
+            }
+          }
+        },
+        {
+          "name": "liquidator_share_ata",
+          "docs": [
+            "The liquidator's associated token account for the shares.",
+            "",
+            "This account must be associated with the share_mint and owned by the liquidator.",
+            "The shares will be burned from this account during liquidation."
+          ],
+          "writable": true,
+          "pda": {
+            "seeds": [
+              {
+                "kind": "account",
+                "path": "liquidator"
+              },
+              {
+                "kind": "account",
+                "path": "share_token_program"
+              },
+              {
+                "kind": "account",
+                "path": "share_mint"
+              }
+            ],
+            "program": {
+              "kind": "const",
+              "value": [
+                140, 151, 37, 143, 78, 36, 137, 241, 187, 61, 16, 41, 20, 142,
+                13, 131, 11, 90, 19, 153, 218, 255, 16, 132, 4, 142, 123, 216,
+                219, 233, 248, 89
+              ]
+            }
+          }
+        },
+        {
+          "name": "liquidator_liquidation_ata",
+          "docs": [
+            "The liquidator's associated token account for the liquidation tokens.",
+            "",
+            "This account is only required when redemption program is enabled.",
+            "It must be associated with the liquidation_token_mint and owned by the liquidator.",
+            "It will receive the redeemed liquidation tokens if redemption is enabled."
+          ],
+          "writable": true,
+          "optional": true,
+          "pda": {
+            "seeds": [
+              {
+                "kind": "account",
+                "path": "liquidator"
+              },
+              {
+                "kind": "account",
+                "path": "liquidation_token_program"
+              },
+              {
+                "kind": "account",
+                "path": "liquidation_token_mint"
+              }
+            ],
+            "program": {
+              "kind": "const",
+              "value": [
+                140, 151, 37, 143, 78, 36, 137, 241, 187, 61, 16, 41, 20, 142,
+                13, 131, 11, 90, 19, 153, 218, 255, 16, 132, 4, 142, 123, 216,
+                219, 233, 248, 89
+              ]
+            }
+          }
+        },
+        {
+          "name": "asset_mint",
+          "docs": [
+            "The mint account for the asset token.",
+            "",
+            "This account defines the asset token used by the vault."
+          ]
+        },
+        {
+          "name": "asset_vault",
+          "docs": [
+            "The token account holding the vault's assets.",
+            "",
+            "This account must have the correct mint and be owned by the vault_authority."
+          ],
+          "writable": true,
+          "relations": ["vault_state"]
+        },
+        {
+          "name": "share_mint",
+          "docs": [
+            "The mint account for the vault's shares.",
+            "",
+            "This account defines the share tokens issued by the vault.",
+            "During liquidation, shares are burned from this mint."
+          ],
+          "writable": true,
+          "relations": ["vault_state"]
+        },
+        {
+          "name": "liquidation_token_mint",
+          "docs": [
+            "The mint account for the liquidation token.",
+            "",
+            "This account is only required when redemption program is enabled.",
+            "It defines the liquidation tokens that will be received after redemption."
+          ],
+          "optional": true
+        },
+        {
+          "name": "liquidation_token_vault",
+          "docs": [
+            "The token account for the liquidation token.",
+            "",
+            "This account is only required when redemption program is enabled.",
+            "It must have the correct mint and be owned by the vault_authority.",
+            "It temporarily holds the liquidation tokens received from redemption",
+            "before transferring them to the liquidator."
+          ],
+          "writable": true,
+          "optional": true
+        },
+        {
+          "name": "vault_state",
+          "docs": [
+            "The account representing the state of the vault.",
+            "",
+            "This account contains configuration and state data for the vault.",
+            "It is validated against various other accounts to ensure consistency."
+          ],
+          "pda": {
+            "seeds": [
+              {
+                "kind": "const",
+                "value": [118, 97, 117, 108, 116, 95, 115, 116, 97, 116, 101]
+              },
+              {
+                "kind": "account",
+                "path": "vault_state.id",
+                "account": "VaultState"
+              }
+            ]
+          }
+        },
+        {
+          "name": "vault_authority",
+          "docs": [
+            "The derived authority account for the vault.",
+            "",
+            "This account is used to sign operations on behalf of the vault.",
+            "It is derived from the vault state using a PDA."
+          ],
+          "pda": {
+            "seeds": [
+              {
+                "kind": "const",
+                "value": [
+                  118, 97, 117, 108, 116, 95, 97, 117, 116, 104, 111, 114, 105,
+                  116, 121
+                ]
+              },
+              {
+                "kind": "account",
+                "path": "vault_state"
+              }
+            ]
+          }
+        },
+        {
+          "name": "redemption_program",
+          "docs": [
+            "The program implementing the redemption interface.",
+            "",
+            "This account is only required when redemption is enabled for the vault.",
+            "The program must implement the redemption-interface.",
+            "that implements redemption-interface (if redemption is enabled)."
+          ],
+          "optional": true
+        },
+        {
+          "name": "nav_provider_program",
+          "docs": [
+            "The program implementing the NAV provider interface.",
+            "",
+            "This program provides the current rate for conversion between shares and assets.",
+            "It must implement the nav-provider-interface.",
+            "that implements nav-provider-interface."
+          ],
+          "relations": ["vault_state"]
+        },
+        {
+          "name": "asset_token_program",
+          "docs": ["The token program for the asset token."]
+        },
+        {
+          "name": "liquidation_token_program",
+          "docs": [
+            "The token program for the liquidation token.",
+            "",
+            "This account is only required when redemption program is enabled."
+          ],
+          "optional": true
+        },
+        {
+          "name": "share_token_program",
+          "docs": ["The token program for the share token."]
+        }
+      ],
+      "args": [
+        {
+          "name": "shares",
+          "type": "u64"
+        },
+        {
+          "name": "min_output_amount",
+          "type": {
+            "option": "u64"
+          }
+        }
+      ]
+    },
+    {
+      "name": "pause",
+      "docs": [
+        "Pauses all vault operations.",
+        "",
+        "Accounts:",
+        "* `admin` - Signer. Must be the vault admin",
+        "* `vault_state` - Must be owned by this program",
+        "",
+        "Emits: `Paused` event",
+        "",
+        "For detailed documentation, see `pause_handler`."
+      ],
+      "discriminator": [211, 22, 221, 251, 74, 121, 193, 47],
+      "accounts": [
+        {
+          "name": "admin",
+          "docs": [
+            "The admin account.",
+            "",
+            "This account must sign the transaction and must match the admin specified in the vault state."
+          ],
+          "signer": true,
+          "relations": ["vault_state"]
+        },
+        {
+          "name": "vault_state",
+          "docs": [
+            "The vault state account.",
+            "",
+            "This account is derived using the `VAULT_STATE_SEED` and the vault's unique ID.",
+            "It contains metadata about the vault, including its paused state."
+          ],
+          "writable": true,
+          "pda": {
+            "seeds": [
+              {
+                "kind": "const",
+                "value": [118, 97, 117, 108, 116, 95, 115, 116, 97, 116, 101]
+              },
+              {
+                "kind": "account",
+                "path": "vault_state.id",
+                "account": "VaultState"
+              }
+            ]
+          }
+        }
+      ],
+      "args": []
+    },
+    {
+      "name": "redeem",
+      "docs": [
+        "Redeems share tokens from the vault in exchange for assets.",
+        "",
+        "* `shares` - Number of share tokens to redeem",
+        "",
+        "Accounts:",
+        "* `operator` - Signer. Must be an authorized operator",
+        "* `operator_asset_ata` - Operator's asset token account",
+        "* `operator_share_ata` - Operator's share token account",
+        "* `asset_mint` - Asset token mint",
+        "* `asset_vault` - Vault's asset token account",
+        "* `share_mint` - Share token mint",
+        "* `vault_state` - Must be owned by this program",
+        "* `vault_authority` - PDA with authority over vault tokens",
+        "* Token program accounts and NAV provider program",
+        "",
+        "Remaining Accounts:",
+        "* NAV provider accounts - Required for rate calculation",
+        "",
+        "Emits: `Redeem` event",
+        "",
+        "For detailed documentation, see `redeem_handler`."
+      ],
+      "discriminator": [184, 12, 86, 149, 70, 196, 97, 225],
+      "accounts": [
+        {
+          "name": "operator",
+          "docs": [
+            "The operator account.",
+            "",
+            "This account must sign the transaction and must be listed as an operator in the vault state."
+          ],
+          "writable": true,
+          "signer": true
+        },
+        {
+          "name": "operator_asset_ata",
+          "docs": ["The operator's associated token account for the asset."],
+          "writable": true,
+          "pda": {
+            "seeds": [
+              {
+                "kind": "account",
+                "path": "operator"
+              },
+              {
+                "kind": "account",
+                "path": "asset_token_program"
+              },
+              {
+                "kind": "account",
+                "path": "asset_mint"
+              }
+            ],
+            "program": {
+              "kind": "const",
+              "value": [
+                140, 151, 37, 143, 78, 36, 137, 241, 187, 61, 16, 41, 20, 142,
+                13, 131, 11, 90, 19, 153, 218, 255, 16, 132, 4, 142, 123, 216,
+                219, 233, 248, 89
+              ]
+            }
+          }
+        },
+        {
+          "name": "operator_share_ata",
+          "docs": ["The operator's associated token account for the shares."],
+          "writable": true,
+          "pda": {
+            "seeds": [
+              {
+                "kind": "account",
+                "path": "operator"
+              },
+              {
+                "kind": "account",
+                "path": "share_token_program"
+              },
+              {
+                "kind": "account",
+                "path": "share_mint"
+              }
+            ],
+            "program": {
+              "kind": "const",
+              "value": [
+                140, 151, 37, 143, 78, 36, 137, 241, 187, 61, 16, 41, 20, 142,
+                13, 131, 11, 90, 19, 153, 218, 255, 16, 132, 4, 142, 123, 216,
+                219, 233, 248, 89
+              ]
+            }
+          }
+        },
+        {
+          "name": "asset_mint",
+          "docs": ["The mint account for the asset token."]
+        },
+        {
+          "name": "asset_vault",
+          "docs": ["The token account holding the vault's assets."],
+          "writable": true,
+          "relations": ["vault_state"]
+        },
+        {
+          "name": "share_mint",
+          "docs": ["The mint account for the vault's shares."],
+          "writable": true,
+          "relations": ["vault_state"]
+        },
+        {
+          "name": "liquidation_token_mint",
+          "docs": ["The mint account for the liquidation token (optional)."],
+          "optional": true
+        },
+        {
+          "name": "liquidation_token_vault",
+          "docs": ["The token account for the liquidation token (optional)."],
+          "optional": true
+        },
+        {
+          "name": "vault_state",
+          "docs": ["The account representing the state of the vault."],
+          "pda": {
+            "seeds": [
+              {
+                "kind": "const",
+                "value": [118, 97, 117, 108, 116, 95, 115, 116, 97, 116, 101]
+              },
+              {
+                "kind": "account",
+                "path": "vault_state.id",
+                "account": "VaultState"
+              }
+            ]
+          }
+        },
+        {
+          "name": "vault_authority",
+          "docs": ["The derived authority account for the vault."],
+          "pda": {
+            "seeds": [
+              {
+                "kind": "const",
+                "value": [
+                  118, 97, 117, 108, 116, 95, 97, 117, 116, 104, 111, 114, 105,
+                  116, 121
+                ]
+              },
+              {
+                "kind": "account",
+                "path": "vault_state"
+              }
+            ]
+          }
+        },
+        {
+          "name": "nav_provider_program",
+          "docs": ["The program implementing the NAV provider interface."],
+          "relations": ["vault_state"]
+        },
+        {
+          "name": "asset_token_program",
+          "docs": ["The token program for the asset token."]
+        },
+        {
+          "name": "share_token_program",
+          "docs": ["The token program for the share token."]
+        }
+      ],
+      "args": [
+        {
+          "name": "shares",
+          "type": "u64"
+        }
+      ]
+    },
+    {
+      "name": "revoke_liquidator",
+      "docs": [
+        "Removes a liquidator from the vault's list of authorized liquidators.",
+        "",
+        "* `liquidator` - The public key of the liquidator to remove",
+        "",
+        "Accounts:",
+        "* `admin` - Signer. Must be the vault admin",
+        "* `vault_state` - Must be owned by this program",
+        "",
+        "Emits: `LiquidatorRevoked` event",
+        "",
+        "For detailed documentation, see `revoke_liquidator_handler`."
+      ],
+      "discriminator": [30, 146, 107, 68, 92, 196, 4, 174],
+      "accounts": [
+        {
+          "name": "admin",
+          "docs": [
+            "The admin account.",
+            "",
+            "This account must sign the transaction and must match the admin specified in the vault state."
+          ],
+          "signer": true,
+          "relations": ["vault_state"]
+        },
+        {
+          "name": "vault_state",
+          "docs": [
+            "The vault state account.",
+            "",
+            "This account is derived using the `VAULT_STATE_SEED` and the vault's unique ID.",
+            "It contains the list of liquidators and other vault-related metadata."
+          ],
+          "writable": true,
+          "pda": {
+            "seeds": [
+              {
+                "kind": "const",
+                "value": [118, 97, 117, 108, 116, 95, 115, 116, 97, 116, 101]
+              },
+              {
+                "kind": "account",
+                "path": "vault_state.id",
+                "account": "VaultState"
+              }
+            ]
+          }
+        }
+      ],
+      "args": [
+        {
+          "name": "liquidator",
+          "type": "pubkey"
+        }
+      ]
+    },
+    {
+      "name": "revoke_operator",
+      "docs": [
+        "Removes an operator from the vault's list of authorized operators.",
+        "",
+        "* `operator` - The public key of the operator to remove",
+        "",
+        "Accounts:",
+        "* `admin` - Signer. Must be the vault admin",
+        "* `vault_state` - Must be owned by this program",
+        "",
+        "Emits: `OperatorRevoked` event",
+        "",
+        "For detailed documentation, see `revoke_operator_handler`."
+      ],
+      "discriminator": [185, 25, 87, 77, 88, 8, 30, 175],
+      "accounts": [
+        {
+          "name": "admin",
+          "docs": [
+            "The admin account.",
+            "",
+            "This account must sign the transaction and must match the admin specified in the vault state."
+          ],
+          "signer": true,
+          "relations": ["vault_state"]
+        },
+        {
+          "name": "vault_state",
+          "docs": [
+            "The vault state account.",
+            "",
+            "This account is derived using the `VAULT_STATE_SEED` and the vault's unique ID.",
+            "It contains the list of operators and other vault-related metadata."
+          ],
+          "writable": true,
+          "pda": {
+            "seeds": [
+              {
+                "kind": "const",
+                "value": [118, 97, 117, 108, 116, 95, 115, 116, 97, 116, 101]
+              },
+              {
+                "kind": "account",
+                "path": "vault_state.id",
+                "account": "VaultState"
+              }
+            ]
+          }
+        }
+      ],
+      "args": [
+        {
+          "name": "operator",
+          "type": "pubkey"
+        }
+      ]
+    },
+    {
+      "name": "set_liquidation_open_to_public",
+      "docs": [
+        "Sets whether liquidation is open to the public or restricted to authorized liquidators.",
+        "",
+        "* `open` - Boolean indicating whether liquidation should be open to the public (true)",
+        "or restricted to authorized liquidators only (false)",
+        "",
+        "Accounts:",
+        "* `admin` - Signer. Must be the vault admin",
+        "* `vault_state` - Must be owned by this program",
+        "",
+        "Emits: `LiquidationOpenToPublic` event",
+        "",
+        "For detailed documentation, see `set_liquidation_open_to_public_handler`."
+      ],
+      "discriminator": [80, 71, 82, 93, 90, 183, 32, 130],
+      "accounts": [
+        {
+          "name": "admin",
+          "docs": [
+            "The admin account.",
+            "",
+            "This account must sign the transaction and must match the admin specified in the vault state."
+          ],
+          "signer": true,
+          "relations": ["vault_state"]
+        },
+        {
+          "name": "vault_state",
+          "docs": [
+            "The vault state account.",
+            "",
+            "This account is derived using the `VAULT_STATE_SEED` and the vault's unique ID.",
+            "It contains metadata about the vault, including the liquidation settings."
+          ],
+          "writable": true,
+          "pda": {
+            "seeds": [
+              {
+                "kind": "const",
+                "value": [118, 97, 117, 108, 116, 95, 115, 116, 97, 116, 101]
+              },
+              {
+                "kind": "account",
+                "path": "vault_state.id",
+                "account": "VaultState"
+              }
+            ]
+          }
+        }
+      ],
+      "args": [
+        {
+          "name": "open",
+          "type": "bool"
+        }
+      ]
+    },
+    {
+      "name": "unpause",
+      "docs": [
+        "Unpauses the vault, allowing operations to resume.",
+        "",
+        "Accounts:",
+        "* `admin` - Signer. Must be the vault admin",
+        "* `vault_state` - Must be owned by this program",
+        "",
+        "Emits: `Unpaused` event",
+        "",
+        "For detailed documentation, see `unpause_handler`."
+      ],
+      "discriminator": [169, 144, 4, 38, 10, 141, 188, 255],
+      "accounts": [
+        {
+          "name": "admin",
+          "docs": [
+            "The admin account.",
+            "",
+            "This account must sign the transaction and must match the admin specified in the vault state."
+          ],
+          "signer": true,
+          "relations": ["vault_state"]
+        },
+        {
+          "name": "vault_state",
+          "docs": [
+            "The vault state account.",
+            "",
+            "This account is derived using the `VAULT_STATE_SEED` and the vault's unique ID.",
+            "It contains metadata about the vault, including its paused state."
+          ],
+          "writable": true,
+          "pda": {
+            "seeds": [
+              {
+                "kind": "const",
+                "value": [118, 97, 117, 108, 116, 95, 115, 116, 97, 116, 101]
+              },
+              {
+                "kind": "account",
+                "path": "vault_state.id",
+                "account": "VaultState"
+              }
+            ]
+          }
+        }
+      ],
+      "args": []
+    },
+    {
+      "name": "update_nav_provider",
+      "docs": [
+        "Updates the NAV (Net Asset Value) provider program for the vault.",
+        "",
+        "Accounts:",
+        "* `admin` - Signer. Must be the vault admin",
+        "* `vault_state` - Must be owned by this program",
+        "* `nav_provider_program` - New NAV provider program",
+        "",
+        "Emits: `NavProviderUpdated` event",
+        "",
+        "For detailed documentation, see `update_nav_provider_handler`."
+      ],
+      "discriminator": [22, 213, 60, 60, 31, 211, 145, 198],
+      "accounts": [
+        {
+          "name": "admin",
+          "docs": [
+            "The admin account.",
+            "",
+            "This account must sign the transaction and must match the admin specified in the vault state."
+          ],
+          "signer": true,
+          "relations": ["vault_state"]
+        },
+        {
+          "name": "vault_state",
+          "docs": [
+            "The vault state account.",
+            "",
+            "This account is derived using the `VAULT_STATE_SEED` and the vault's unique ID.",
+            "It contains metadata about the vault, including the current NAV provider program."
+          ],
+          "writable": true,
+          "pda": {
+            "seeds": [
+              {
+                "kind": "const",
+                "value": [118, 97, 117, 108, 116, 95, 115, 116, 97, 116, 101]
+              },
+              {
+                "kind": "account",
+                "path": "vault_state.id",
+                "account": "VaultState"
+              }
+            ]
+          }
+        },
+        {
+          "name": "new_nav_provider_program",
+          "docs": ["The new NAV provider program account.", ""]
+        }
+      ],
+      "args": []
+    }
+  ],
+  "accounts": [
+    {
+      "name": "VaultCounter",
+      "discriminator": [180, 127, 122, 230, 154, 126, 126, 98]
+    },
+    {
+      "name": "VaultState",
+      "discriminator": [228, 196, 82, 165, 98, 210, 235, 152]
+    }
+  ],
+  "events": [
+    {
+      "name": "AdminChanged",
+      "discriminator": [232, 34, 31, 226, 62, 18, 19, 114]
+    },
+    {
+      "name": "Deposit",
+      "discriminator": [62, 205, 242, 175, 244, 169, 136, 52]
+    },
+    {
+      "name": "Initialized",
+      "discriminator": [208, 213, 115, 98, 115, 82, 201, 209]
+    },
+    {
+      "name": "Liquidate",
+      "discriminator": [82, 165, 82, 245, 248, 64, 66, 30]
+    },
+    {
+      "name": "LiquidationOpenToPublic",
+      "discriminator": [125, 85, 76, 3, 194, 24, 21, 55]
+    },
+    {
+      "name": "LiquidatorAdded",
+      "discriminator": [223, 250, 146, 144, 250, 98, 60, 120]
+    },
+    {
+      "name": "LiquidatorRevoked",
+      "discriminator": [111, 189, 247, 121, 125, 30, 157, 234]
+    },
+    {
+      "name": "NavProviderUpdated",
+      "discriminator": [37, 225, 186, 150, 238, 181, 132, 44]
+    },
+    {
+      "name": "OperatorAdded",
+      "discriminator": [216, 247, 101, 54, 51, 70, 215, 192]
+    },
+    {
+      "name": "OperatorRevoked",
+      "discriminator": [234, 41, 78, 23, 191, 224, 103, 64]
+    },
+    {
+      "name": "Paused",
+      "discriminator": [172, 248, 5, 253, 49, 255, 255, 232]
+    },
+    {
+      "name": "Redeem",
+      "discriminator": [251, 40, 155, 2, 18, 221, 176, 73]
+    },
+    {
+      "name": "Unpaused",
+      "discriminator": [156, 150, 47, 174, 120, 216, 93, 117]
+    }
+  ],
+  "errors": [
+    {
+      "code": 6000,
+      "name": "AlreadyPaused",
+      "msg": "The vault is already paused"
+    },
+    {
+      "code": 6001,
+      "name": "AlreadyUnpaused",
+      "msg": "The vault is already unpaused"
+    },
+    {
+      "code": 6002,
+      "name": "Paused",
+      "msg": "The vault is paused"
+    },
+    {
+      "code": 6003,
+      "name": "Forbidden",
+      "msg": "The caller does not have the required permissions"
+    },
+    {
+      "code": 6004,
+      "name": "InvalidDeployer",
+      "msg": "The caller is not the deployer"
+    },
+    {
+      "code": 6005,
+      "name": "InvalidAssetVault",
+      "msg": "Invalid asset vault"
+    },
+    {
+      "code": 6006,
+      "name": "InvalidLiquidationTokenVault",
+      "msg": "Invalid liquidation token vault"
+    },
+    {
+      "code": 6007,
+      "name": "InvalidMint",
+      "msg": "Invalid mint"
+    },
+    {
+      "code": 6008,
+      "name": "InvalidProgram",
+      "msg": "Invalid program"
+    },
+    {
+      "code": 6009,
+      "name": "InvalidRate",
+      "msg": "Invalid rate"
+    },
+    {
+      "code": 6010,
+      "name": "InvalidRedeem",
+      "msg": "Invalid redeem logic"
+    },
+    {
+      "code": 6011,
+      "name": "InvalidTotalSupply",
+      "msg": "Invalid total supply"
+    },
+    {
+      "code": 6012,
+      "name": "WrongLiquidationConfiguration",
+      "msg": "Wrong liquidation configuration"
+    },
+    {
+      "code": 6013,
+      "name": "NoChange",
+      "msg": "No change detected"
+    },
+    {
+      "code": 6014,
+      "name": "NoTokensRedeemed",
+      "msg": "No tokens redeemed"
+    },
+    {
+      "code": 6015,
+      "name": "DivisionByZero",
+      "msg": "Division by zero"
+    },
+    {
+      "code": 6016,
+      "name": "Overflow",
+      "msg": "Overflow occurred"
+    },
+    {
+      "code": 6017,
+      "name": "MaxLiquidators",
+      "msg": "Maximum number of liquidators reached"
+    },
+    {
+      "code": 6018,
+      "name": "MaxOperators",
+      "msg": "Maximum number of operators reached"
+    },
+    {
+      "code": 6019,
+      "name": "TooManyNavProviderAccounts",
+      "msg": "Too many NAV provider accounts"
+    },
+    {
+      "code": 6020,
+      "name": "NotEnoughNavProviderAccounts",
+      "msg": "Not enough NAV provider accounts"
+    },
+    {
+      "code": 6021,
+      "name": "NotEnoughAssets",
+      "msg": "Not enough assets available"
+    },
+    {
+      "code": 6022,
+      "name": "NotEnoughShares",
+      "msg": "Not enough shares available"
+    },
+    {
+      "code": 6023,
+      "name": "InsufficientOutputAmount",
+      "msg": "Insufficient output amount"
+    },
+    {
+      "code": 6024,
+      "name": "RedemptionAccountsRequired",
+      "msg": "Redemption accounts required"
+    },
+    {
+      "code": 6025,
+      "name": "ZeroAssets",
+      "msg": "The asset amount cannot be zero"
+    },
+    {
+      "code": 6026,
+      "name": "ZeroShares",
+      "msg": "The share amount cannot be zero"
+    }
+  ],
+  "types": [
+    {
+      "name": "AddShareMetadataArgs",
+      "docs": ["Arguments for the `add_share_metadata` instruction."],
+      "type": {
+        "kind": "struct",
+        "fields": [
+          {
+            "name": "token_name",
+            "docs": ["The name of the share token."],
+            "type": "string"
+          },
+          {
+            "name": "token_symbol",
+            "docs": ["The symbol of the share token."],
+            "type": "string"
+          },
+          {
+            "name": "uri",
+            "docs": ["The URI pointing to the token's metadata JSON."],
+            "type": "string"
+          }
+        ]
+      }
+    },
+    {
+      "name": "AdminChanged",
+      "docs": [
+        "Emitted when the admin of the vault is changed.",
+        "",
+        "Fields:",
+        "- `admin`: The current admin's public key.",
+        "- `new_admin`: The new admin's public key."
+      ],
+      "type": {
+        "kind": "struct",
+        "fields": [
+          {
+            "name": "admin",
+            "type": "pubkey"
+          },
+          {
+            "name": "new_admin",
+            "type": "pubkey"
+          }
+        ]
+      }
+    },
+    {
+      "name": "Deposit",
+      "docs": [
+        "Emitted when a deposit is made into the vault.",
+        "",
+        "Fields:",
+        "- `operator`: The operator's public key who made the deposit.",
+        "- `assets`: The amount of assets deposited.",
+        "- `shares`: The amount of shares issued for the deposit."
+      ],
+      "type": {
+        "kind": "struct",
+        "fields": [
+          {
+            "name": "operator",
+            "type": "pubkey"
+          },
+          {
+            "name": "assets",
+            "type": "u64"
+          },
+          {
+            "name": "shares",
+            "type": "u64"
+          }
+        ]
+      }
+    },
+    {
+      "name": "Initialized",
+      "docs": [
+        "Emitted when a vault is initialized.",
+        "",
+        "Fields:",
+        "- `vault_state_key`: The public key of the vault state.",
+        "- `vault_state`: The initial state of the vault."
+      ],
+      "type": {
+        "kind": "struct",
+        "fields": [
+          {
+            "name": "vault_state_key",
+            "type": "pubkey"
+          },
+          {
+            "name": "vault_state",
+            "type": {
+              "defined": {
+                "name": "VaultState"
+              }
+            }
+          }
+        ]
+      }
+    },
+    {
+      "name": "Liquidate",
+      "docs": [
+        "Emitted when a liquidation occurs.",
+        "",
+        "Fields:",
+        "- `liquidator`: The liquidator's public key.",
+        "- `assets`: The amount of assets liquidated.",
+        "- `shares`: The amount of shares involved in the liquidation.",
+        "- `liquidation_amount`: The amount of liquidation tokens received."
+      ],
+      "type": {
+        "kind": "struct",
+        "fields": [
+          {
+            "name": "liquidator",
+            "type": "pubkey"
+          },
+          {
+            "name": "assets",
+            "type": "u64"
+          },
+          {
+            "name": "shares",
+            "type": "u64"
+          },
+          {
+            "name": "liquidation_amount",
+            "type": "u64"
+          }
+        ]
+      }
+    },
+    {
+      "name": "LiquidationOpenToPublic",
+      "docs": [
+        "Emitted when liquidation is opened to the public.",
+        "",
+        "Fields:",
+        "- `admin`: The admin's public key who opened liquidation to the public.",
+        "- `open`: A boolean indicating whether liquidation is open to the public."
+      ],
+      "type": {
+        "kind": "struct",
+        "fields": [
+          {
+            "name": "admin",
+            "type": "pubkey"
+          },
+          {
+            "name": "open",
+            "type": "bool"
+          }
+        ]
+      }
+    },
+    {
+      "name": "LiquidatorAdded",
+      "docs": [
+        "Emitted when a new liquidator is added to the vault.",
+        "",
+        "Fields:",
+        "- `admin`: The admin's public key who added the liquidator.",
+        "- `new_liquidator`: The new liquidator's public key."
+      ],
+      "type": {
+        "kind": "struct",
+        "fields": [
+          {
+            "name": "admin",
+            "type": "pubkey"
+          },
+          {
+            "name": "new_liquidator",
+            "type": "pubkey"
+          }
+        ]
+      }
+    },
+    {
+      "name": "LiquidatorRevoked",
+      "docs": [
+        "Emitted when a liquidator is revoked from the vault.",
+        "",
+        "Fields:",
+        "- `admin`: The admin's public key who revoked the liquidator.",
+        "- `liquidator`: The revoked liquidator's public key."
+      ],
+      "type": {
+        "kind": "struct",
+        "fields": [
+          {
+            "name": "admin",
+            "type": "pubkey"
+          },
+          {
+            "name": "liquidator",
+            "type": "pubkey"
+          }
+        ]
+      }
+    },
+    {
+      "name": "NavProviderUpdated",
+      "docs": [
+        "Emitted when the NAV provider is updated.",
+        "",
+        "Fields:",
+        "- `admin`: The admin's public key who updated the NAV provider.",
+        "- `new_nav_provider`: The new NAV provider's public key."
+      ],
+      "type": {
+        "kind": "struct",
+        "fields": [
+          {
+            "name": "admin",
+            "type": "pubkey"
+          },
+          {
+            "name": "new_nav_provider",
+            "type": "pubkey"
+          }
+        ]
+      }
+    },
+    {
+      "name": "OperatorAdded",
+      "docs": [
+        "Emitted when a new operator is added to the vault.",
+        "",
+        "Fields:",
+        "- `admin`: The admin's public key who added the operator.",
+        "- `new_operator`: The new operator's public key."
+      ],
+      "type": {
+        "kind": "struct",
+        "fields": [
+          {
+            "name": "admin",
+            "type": "pubkey"
+          },
+          {
+            "name": "new_operator",
+            "type": "pubkey"
+          }
+        ]
+      }
+    },
+    {
+      "name": "OperatorRevoked",
+      "docs": [
+        "Emitted when an operator is revoked from the vault.",
+        "",
+        "Fields:",
+        "- `admin`: The admin's public key who revoked the operator.",
+        "- `operator`: The revoked operator's public key."
+      ],
+      "type": {
+        "kind": "struct",
+        "fields": [
+          {
+            "name": "admin",
+            "type": "pubkey"
+          },
+          {
+            "name": "operator",
+            "type": "pubkey"
+          }
+        ]
+      }
+    },
+    {
+      "name": "Paused",
+      "docs": [
+        "Emitted when the vault is paused.",
+        "",
+        "Fields:",
+        "- `admin`: The admin's public key who paused the vault."
+      ],
+      "type": {
+        "kind": "struct",
+        "fields": [
+          {
+            "name": "admin",
+            "type": "pubkey"
+          }
+        ]
+      }
+    },
+    {
+      "name": "Redeem",
+      "docs": [
+        "Emitted when a redemption occurs.",
+        "",
+        "Fields:",
+        "- `operator`: The operator's public key who initiated the redemption.",
+        "- `shares`: The amount of shares redeemed.",
+        "- `assets`: The amount of assets returned for the redemption."
+      ],
+      "type": {
+        "kind": "struct",
+        "fields": [
+          {
+            "name": "operator",
+            "type": "pubkey"
+          },
+          {
+            "name": "shares",
+            "type": "u64"
+          },
+          {
+            "name": "assets",
+            "type": "u64"
+          }
+        ]
+      }
+    },
+    {
+      "name": "Rounding",
+      "docs": [
+        "Defines rounding strategies for mathematical operations.",
+        "",
+        "Used in mathematical operations throughout the vault protocol to control",
+        "how fractional results are handled."
+      ],
+      "type": {
+        "kind": "enum",
+        "variants": [
+          {
+            "name": "Ceil"
+          },
+          {
+            "name": "Floor"
+          }
+        ]
+      }
+    },
+    {
+      "name": "Unpaused",
+      "docs": [
+        "Emitted when the vault is unpaused.",
+        "",
+        "Fields:",
+        "- `admin`: The admin's public key who unpaused the vault."
+      ],
+      "type": {
+        "kind": "struct",
+        "fields": [
+          {
+            "name": "admin",
+            "type": "pubkey"
+          }
+        ]
+      }
+    },
+    {
+      "name": "VaultCounter",
+      "docs": [
+        "A singleton account that keeps track of the total number of vaults created in the system.",
+        "",
+        "This account maintains a global counter that ensures each newly created vault",
+        "receives a unique identifier. It's implemented as a PDA (Program Derived Address)",
+        "with a fixed seed, ensuring there's only one instance per program.",
+        "",
+        "## Fields",
+        "* `counter` - The current count of vaults created, used to assign sequential IDs",
+        "* `bump` - The bump seed used for this account's PDA derivation"
+      ],
+      "type": {
+        "kind": "struct",
+        "fields": [
+          {
+            "name": "counter",
+            "type": "u64"
+          },
+          {
+            "name": "bump",
+            "type": "u8"
+          }
+        ]
+      }
+    },
+    {
+      "name": "VaultState",
+      "docs": [
+        "Represents the state of a vault in the system.",
+        "",
+        "This account holds all configuration, permissions, and references to related accounts that define a vault.",
+        "It serves as the central record for a vault's operations and authorities.",
+        "",
+        "## Fields",
+        "* `id` - Unique identifier for this vault",
+        "* `admin` - The admin public key with authority to change vault settings, add/remove operators and liquidators",
+        "* `is_paused` - Flag indicating if the vault operations are currently paused",
+        "* `asset_vault` - Public key of the token account holding the vault's underlying assets",
+        "* `share_mint` - Public key of the mint for share tokens issued to depositors",
+        "* `liquidation_open_to_public` - Flag indicating if liquidation is open to the public or restricted to approved liquidators",
+        "* `liquidation_token_vault` - Optional public key of the token account for liquidation tokens",
+        "* `redemption_program` - Optional public key of the program implementing the redemption interface",
+        "* `nav_provider_program` - Public key of the program implementing the NAV (Net Asset Value) provider interface",
+        "* `vault_authority_bump` - Bump seed for the vault authority PDA derivation",
+        "* `bump` - Bump seed for this account's PDA derivation",
+        "* `operators` - List of public keys authorized to perform operator actions like deposits and redemptions",
+        "* `liquidators` - List of public keys authorized to perform liquidations when not open to public"
+      ],
+      "type": {
+        "kind": "struct",
+        "fields": [
+          {
+            "name": "id",
+            "type": "u64"
+          },
+          {
+            "name": "admin",
+            "type": "pubkey"
+          },
+          {
+            "name": "is_paused",
+            "type": "bool"
+          },
+          {
+            "name": "asset_vault",
+            "type": "pubkey"
+          },
+          {
+            "name": "share_mint",
+            "type": "pubkey"
+          },
+          {
+            "name": "liquidation_open_to_public",
+            "type": "bool"
+          },
+          {
+            "name": "liquidation_token_vault",
+            "type": {
+              "option": "pubkey"
+            }
+          },
+          {
+            "name": "redemption_program",
+            "type": {
+              "option": "pubkey"
+            }
+          },
+          {
+            "name": "nav_provider_program",
+            "type": "pubkey"
+          },
+          {
+            "name": "vault_authority_bump",
+            "type": "u8"
+          },
+          {
+            "name": "bump",
+            "type": "u8"
+          },
+          {
+            "name": "operators",
+            "type": {
+              "vec": "pubkey"
+            }
+          },
+          {
+            "name": "liquidators",
+            "type": {
+              "vec": "pubkey"
+            }
+          }
+        ]
+      }
+    }
+  ],
+  "constants": [
+    {
+      "name": "VAULT_AUTHORITY_SEED",
+      "docs": ["Seed for deriving the vault authority PDA"],
+      "type": "bytes",
+      "value": "[118, 97, 117, 108, 116, 95, 97, 117, 116, 104, 111, 114, 105, 116, 121]"
+    },
+    {
+      "name": "VAULT_COUNTER_SEED",
+      "docs": ["Seed for deriving the vault counter PDA"],
+      "type": "bytes",
+      "value": "[118, 97, 117, 108, 116, 95, 99, 111, 117, 110, 116, 101, 114]"
+    },
+    {
+      "name": "VAULT_STATE_SEED",
+      "docs": ["Seed for deriving the vault state PDA"],
+      "type": "bytes",
+      "value": "[118, 97, 117, 108, 116, 95, 115, 116, 97, 116, 101]"
+    }
+  ]
+}
