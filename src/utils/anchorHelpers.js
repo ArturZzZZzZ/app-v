@@ -1,13 +1,12 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
-import { useCallback, useMemo, useState } from "react";
+import { useCallback, useEffect, useMemo, useState } from "react";
 
 import { AnchorProvider, BN, Program } from "@coral-xyz/anchor";
 import {
   createAssociatedTokenAccountInstruction,
   getAccount,
   getAssociatedTokenAddress,
-  getMint,
-  getOrCreateAssociatedTokenAccount
+  getMint
 } from "@solana/spl-token";
 import { useConnection, useWallet } from "@solana/wallet-adapter-react";
 import { PublicKey, Transaction } from "@solana/web3.js";
@@ -77,34 +76,32 @@ export const getVaultStateById = async (program, vaultId) => {
 
 export async function getUserBalanceByAta(
   connection,
-  { mintPubkey, userPubkey, adminKp, tokenProgram }
+  { mintPubkey, userPubkey, tokenProgram }
 ) {
-  const tokenAccount = await getOrCreateAssociatedTokenAccount(
-    connection,
-    adminKp,
+  const userAta = await getAssociatedTokenAddress(
     mintPubkey,
     userPubkey,
     false,
-    connection.commitment,
-    {},
     tokenProgram
   );
-  // decimal also here
+
   const balance = await connection
-    .getTokenAccountBalance(tokenAccount.address)
-    .then((balance) => balance.value.uiAmountString)
+    .getTokenAccountBalance(userAta)
+    .then((balance) => balance.value)
     .catch(() => 0);
 
   return balance;
 }
-
 export const useProgram = () => {
   const { connection } = useConnection();
   const wallet = useWallet();
 
-  const provider = makeProvider(connection, wallet);
+  const provider = useMemo(
+    () => makeProvider(connection, wallet),
+    [connection, wallet]
+  );
 
-  const program = makeVaultProgram(provider);
+  const program = useMemo(() => makeVaultProgram(provider), [provider]);
 
   return useMemo(() => program, [program]);
 };
@@ -331,4 +328,64 @@ export const useRedeem = () => {
     [wallet, program, vaultStatePk, authorityAddress]
   );
   return { onRedeem, loading };
+};
+
+export const useTokenBalanceState = ({ vaultId = 0, type }) => {
+  const program = useProgram();
+  const { publicKey: userPk } = useWallet();
+  const [balanceState, setBalanceState] = useState(null);
+
+  useEffect(() => {
+    let cancelled = false;
+    const connection = program.provider.connection;
+
+    if (!connection || !userPk) {
+      setBalanceState(null);
+      return;
+    }
+
+    (async () => {
+      try {
+        let vaultPk;
+        let mintPk;
+        const vaultState = await getVaultStateById(program, vaultId);
+
+        if (type === "deposit") {
+          vaultPk = vaultState.assetVault;
+          const assetVaultState = await getAccount(connection, vaultPk);
+          mintPk = assetVaultState.mint;
+        } else if (type === "redeem") {
+          vaultPk = vaultState.assetVault;
+          mintPk = vaultState.shareMint;
+        }
+
+        const shareMintInfo = await connection.getAccountInfo(mintPk);
+        if (!shareMintInfo) {
+          if (!cancelled) setBalanceState(null);
+          return;
+        }
+
+        const balanceState = await getUserBalanceByAta(connection, {
+          mintPubkey: mintPk,
+          tokenProgram: shareMintInfo.owner,
+          userPubkey: userPk
+        });
+
+        if (!cancelled) {
+          setBalanceState(balanceState);
+        }
+      } catch (error) {
+        console.error("Failed to fetch token balance", error);
+        if (!cancelled) {
+          setBalanceState(null);
+        }
+      }
+    })();
+
+    return () => {
+      cancelled = true;
+    };
+  }, [program, userPk, vaultId, type]);
+
+  return { balanceState };
 };

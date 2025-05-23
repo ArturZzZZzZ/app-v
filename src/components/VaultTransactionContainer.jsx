@@ -1,18 +1,39 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
+import { use } from "react";
 
-import { useDeposit, useRedeem } from "../utils/anchorHelpers";
+import {
+  useDeposit,
+  useRedeem,
+  useTokenBalanceState
+} from "../utils/anchorHelpers";
 import VaultTransactionUI from "./ui/VaultTransactionUI";
 
 export const VaultSolanaTransactionContainer = () => {
   const [assets, setAssets] = useState(0);
   const [action, setAction] = useState("deposit");
-  const [maxAssets, setMaxAssets] = useState(1233123);
+  const [maxAssets, setMaxAssets] = useState(0);
   const [step, setStep] = useState(0);
   const [snackbarOpen, setSnackbarOpen] = useState(false);
   const [snackbarMessage, setSnackbarMessage] = useState("");
   const [snackbarSeverity, setSnackbarSeverity] = useState("info");
   const { onDeposit, loading: isLoadingDeposit } = useDeposit();
   const { onRedeem, loading: isLoadingRedeem } = useRedeem();
+
+  const { balanceState } = useTokenBalanceState({
+    vaultId: 0,
+    type: action
+  });
+
+  useEffect(() => {
+    if (balanceState) {
+      if (action === "deposit") {
+        console.log("balanceState", balanceState);
+        setMaxAssets(balanceState.uiAmountString);
+      } else if (action === "redeem") {
+        setMaxAssets(balanceState.amount);
+      }
+    }
+  }, [balanceState]);
 
   const isLoading = isLoadingDeposit || isLoadingRedeem;
 
@@ -99,6 +120,7 @@ export const VaultSolanaTransactionContainer = () => {
       snackbarSeverity={snackbarSeverity}
       handleSnackbarClose={handleSnackbarClose}
       maxAssets={maxAssets}
+      tokenSymbol="SOL"
     />
   );
 };
