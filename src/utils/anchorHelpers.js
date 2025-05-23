@@ -1,10 +1,16 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
-import { useMemo } from "react";
+import { useCallback, useMemo, useState } from "react";
 
 import { AnchorProvider, BN, Program } from "@coral-xyz/anchor";
-import { getOrCreateAssociatedTokenAccount } from "@solana/spl-token";
+import {
+  createAssociatedTokenAccountInstruction,
+  getAccount,
+  getAssociatedTokenAddress,
+  getMint,
+  getOrCreateAssociatedTokenAccount
+} from "@solana/spl-token";
 import { useConnection, useWallet } from "@solana/wallet-adapter-react";
-import { PublicKey } from "@solana/web3.js";
+import { PublicKey, Transaction } from "@solana/web3.js";
 
 import idl from "../api/solana/idls/sc_vault.json";
 
@@ -101,4 +107,129 @@ export const useProgram = () => {
   const program = makeVaultProgram(provider);
 
   return useMemo(() => program, [program]);
+};
+
+export const useDeposit = () => {
+  const wallet = useWallet();
+  const [loading, setLoading] = useState(false);
+
+  const vaultId = 0;
+  const vaultProgramId = new PublicKey(
+    "9N3yqarWXmXJ9NQBGgN47JXV82smby8nSMffkwetgYov"
+  );
+
+  const vaultStatePk = getVaultStatePda(vaultProgramId, vaultId);
+  const authorityAddress = vaultAuthorityAddress(vaultProgramId, vaultId);
+
+  const program = useProgram();
+  const onDeposit = useCallback(
+    async (amountTokens) => {
+      const { publicKey: userPk, sendTransaction } = wallet;
+      if (!userPk || !sendTransaction) {
+        alert("Пожалуйста, подключите кошелёк");
+        return;
+      }
+      setLoading(true);
+
+      try {
+        const connection = program.provider.connection;
+
+        const vaultState = await getVaultStateById(program, vaultId);
+        const assetVaultPk = vaultState.assetVault;
+        const shareMintPk = vaultState.shareMint;
+        const navProviderProgramPk = vaultState.navProviderProgram;
+        const liquidationTokenVaultPk = vaultState.liquidationTokenVault;
+
+        const liquidationTokenMintPk = liquidationTokenVaultPk
+          ? (await getAccount(connection, liquidationTokenVaultPk)).mint
+          : null;
+
+        const assetVaultState = await getAccount(connection, assetVaultPk);
+        const assetMintPk = assetVaultState.mint;
+
+        const [{ decimals: tokenDecimal }, shareMintInfo, assetMintInfo] =
+          await Promise.all([
+            getMint(connection, assetMintPk),
+            connection.getAccountInfo(shareMintPk),
+            connection.getAccountInfo(assetMintPk)
+          ]);
+
+        if (!shareMintInfo || !assetMintInfo) {
+          throw new Error("Не удалось получить информацию о mint-ах");
+        }
+
+        const amount = toBaseUnits(amountTokens.toString(), tokenDecimal);
+
+        const [operatorAssetAta, operatorShareAta] = await Promise.all([
+          getAssociatedTokenAddress(
+            assetMintPk,
+            userPk,
+            false,
+            assetMintInfo.owner
+          ),
+          getAssociatedTokenAddress(
+            shareMintPk,
+            userPk,
+            false,
+            shareMintInfo.owner
+          )
+        ]);
+
+        const shareAtaInfo = await connection.getAccountInfo(operatorShareAta);
+
+        const depositIx = await program.methods
+          .deposit(amount)
+          .accountsPartial({
+            operator: userPk,
+            vaultState: vaultStatePk,
+            vaultAuthority: authorityAddress,
+            operatorAssetAta,
+            operatorShareAta,
+            assetMint: assetMintPk,
+            assetVault: assetVaultPk,
+            shareMint: shareMintPk,
+            assetTokenProgram: assetMintInfo.owner,
+            shareTokenProgram: shareMintInfo.owner,
+            liquidationTokenMint: liquidationTokenMintPk,
+            liquidationTokenVault: liquidationTokenVaultPk,
+            navProviderProgram: navProviderProgramPk
+          })
+          .remainingAccounts([
+            { pubkey: PublicKey.default, isSigner: false, isWritable: false }
+          ])
+          .instruction();
+
+        const tx = new Transaction();
+
+        if (!shareAtaInfo) {
+          tx.add(
+            createAssociatedTokenAccountInstruction(
+              userPk,
+              operatorShareAta,
+              userPk,
+              shareMintPk,
+              shareMintInfo.owner
+            )
+          );
+        }
+
+        tx.add(depositIx);
+
+        tx.feePayer = userPk;
+        tx.recentBlockhash = (await connection.getLatestBlockhash()).blockhash;
+
+        const signature = await sendTransaction(tx, connection);
+        console.log("Deposit successful, signature:", signature);
+        return signature;
+      } catch (err) {
+        console.error("deposit error:", err);
+        throw new Error(err);
+      } finally {
+        setLoading(false);
+      }
+    },
+    [wallet, program, vaultStatePk, authorityAddress]
+  );
+
+  return { onDeposit, loading };
 };
