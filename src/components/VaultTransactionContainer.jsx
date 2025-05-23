@@ -4,7 +4,6 @@ import { useDeposit, useRedeem } from "../utils/anchorHelpers";
 import VaultTransactionUI from "./ui/VaultTransactionUI";
 
 export const VaultSolanaTransactionContainer = () => {
-  console.log("blockType", "SOLANA");
   const [assets, setAssets] = useState(0);
   const [action, setAction] = useState("deposit");
   const [maxAssets, setMaxAssets] = useState(1233123);
