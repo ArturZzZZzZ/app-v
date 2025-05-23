@@ -1,6 +1,6 @@
 import React, { useState } from "react";
 
-import { useDeposit } from "../utils/anchorHelpers";
+import { useDeposit, useRedeem } from "../utils/anchorHelpers";
 import VaultTransactionUI from "./ui/VaultTransactionUI";
 
 export const VaultSolanaTransactionContainer = () => {
@@ -13,6 +13,9 @@ export const VaultSolanaTransactionContainer = () => {
   const [snackbarMessage, setSnackbarMessage] = useState("");
   const [snackbarSeverity, setSnackbarSeverity] = useState("info");
   const { onDeposit, loading: isLoadingDeposit } = useDeposit();
+  const { onRedeem, loading: isLoadingRedeem } = useRedeem();
+
+  const isLoading = isLoadingDeposit || isLoadingRedeem;
 
   const getButtonText = () => {
     switch (step) {
@@ -28,6 +31,7 @@ export const VaultSolanaTransactionContainer = () => {
   };
 
   const handleDepositTransaction = async () => {
+    console.log("Deposit");
     setStep(2);
     onDeposit(assets)
       .then((hash) => {
@@ -46,6 +50,39 @@ export const VaultSolanaTransactionContainer = () => {
       });
   };
 
+  const handleRedeemTransaction = async () => {
+    console.log("Redeem");
+    setStep(2);
+    onRedeem(assets)
+      .then((hash) => {
+        setSnackbarMessage("Transaction successful: " + hash);
+        setSnackbarSeverity("success");
+        setAssets(0);
+      })
+      .catch((error) => {
+        console.error("Transaction error:", error);
+        setSnackbarMessage(error.message || "Transaction failed");
+        setSnackbarSeverity("error");
+      })
+      .finally(() => {
+        setStep(1);
+        setSnackbarOpen(true);
+      });
+  };
+
+  const handleTransaction = async () => {
+    switch (action) {
+      case "deposit":
+        await handleDepositTransaction();
+        break;
+      case "redeem":
+        await handleRedeemTransaction();
+        break;
+      default:
+        break;
+    }
+  };
+
   const handleSnackbarClose = () => setSnackbarOpen(false);
 
   return (
@@ -55,8 +92,8 @@ export const VaultSolanaTransactionContainer = () => {
       action={action}
       setAction={setAction}
       step={step}
-      loading={isLoadingDeposit}
-      handleTransaction={handleDepositTransaction}
+      loading={isLoading}
+      handleTransaction={handleTransaction}
       getButtonText={getButtonText}
       snackbarOpen={snackbarOpen}
       snackbarMessage={snackbarMessage}

@@ -122,11 +122,12 @@ export const useDeposit = () => {
   const authorityAddress = vaultAuthorityAddress(vaultProgramId, vaultId);
 
   const program = useProgram();
+
   const onDeposit = useCallback(
     async (amountTokens) => {
       const { publicKey: userPk, sendTransaction } = wallet;
       if (!userPk || !sendTransaction) {
-        alert("Пожалуйста, подключите кошелёк");
+        alert("Please connect your wallet");
         return;
       }
       setLoading(true);
@@ -155,7 +156,7 @@ export const useDeposit = () => {
           ]);
 
         if (!shareMintInfo || !assetMintInfo) {
-          throw new Error("Не удалось получить информацию о mint-ах");
+          throw new Error("Failed to retrieve mint information");
         }
 
         const amount = toBaseUnits(amountTokens.toString(), tokenDecimal);
@@ -232,4 +233,102 @@ export const useDeposit = () => {
   );
 
   return { onDeposit, loading };
+};
+
+export const useRedeem = () => {
+  const wallet = useWallet();
+  const [loading, setLoading] = useState(false);
+  const vaultId = 0;
+  const vaultProgramId = new PublicKey(
+    "9N3yqarWXmXJ9NQBGgN47JXV82smby8nSMffkwetgYov"
+  );
+
+  const vaultStatePk = getVaultStatePda(vaultProgramId, vaultId);
+  const authorityAddress = vaultAuthorityAddress(vaultProgramId, vaultId);
+
+  const program = useProgram();
+  const onRedeem = useCallback(
+    async (amountTokens) => {
+      const { publicKey: userPk, sendTransaction } = wallet;
+      if (!userPk || !sendTransaction) {
+        alert("Please connect your wallet");
+        return;
+      }
+      setLoading(true);
+
+      try {
+        const connection = program.provider.connection;
+
+        const vaultState = await getVaultStateById(program, vaultId);
+        const assetVaultPk = vaultState.assetVault;
+        const shareMintPk = vaultState.shareMint;
+        const navProviderProgramPk = vaultState.navProviderProgram;
+        const liquidationTokenVaultPk = vaultState.liquidationTokenVault;
+
+        const liquidationTokenMintPk = liquidationTokenVaultPk
+          ? (await getAccount(connection, liquidationTokenVaultPk)).mint
+          : null;
+
+        const assetVaultState = await getAccount(connection, assetVaultPk);
+        const assetMintPk = assetVaultState.mint;
+
+        const [shareMintInfo, assetMintInfo] = await Promise.all([
+          connection.getAccountInfo(shareMintPk),
+          connection.getAccountInfo(assetMintPk)
+        ]);
+
+        if (!shareMintInfo || !assetMintInfo) {
+          throw new Error("Failed to retrieve mint information");
+        }
+
+        const amount = new BN(amountTokens);
+
+        const [operatorAssetAta, operatorShareAta] = await Promise.all([
+          getAssociatedTokenAddress(
+            assetMintPk,
+            userPk,
+            false,
+            assetMintInfo.owner
+          ),
+          getAssociatedTokenAddress(
+            shareMintPk,
+            userPk,
+            false,
+            shareMintInfo.owner
+          )
+        ]);
+
+        const signature = await program.methods
+          .redeem(amount)
+          .accountsPartial({
+            operator: userPk,
+            vaultState: vaultStatePk,
+            vaultAuthority: authorityAddress,
+            operatorAssetAta,
+            operatorShareAta,
+            assetMint: assetMintPk,
+            assetVault: assetVaultPk,
+            shareMint: shareMintPk,
+            assetTokenProgram: assetMintInfo.owner,
+            shareTokenProgram: shareMintInfo.owner,
+            liquidationTokenMint: liquidationTokenMintPk,
+            liquidationTokenVault: liquidationTokenVaultPk,
+            navProviderProgram: navProviderProgramPk
+          })
+          .remainingAccounts([
+            { pubkey: PublicKey.default, isSigner: false, isWritable: false }
+          ])
+          .rpc();
+        console.log("Redeem signature:", signature);
+        return signature;
+      } catch (err) {
+        console.error("Error redeem:", err);
+        throw new Error(err);
+      } finally {
+        setLoading(false);
+      }
+    },
+    [wallet, program, vaultStatePk, authorityAddress]
+  );
+  return { onRedeem, loading };
 };
