@@ -79,11 +79,11 @@ export const VaultSolanaTransactionContainer = () => {
       })
       .finally(() => {
         setSnackbarOpen(true);
+        setStep(1);
       });
   };
 
   const handleRedeemTransaction = async () => {
-    console.log("Redeem");
     setStep(2);
     onRedeem(assets)
       .then((hash) => {
