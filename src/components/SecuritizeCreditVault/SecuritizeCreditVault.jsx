@@ -97,11 +97,12 @@ function SecuritizeCreditVault() {
               {<Tab label="Smart Contract Interface" />}
             </Tabs>
             <Box sx={{ mt: 3 }}>
-              {tabValue === 0 && isSolana ? (
-                <VaultSolanaTransactionContainer />
-              ) : (
-                <VaultTransaction action="deposit" />
-              )}
+              {tabValue === 0 &&
+                (isSolana ? (
+                  <VaultSolanaTransactionContainer />
+                ) : (
+                  <VaultTransaction action="deposit" />
+                ))}
               {tabValue === 1 && <VaultAdmin />}
               {tabValue === 2 && <SmartContractInterface />}
             </Box>
