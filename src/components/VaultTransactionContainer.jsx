@@ -7,13 +7,12 @@ export const VaultSolanaTransactionContainer = () => {
   console.log("blockType", "SOLANA");
   const [assets, setAssets] = useState(0);
   const [action, setAction] = useState("deposit");
+  const [maxAssets, setMaxAssets] = useState(1233123);
   const [step, setStep] = useState(0);
   const [snackbarOpen, setSnackbarOpen] = useState(false);
   const [snackbarMessage, setSnackbarMessage] = useState("");
   const [snackbarSeverity, setSnackbarSeverity] = useState("info");
   const { onDeposit, loading: isLoadingDeposit } = useDeposit();
-
-  const maxAssets = 100;
 
   const getButtonText = () => {
     switch (step) {
@@ -35,6 +34,7 @@ export const VaultSolanaTransactionContainer = () => {
         setSnackbarMessage("Transaction successful: " + hash);
         setSnackbarSeverity("success");
         setStep(1);
+        setAssets(0);
       })
       .catch((error) => {
         console.error("Transaction error:", error);
