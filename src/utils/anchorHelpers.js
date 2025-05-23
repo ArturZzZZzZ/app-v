@@ -106,17 +106,14 @@ export const useProgram = () => {
   return useMemo(() => program, [program]);
 };
 
-export const useDeposit = () => {
+export const useDeposit = ({ vaultId, vaultProgramId }) => {
   const wallet = useWallet();
   const [loading, setLoading] = useState(false);
 
-  const vaultId = 0;
-  const vaultProgramId = new PublicKey(
-    "9N3yqarWXmXJ9NQBGgN47JXV82smby8nSMffkwetgYov"
-  );
+  const vaultProgramIdPk = new PublicKey(vaultProgramId);
 
-  const vaultStatePk = getVaultStatePda(vaultProgramId, vaultId);
-  const authorityAddress = vaultAuthorityAddress(vaultProgramId, vaultId);
+  const vaultStatePk = getVaultStatePda(vaultProgramIdPk, vaultId);
+  const authorityAddress = vaultAuthorityAddress(vaultProgramIdPk, vaultId);
 
   const program = useProgram();
 
@@ -232,16 +229,13 @@ export const useDeposit = () => {
   return { onDeposit, loading };
 };
 
-export const useRedeem = () => {
+export const useRedeem = ({ vaultId, vaultProgramId }) => {
   const wallet = useWallet();
   const [loading, setLoading] = useState(false);
-  const vaultId = 0;
-  const vaultProgramId = new PublicKey(
-    "9N3yqarWXmXJ9NQBGgN47JXV82smby8nSMffkwetgYov"
-  );
+  const vaultProgramIdPk = new PublicKey(vaultProgramId);
 
-  const vaultStatePk = getVaultStatePda(vaultProgramId, vaultId);
-  const authorityAddress = vaultAuthorityAddress(vaultProgramId, vaultId);
+  const vaultStatePk = getVaultStatePda(vaultProgramIdPk, vaultId);
+  const authorityAddress = vaultAuthorityAddress(vaultProgramIdPk, vaultId);
 
   const program = useProgram();
   const onRedeem = useCallback(

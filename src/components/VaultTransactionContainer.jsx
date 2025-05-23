@@ -1,6 +1,7 @@
 import React, { useEffect, useState } from "react";
 import { use } from "react";
 
+import { useAppContext } from "../utils/AppContext";
 import {
   useDeposit,
   useRedeem,
@@ -16,18 +17,29 @@ export const VaultSolanaTransactionContainer = () => {
   const [snackbarOpen, setSnackbarOpen] = useState(false);
   const [snackbarMessage, setSnackbarMessage] = useState("");
   const [snackbarSeverity, setSnackbarSeverity] = useState("info");
-  const { onDeposit, loading: isLoadingDeposit } = useDeposit();
-  const { onRedeem, loading: isLoadingRedeem } = useRedeem();
+
+  const ctx = useAppContext();
+  const selectedAsset = ctx.selectedAsset;
+  const assetSymbol = selectedAsset.assetSymbol;
+  const vaultId = ctx.solanaVaultId;
+
+  const { onDeposit, loading: isLoadingDeposit } = useDeposit({
+    vaultId,
+    vaultProgramId: selectedAsset.vaultAddress
+  });
+  const { onRedeem, loading: isLoadingRedeem } = useRedeem({
+    vaultId,
+    vaultProgramId: selectedAsset.vaultAddress
+  });
 
   const { balanceState } = useTokenBalanceState({
-    vaultId: 0,
+    vaultId,
     type: action
   });
 
   useEffect(() => {
     if (balanceState) {
       if (action === "deposit") {
-        console.log("balanceState", balanceState);
         setMaxAssets(balanceState.uiAmountString);
       } else if (action === "redeem") {
         setMaxAssets(balanceState.amount);
@@ -120,7 +132,7 @@ export const VaultSolanaTransactionContainer = () => {
       snackbarSeverity={snackbarSeverity}
       handleSnackbarClose={handleSnackbarClose}
       maxAssets={maxAssets}
-      tokenSymbol="SOL"
+      tokenSymbol={assetSymbol}
     />
   );
 };

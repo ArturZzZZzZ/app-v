@@ -46,7 +46,8 @@ function AssetSwitcher() {
             representationTokenName: asset.RepresentationTokenName,
             assetName: asset.name,
             assetSymbol: asset.symbol,
-            assetIcon: asset.icon
+            assetIcon: asset.icon,
+            solanaVaultId: asset.vaultId
           });
         }
       });
