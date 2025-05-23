@@ -1,25 +1,27 @@
-import React, { useState } from 'react';
-import VaultTransactionUI from './ui/VaultTransactionUI';
+import React, { useState } from "react";
 
-const VaultTransactionContainer = () => {
+import VaultTransactionUI from "./ui/VaultTransactionUI";
+
+export const VaultSolanaTransactionContainer = () => {
+  console.log("blockType", "SOLANA");
   const [assets, setAssets] = useState(0);
-  const [action, setAction] = useState('deposit');
+  const [action, setAction] = useState("deposit");
   const [step, setStep] = useState(0);
   const [loading, setLoading] = useState(false);
   const [snackbarOpen, setSnackbarOpen] = useState(false);
-  const [snackbarMessage, setSnackbarMessage] = useState('');
-  const [snackbarSeverity, setSnackbarSeverity] = useState('info');
+  const [snackbarMessage, setSnackbarMessage] = useState("");
+  const [snackbarSeverity, setSnackbarSeverity] = useState("info");
 
   const maxAssets = 100;
 
   const getButtonText = () => {
     switch (step) {
       case 1:
-        return 'Approving...';
+        return "Approving...";
       case 2:
-        return 'Processing...';
+        return "Processing...";
       case 3:
-        return 'Confirmed';
+        return "Confirmed";
       default:
         return action.charAt(0).toUpperCase() + action.slice(1);
     }
@@ -27,15 +29,15 @@ const VaultTransactionContainer = () => {
 
   const handleTransaction = async () => {
     setLoading(true);
-    setSnackbarMessage('Transaction started...');
-    setSnackbarSeverity('info');
+    setSnackbarMessage("Transaction started...");
+    setSnackbarSeverity("info");
     setSnackbarOpen(true);
 
     setTimeout(() => {
       setLoading(false);
       setStep(3);
-      setSnackbarMessage('Transaction successful!');
-      setSnackbarSeverity('success');
+      setSnackbarMessage("Transaction successful!");
+      setSnackbarSeverity("success");
     }, 2000);
   };
 
@@ -59,5 +61,3 @@ const VaultTransactionContainer = () => {
     />
   );
 };
-
-export default VaultTransactionContainer;

@@ -1,23 +1,35 @@
 // import { TargetBlockchainChainId } from '../../../utils/globals';
+import React, { useEffect, useState } from "react";
 
-import React, { useEffect, useState } from 'react';
-import { useWeb3Modal, useDisconnect } from '@web3modal/ethers/react';
-import { Button, Typography, Box, Container, Paper, Tabs, Tab } from '@mui/material';
-import { useWeb3ModalProvider, useWeb3ModalAccount } from '@web3modal/ethers/react';
-import { ethers } from 'ethers';
+import {
+  Box,
+  Button,
+  Container,
+  Paper,
+  Tab,
+  Tabs,
+  Typography
+} from "@mui/material";
+import { useDisconnect, useWeb3Modal } from "@web3modal/ethers/react";
+import {
+  useWeb3ModalAccount,
+  useWeb3ModalProvider
+} from "@web3modal/ethers/react";
+import { useSwitchNetwork } from "@web3modal/ethers/react";
+import { ethers } from "ethers";
+
 // import { VaultAddress } from '../../../utils/globals';
-import { VaultABI } from '../../utils/ABIs';
-
-import VaultTransaction from './components/VaultTransaction';
-import VaultAdmin from './components/VaultAdmin';
-import WalletDisplay from '../WalletDisplay/WalletDisplay';
-import SmartContractInterface from './components/SmartContractInterfaces';
-import { useSwitchNetwork } from '@web3modal/ethers/react';
-import BlockchainSwitcher from './components/BlockchainSwitcher';
-
-import { useAppContext } from '../../utils/AppContext'; // Import AppContext.js
-import AssetDisplay from '../Bridge/components/AssetDisplay';
-import AssetSwitcher from './components/AssetSwitcher';
+import { VaultABI } from "../../utils/ABIs";
+import { useAppContext } from "../../utils/AppContext";
+// Import AppContext.js
+import AssetDisplay from "../Bridge/components/AssetDisplay";
+import { VaultSolanaTransactionContainer } from "../VaultTransactionContainer";
+import WalletDisplay from "../WalletDisplay/WalletDisplay";
+import AssetSwitcher from "./components/AssetSwitcher";
+import BlockchainSwitcher from "./components/BlockchainSwitcher";
+import SmartContractInterface from "./components/SmartContractInterfaces";
+import VaultAdmin from "./components/VaultAdmin";
+import VaultTransaction from "./components/VaultTransaction";
 
 function SecuritizeCreditVault() {
   const { address, chainId, isConnected } = useWeb3ModalAccount();
@@ -30,15 +42,17 @@ function SecuritizeCreditVault() {
   const { switchNetwork } = useSwitchNetwork();
   const [buttonLabelStatus, setButtonLabelStatus] = useState("Switch");
 
-  const { vaultAddress, setVaultAddress } = useAppContext();
+  const { vaultAddress, setVaultAddress, selectedAsset } = useAppContext();
   const { vaultAssetAddress, setVaultAssetAddress } = useAppContext();
-  const { TargetBlockchainChainId, setTargetBlockchainChainId } = useAppContext();
+  const { TargetBlockchainChainId, setTargetBlockchainChainId } =
+    useAppContext();
+
+  const blockchainType = selectedAsset?.chainName.toLowerCase();
+  const isSolana = blockchainType === "solana";
 
   const VaultAddress = vaultAddress;
 
   const isOnCorrectBlockchain = chainId === TargetBlockchainChainId;
-
-  const {selectedAsset} = useAppContext();
 
   useEffect(() => {
     if (provider) {
@@ -54,12 +68,12 @@ function SecuritizeCreditVault() {
         disconnect();
       };
 
-      provider.on('accountsChanged', handleAccountsChanged);
-      provider.on('chainChanged', handleChainChanged);
+      provider.on("accountsChanged", handleAccountsChanged);
+      provider.on("chainChanged", handleChainChanged);
 
       return () => {
-        provider.removeListener('accountsChanged', handleAccountsChanged);
-        provider.removeListener('chainChanged', handleChainChanged);
+        provider.removeListener("accountsChanged", handleAccountsChanged);
+        provider.removeListener("chainChanged", handleChainChanged);
       };
     }
   }, [provider, disconnect]);
@@ -68,7 +82,6 @@ function SecuritizeCreditVault() {
     setTabValue(newValue);
   };
 
-
   return (
     <>
       {/* <AssetDisplay onAssetChange={setSelectedAsset} /> */}
@@ -76,26 +89,29 @@ function SecuritizeCreditVault() {
       {/* <BlockchainSwitcher /> */}
       {/* {isOnCorrectBlockchain ? ( */}
       {selectedAsset ? (
-
         <>
-          <Box elevation={3} sx={{ padding: '16px', textAlign: 'center' }}>
+          <Box elevation={3} sx={{ padding: "16px", textAlign: "center" }}>
             <Tabs value={tabValue} onChange={handleTabChange} centered>
               <Tab label="Vault Transaction" />
               {<Tab label="Vault Admin" />}
               {<Tab label="Smart Contract Interface" />}
             </Tabs>
             <Box sx={{ mt: 3 }}>
-              {tabValue === 0 && <VaultTransaction action="deposit" />}
+              {tabValue === 0 && isSolana ? (
+                <VaultSolanaTransactionContainer />
+              ) : (
+                <VaultTransaction action="deposit" />
+              )}
               {tabValue === 1 && <VaultAdmin />}
               {tabValue === 2 && <SmartContractInterface />}
             </Box>
           </Box>
         </>
-      ) : (<> </>)}
-
+      ) : (
+        <> </>
+      )}
     </>
   );
 }
 
 export default SecuritizeCreditVault;
-
