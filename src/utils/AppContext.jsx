@@ -17,8 +17,6 @@ import { WalletModalProvider } from "@solana/wallet-adapter-react-ui";
 import { PhantomWalletAdapter } from "@solana/wallet-adapter-wallets";
 import { clusterApiUrl } from "@solana/web3.js";
 
-import { TEST_VERSION } from "./globals";
-
 const AppContext = createContext();
 export default AppContext;
 
@@ -27,7 +25,7 @@ export function getCluster(cluster) {
     case WalletAdapterNetwork.Mainnet:
       return {
         name: "Mainnet Beta",
-        endpoint: "",
+        endpoint: clusterApiUrl("mainnet-beta"),
         network: WalletAdapterNetwork.Mainnet
       };
     case WalletAdapterNetwork.Devnet:
@@ -45,17 +43,18 @@ export function getCluster(cluster) {
   }
 }
 
-const network = TEST_VERSION
-  ? WalletAdapterNetwork.Devnet
-  : WalletAdapterNetwork.Mainnet;
+const SolanaWalletProvider = ({ children, isMainnet = false }) => {
+  const network = useMemo(
+    () =>
+      isMainnet ? WalletAdapterNetwork.Mainnet : WalletAdapterNetwork.Devnet,
+    [isMainnet]
+  );
 
-const cluster = getCluster(network);
-const endpoint = cluster.endpoint;
-const wallets = [new PhantomWalletAdapter()];
+  const endpoint = useMemo(() => getCluster(network).endpoint, [network]);
+  const wallets = useMemo(() => [new PhantomWalletAdapter()], []);
 
-const SolanaWalletProvider = ({ children }) => {
   const onError = useCallback((error) => {
-    console.error(error);
+    console.error("Solana Wallet Error:", error);
   }, []);
 
   return (
@@ -76,6 +75,7 @@ export const AppProvider = ({ children }) => {
   const [TargetBlockchainChainId, setTargetBlockchainChainId] = useState(0);
   const [selectedAssetKey, setSelectedAssetKey] = useState("");
   const [selectedAsset, setSelectedAsset] = useState(null);
+
   return (
     <AppContext.Provider
       value={{
@@ -93,7 +93,9 @@ export const AppProvider = ({ children }) => {
         setSelectedAsset
       }}
     >
-      <SolanaWalletProvider>{children}</SolanaWalletProvider>
+      <SolanaWalletProvider isMainnet={showMainNets}>
+        {children}
+      </SolanaWalletProvider>
     </AppContext.Provider>
   );
 };
