@@ -12,5 +12,15 @@ const LABELS = {
 };
 
 export default function SolanaWalletConnect() {
-  return <BaseWalletMultiButton labels={LABELS} />;
+  return (
+    <BaseWalletMultiButton
+      labels={LABELS}
+      style={{
+        background: "#3b3d5b",
+        fontWeight: "normal",
+        textTransform: "uppercase",
+        fontSize: "14px"
+      }}
+    />
+  );
 }
