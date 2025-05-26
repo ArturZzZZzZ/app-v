@@ -572,6 +572,7 @@ export const blockchainInfo = {
     assets: [
       {
         vaultAddress: "9N3yqarWXmXJ9NQBGgN47JXV82smby8nSMffkwetgYov",
+        address: "need address",
         vaultId: "0",
         name: "Solana",
         symbol: "SPL",

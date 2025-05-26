@@ -1,5 +1,4 @@
 import React, { useEffect, useState } from "react";
-import { use } from "react";
 
 import { useAppContext } from "../utils/AppContext";
 import {
@@ -24,15 +23,13 @@ export const VaultSolanaTransactionContainer = () => {
   const vaultId = ctx.solanaVaultId;
 
   const { onDeposit, loading: isLoadingDeposit } = useDeposit({
-    vaultId,
-    vaultProgramId: selectedAsset.vaultAddress
+    vaultId
   });
   const { onRedeem, loading: isLoadingRedeem } = useRedeem({
-    vaultId,
-    vaultProgramId: selectedAsset.vaultAddress
+    vaultId
   });
 
-  const { balanceState } = useTokenBalanceState({
+  const { balanceState, refetch } = useTokenBalanceState({
     vaultId,
     type: action
   });
@@ -80,6 +77,7 @@ export const VaultSolanaTransactionContainer = () => {
       .finally(() => {
         setSnackbarOpen(true);
         setStep(1);
+        refetch();
       });
   };
 
@@ -99,6 +97,7 @@ export const VaultSolanaTransactionContainer = () => {
       .finally(() => {
         setStep(1);
         setSnackbarOpen(true);
+        refetch();
       });
   };
 
