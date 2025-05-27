@@ -4,6 +4,8 @@ import { useAppContext } from "../utils/AppContext";
 import { useAddLiquidator } from "../utils/anchorHelpers";
 import VaultAdminUI from "./ui/VaultAdminUI";
 
+// import VaultAdminUI from "./ui/VaultAdminUI";
+
 export const VaultAdminContainer = () => {
   const [action, setAction] = useState("Add Redeemer");
   const [step, setStep] = useState(0);
