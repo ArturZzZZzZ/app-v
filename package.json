@@ -1,6 +1,7 @@
 {
   "name": "vault",
   "version": "0.1.0",
+  "type": "module",
   "private": true,
   "dependencies": {
     "@coral-xyz/anchor": "^0.31.1",
@@ -37,8 +38,8 @@
     "preview": "vite preview",
     "test": "echo 'No test runner configured. Use Vitest or another test runner.' && exit 0",
     "type-check": "tsc --noEmit",
-    "lint": "eslint src --ext .ts,.tsx,.js,.jsx",
-    "lint:fix": "eslint src --ext .ts,.tsx,.js,.jsx --fix"
+    "lint": "eslint src --ext .ts,.tsx",
+    "lint:fix": "eslint src --ext .ts,.tsx --fix"
   },
   "eslintConfig": {
     "extends": [

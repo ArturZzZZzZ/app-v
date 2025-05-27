@@ -31,16 +31,6 @@ declare module "*.json" {
   export default content;
 }
 
-interface ImportMetaEnv {
-  readonly VITE_APP_TITLE: string;
-  // more env variables...
-}
-
-interface ImportMeta {
-  readonly env: ImportMetaEnv;
-}
-
-// Solana types extension
 declare global {
   interface Window {
     solana?: any;

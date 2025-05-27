@@ -1,4 +1,3 @@
-/* eslint-disable @typescript-eslint/no-explicit-any */
 import { useCallback, useEffect, useMemo, useRef, useState } from "react";
 
 import { AnchorProvider, BN, Program } from "@coral-xyz/anchor";
@@ -12,6 +11,13 @@ import { useConnection, useWallet } from "@solana/wallet-adapter-react";
 import { PublicKey, Transaction } from "@solana/web3.js";
 
 import idl from "../api/solana/idls/sc_vault.json";
+
+export interface TokenBalance {
+  amount: string;
+  decimals: number;
+  uiAmount: number;
+  uiAmountString: string;
+}
 
 export function makeProvider(connection, wallet) {
   const opts = AnchorProvider.defaultOptions();
@@ -183,7 +189,7 @@ export const useDeposit = ({ vaultId }) => {
             shareMint: shareMintPk,
             assetTokenProgram: assetMintInfo.owner,
             shareTokenProgram: shareMintInfo.owner,
-            liquidationTokenMint: liquidationTokenMintPk,
+            liquidationTokenMint: liquidationTokenMintPk!,
             liquidationTokenVault: liquidationTokenVaultPk,
             navProviderProgram: navProviderProgramPk
           })
@@ -216,12 +222,12 @@ export const useDeposit = ({ vaultId }) => {
         return signature;
       } catch (err) {
         console.error("deposit error:", err);
-        throw new Error(err);
+        throw new Error(err instanceof Error ? err.message : String(err));
       } finally {
         setLoading(false);
       }
     },
-    [wallet, program, vaultStatePk, authorityAddress]
+    [wallet, program, vaultId, vaultStatePk, authorityAddress]
   );
 
   return { onDeposit, loading };
@@ -299,7 +305,7 @@ export const useRedeem = ({ vaultId }) => {
             shareMint: shareMintPk,
             assetTokenProgram: assetMintInfo.owner,
             shareTokenProgram: shareMintInfo.owner,
-            liquidationTokenMint: liquidationTokenMintPk,
+            liquidationTokenMint: liquidationTokenMintPk!,
             liquidationTokenVault: liquidationTokenVaultPk,
             navProviderProgram: navProviderProgramPk
           })
@@ -311,12 +317,12 @@ export const useRedeem = ({ vaultId }) => {
         return signature;
       } catch (err) {
         console.error("Error redeem:", err);
-        throw new Error(err);
+        throw new Error(err instanceof Error ? err.message : String(err));
       } finally {
         setLoading(false);
       }
     },
-    [wallet, program, vaultStatePk, authorityAddress]
+    [wallet, program, vaultId, vaultStatePk, authorityAddress]
   );
   return { onRedeem, loading };
 };
@@ -324,7 +330,7 @@ export const useRedeem = ({ vaultId }) => {
 export const useTokenBalanceState = ({ vaultId = 0, type }) => {
   const program = useProgram();
   const { publicKey: userPk } = useWallet();
-  const [balanceState, setBalanceState] = useState(0);
+  const [balanceState, setBalanceState] = useState<TokenBalance | null>(null);
 
   const cancelledRef = useRef(false);
 
@@ -333,7 +339,7 @@ export const useTokenBalanceState = ({ vaultId = 0, type }) => {
 
     const connection = program.provider.connection;
     if (!connection || !userPk) {
-      setBalanceState(0);
+      setBalanceState(null);
       return;
     }
 
@@ -354,7 +360,7 @@ export const useTokenBalanceState = ({ vaultId = 0, type }) => {
 
       const mintInfo = await connection.getAccountInfo(mintPk);
       if (!mintInfo) {
-        if (!cancelledRef.current) setBalanceState(0);
+        if (!cancelledRef.current) setBalanceState(null);
         return;
       }
 
@@ -370,7 +376,7 @@ export const useTokenBalanceState = ({ vaultId = 0, type }) => {
     } catch (error) {
       console.error("Failed to fetch token balance", error);
       if (!cancelledRef.current) {
-        setBalanceState(0);
+        setBalanceState(null);
       }
     }
   }, [program, userPk, vaultId, type]);
@@ -391,9 +397,9 @@ export const useTokenBalanceState = ({ vaultId = 0, type }) => {
 export function useVault(vaultId) {
   const { connection } = useConnection();
   const { publicKey, signTransaction, signAllTransactions } = useWallet();
-  const [vault, setVault] = useState(null);
+  const [vault, setVault] = useState<any>(null);
   const [loading, setLoading] = useState(false);
-  const [error, setError] = useState(null);
+  const [error, setError] = useState<Error | null>(null);
 
   const program = useProgram();
 
@@ -436,7 +442,11 @@ export function useVault(vaultId) {
         const assetTokenProgram = assetMintInfo.owner;
         const shareTokenProgram = shareMintInfo.owner;
 
-        let liquidationConfig = null;
+        let liquidationConfig: {
+          mintPubkey: PublicKey;
+          tokenProgram: PublicKey;
+          redemptionProgramPubkey: PublicKey;
+        } | null = null;
         if (vaultState.liquidationTokenVault) {
           const liquidationTokenVaultAccount =
             await program.provider.connection.getAccountInfo(
@@ -488,7 +498,7 @@ export function useVault(vaultId) {
 
         setVault(config);
       } catch (err) {
-        setError(err);
+        setError(err as Error);
       } finally {
         setLoading(false);
       }
@@ -526,7 +536,9 @@ export const useAddLiquidator = (vaultId) => {
       return signature;
     } catch (error) {
       console.error("Error adding liquidator:", error);
-      throw new Error(`Failed to add liquidator: ${error.message || error}`);
+      throw new Error(
+        `Failed to add liquidator: ${error instanceof Error ? error.message : String(error)}`
+      );
     } finally {
       setLoading(false);
     }

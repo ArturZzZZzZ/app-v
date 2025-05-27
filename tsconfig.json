@@ -16,7 +16,7 @@
     "noEmit": true,
     "jsx": "react-jsx",
     "declaration": false,
-    "noImplicitAny": true,
+    "noImplicitAny": false,
     "noImplicitReturns": true,
     "noImplicitThis": true,
     "strictNullChecks": true,

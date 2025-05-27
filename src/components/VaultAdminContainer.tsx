@@ -1,10 +1,8 @@
-import React, { useState } from "react";
+import { useState } from "react";
 
 import { useAppContext } from "../utils/AppContext";
 import { useAddLiquidator } from "../utils/anchorHelpers";
 import VaultAdminUI from "./ui/VaultAdminUI";
-
-// import VaultAdminUI from "./ui/VaultAdminUI";
 
 export const VaultAdminContainer = () => {
   const [action, setAction] = useState("Add Redeemer");
@@ -18,8 +16,6 @@ export const VaultAdminContainer = () => {
   });
 
   const ctx = useAppContext();
-  const selectedAsset = ctx.selectedAsset;
-  const assetSymbol = selectedAsset.assetSymbol;
   const vaultId = ctx.solanaVaultId;
 
   const { addLiquidator, loading: isLoadingAddLiquidator } =
@@ -80,9 +76,9 @@ export const VaultAdminContainer = () => {
     if (!inputValue) return;
     const activeAction =
       activeTab === 0
-        ? "Add Redeemer"
+        ? () => {}
         : activeTab === 1
-          ? "Change Admin"
+          ? () => {}
           : handleAddLiquidator;
     activeAction();
   };

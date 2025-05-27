@@ -10,7 +10,9 @@ import VaultTransactionUI from "./ui/VaultTransactionUI";
 
 export const VaultSolanaTransactionContainer = () => {
   const [assets, setAssets] = useState(0);
-  const [action, setAction] = useState("deposit");
+  const [action, setAction] = useState<"deposit" | "redeem" | "liquidate">(
+    "deposit"
+  );
   const [maxAssets, setMaxAssets] = useState(0);
   const [step, setStep] = useState(0);
   const [snackbarOpen, setSnackbarOpen] = useState(false);
@@ -37,12 +39,12 @@ export const VaultSolanaTransactionContainer = () => {
   useEffect(() => {
     if (balanceState) {
       if (action === "deposit") {
-        setMaxAssets(balanceState.uiAmountString);
-      } else if (action === "redeem") {
-        setMaxAssets(balanceState.amount);
+        setMaxAssets(Number(balanceState.uiAmountString));
+      } else if (action === "redeem" || action === "liquidate") {
+        setMaxAssets(Number(balanceState.amount));
       }
     }
-  }, [balanceState]);
+  }, [action, balanceState]);
 
   const isLoading = isLoadingDeposit || isLoadingRedeem;
 
