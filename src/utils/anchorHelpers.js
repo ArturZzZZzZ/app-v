@@ -504,3 +504,36 @@ export function useVault(vaultId) {
 
   return { vault, loading, error };
 }
+
+export const useAddLiquidator = (vaultId) => {
+  const [loading, setLoading] = useState(false);
+  const program = useProgram();
+
+  const addLiquidator = async (liquidatorAddress) => {
+    try {
+      setLoading(true);
+      const vaultState = await getVaultStateById(program, vaultId);
+      const adminPk = vaultState.admin;
+      const vaultStatePk = getVaultStatePda(program.programId, vaultId);
+
+      const signature = await program.methods
+        .addLiquidator(new PublicKey(liquidatorAddress))
+        .accountsPartial({ vaultState: vaultStatePk, admin: adminPk })
+        .rpc();
+      console.log(
+        `Liquidator added successfully. Transaction signature: ${signature}`
+      );
+      return signature;
+    } catch (error) {
+      console.error("Error adding liquidator:", error);
+      throw new Error(`Failed to add liquidator: ${error.message || error}`);
+    } finally {
+      setLoading(false);
+    }
+  };
+
+  return {
+    addLiquidator,
+    loading
+  };
+};
