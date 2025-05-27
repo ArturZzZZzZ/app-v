@@ -1,7 +1,7 @@
 import { useState } from "react";
 
 import { useAppContext } from "../utils/AppContext";
-import { useAddLiquidator } from "../utils/anchorHelpers";
+import { useAddLiquidator, useChangeAdmin } from "../utils/anchorHelpers";
 import VaultAdminUI from "./ui/VaultAdminUI";
 
 export const VaultAdminContainer = () => {
@@ -21,7 +21,10 @@ export const VaultAdminContainer = () => {
   const { addLiquidator, loading: isLoadingAddLiquidator } =
     useAddLiquidator(vaultId);
 
-  const isLoading = isLoadingAddLiquidator;
+  const { changeAdmin, loading: isLoadingChangeAdmin } =
+    useChangeAdmin(vaultId);
+
+  const isLoading = isLoadingAddLiquidator || isLoadingChangeAdmin;
 
   const getButtonText = () => {
     switch (step) {
@@ -71,6 +74,32 @@ export const VaultAdminContainer = () => {
         setStep(1);
       });
   };
+  const handleChangeAdmin = async () => {
+    console.log("handleAddLiquidator");
+    setStep(2);
+    changeAdmin(inputValue)
+      .then((hash) => {
+        setSnackbar({
+          open: true,
+          message: "Transaction successful: " + hash,
+          severity: "success"
+        });
+        setStep(1);
+        setInputValue("");
+      })
+      .catch((error) => {
+        console.error("Transaction error1111111:", error);
+        setStep(1);
+        setSnackbar({
+          open: true,
+          message: error.message || "Transaction failed",
+          severity: "error"
+        });
+      })
+      .finally(() => {
+        setStep(1);
+      });
+  };
 
   const onAction = () => {
     if (!inputValue) return;
@@ -78,7 +107,7 @@ export const VaultAdminContainer = () => {
       activeTab === 0
         ? () => {}
         : activeTab === 1
-          ? () => {}
+          ? handleChangeAdmin
           : handleAddLiquidator;
     activeAction();
   };

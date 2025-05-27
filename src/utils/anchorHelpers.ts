@@ -493,41 +493,6 @@ export const useTokenBalanceState = ({ vaultId = 0, type }) => {
   };
 };
 
-export const useAddLiquidator = (vaultId) => {
-  const [loading, setLoading] = useState(false);
-  const program = useProgram();
-
-  const addLiquidator = async (liquidatorAddress) => {
-    try {
-      setLoading(true);
-      const vaultState = await getVaultStateById(program, vaultId);
-      const adminPk = vaultState.admin;
-      const vaultStatePk = getVaultStatePda(program.programId, vaultId);
-
-      const signature = await program.methods
-        .addLiquidator(new PublicKey(liquidatorAddress))
-        .accountsPartial({ vaultState: vaultStatePk, admin: adminPk })
-        .rpc();
-      console.log(
-        `Liquidator added successfully. Transaction signature: ${signature}`
-      );
-      return signature;
-    } catch (error) {
-      console.error("Error adding liquidator:", error);
-      throw new Error(
-        `Failed to add liquidator: ${error instanceof Error ? error.message : String(error)}`
-      );
-    } finally {
-      setLoading(false);
-    }
-  };
-
-  return {
-    addLiquidator,
-    loading
-  };
-};
-
 export const useLiquidate = ({ vaultId }) => {
   const wallet = useWallet();
   const [loading, setLoading] = useState(false);
@@ -631,4 +596,76 @@ export const useLiquidate = ({ vaultId }) => {
     [vault, wallet, program.methods]
   );
   return { onLiquidate, loading };
+};
+
+export const useAddLiquidator = (vaultId) => {
+  const [loading, setLoading] = useState(false);
+  const program = useProgram();
+
+  const addLiquidator = async (liquidatorAddress) => {
+    try {
+      setLoading(true);
+      const vaultState = await getVaultStateById(program, vaultId);
+      const adminPk = vaultState.admin;
+      const vaultStatePk = getVaultStatePda(program.programId, vaultId);
+
+      const signature = await program.methods
+        .addLiquidator(new PublicKey(liquidatorAddress))
+        .accountsPartial({ vaultState: vaultStatePk, admin: adminPk })
+        .rpc();
+      console.log(
+        `Liquidator added successfully. Transaction signature: ${signature}`
+      );
+      return signature;
+    } catch (error) {
+      console.error("Error adding liquidator:", error);
+      throw new Error(
+        `Failed to add liquidator: ${error instanceof Error ? error.message : String(error)}`
+      );
+    } finally {
+      setLoading(false);
+    }
+  };
+
+  return {
+    addLiquidator,
+    loading
+  };
+};
+
+export const useChangeAdmin = (vaultId) => {
+  const [loading, setLoading] = useState(false);
+
+  const program = useProgram();
+
+  const changeAdmin = async (newAdminAddress: string) => {
+    try {
+      setLoading(true);
+      const vaultState = await getVaultStateById(program, vaultId);
+      const oldAdminKp = vaultState.admin;
+      const vaultStatePk = getVaultStatePda(program.programId, vaultId);
+      console.log(123213, oldAdminKp.toString());
+
+      const signature = await program.methods
+        .changeAdmin(new PublicKey(newAdminAddress))
+        .accountsPartial({ vaultState: vaultStatePk, admin: oldAdminKp })
+        .rpc();
+      console.log(
+        `changeAdmin successfully. Transaction signature: ${signature}`
+      );
+      return signature;
+    } catch (error) {
+      console.error("Error changeAdmin:", error);
+      throw new Error(
+        `Failed to change admin: ${error instanceof Error ? error.message : String(error)}`
+      );
+    } finally {
+      setLoading(false);
+    }
+  };
+
+  return {
+    changeAdmin,
+    loading
+  };
 };
