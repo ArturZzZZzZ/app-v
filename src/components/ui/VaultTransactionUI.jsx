@@ -16,7 +16,6 @@ function VaultTransactionUI({
   setAssets,
   action,
   setAction,
-  step,
   loading,
   handleTransaction,
   getButtonText,

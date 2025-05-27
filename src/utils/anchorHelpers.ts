@@ -1,4 +1,4 @@
-import { useCallback, useEffect, useMemo, useRef, useState } from "react";
+import { use, useCallback, useEffect, useMemo, useRef, useState } from "react";
 
 import { AnchorProvider, BN, Program } from "@coral-xyz/anchor";
 import {
@@ -431,6 +431,7 @@ export const useTokenBalanceState = ({ vaultId = 0, type }) => {
   const program = useProgram();
   const { publicKey: userPk } = useWallet();
   const [balanceState, setBalanceState] = useState<TokenBalance | null>(null);
+  const [activeType, setActiveType] = useState("");
 
   const cancelledRef = useRef(false);
 
@@ -468,6 +469,7 @@ export const useTokenBalanceState = ({ vaultId = 0, type }) => {
 
       if (!cancelledRef.current) {
         setBalanceState(userBalance);
+        setActiveType(type);
       }
     } catch (error) {
       console.error("Failed to fetch token balance", error);
@@ -486,7 +488,8 @@ export const useTokenBalanceState = ({ vaultId = 0, type }) => {
 
   return {
     balanceState,
-    refetch: fetchBalance
+    refetch: fetchBalance,
+    activeType
   };
 };
 

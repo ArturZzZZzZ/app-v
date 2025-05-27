@@ -36,20 +36,25 @@ export const VaultSolanaTransactionContainer = () => {
     vaultId
   });
 
-  const { balanceState, refetch } = useTokenBalanceState({
+  const { balanceState, refetch, activeType } = useTokenBalanceState({
     vaultId,
     type: action
   });
 
   useEffect(() => {
+    setMaxAssets(0);
+  }, [action]);
+
+  useEffect(() => {
     if (balanceState) {
-      if (action === "deposit") {
+      console.log("Balance state:", balanceState, activeType);
+      if (activeType === "deposit") {
         setMaxAssets(Number(balanceState.uiAmountString));
-      } else if (action === "redeem" || action === "liquidate") {
+      } else if (activeType === "redeem" || activeType === "liquidate") {
         setMaxAssets(Number(balanceState.amount));
       }
     }
-  }, [action, balanceState]);
+  }, [activeType, balanceState]);
 
   const isLoading = isLoadingDeposit || isLoadingRedeem || isLoadingLiquidate;
 
@@ -152,7 +157,6 @@ export const VaultSolanaTransactionContainer = () => {
       setAssets={setAssets}
       action={action}
       setAction={setAction}
-      step={step}
       loading={isLoading}
       handleTransaction={handleTransaction}
       getButtonText={getButtonText}
