@@ -459,14 +459,10 @@ export const useTokenBalanceState = ({ vaultId = 0, type }) => {
       }
 
       const mintInfo = await connection.getAccountInfo(mintPk);
-      if (!mintInfo) {
-        if (!cancelledRef.current) setBalanceState(null);
-        return;
-      }
 
       const userBalance = await getUserBalanceByAta(connection, {
         mintPubkey: mintPk,
-        tokenProgram: mintInfo.owner,
+        tokenProgram: mintInfo?.owner,
         userPubkey: userPk
       });
 
