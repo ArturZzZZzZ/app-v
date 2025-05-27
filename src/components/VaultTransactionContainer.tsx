@@ -3,6 +3,7 @@ import React, { useEffect, useState } from "react";
 import { useAppContext } from "../utils/AppContext";
 import {
   useDeposit,
+  useLiquidate,
   useRedeem,
   useTokenBalanceState
 } from "../utils/anchorHelpers";
@@ -31,6 +32,10 @@ export const VaultSolanaTransactionContainer = () => {
     vaultId
   });
 
+  const { onLiquidate, loading: isLoadingLiquidate } = useLiquidate({
+    vaultId
+  });
+
   const { balanceState, refetch } = useTokenBalanceState({
     vaultId,
     type: action
@@ -46,7 +51,7 @@ export const VaultSolanaTransactionContainer = () => {
     }
   }, [action, balanceState]);
 
-  const isLoading = isLoadingDeposit || isLoadingRedeem;
+  const isLoading = isLoadingDeposit || isLoadingRedeem || isLoadingLiquidate;
 
   const getButtonText = () => {
     switch (step) {
@@ -103,6 +108,26 @@ export const VaultSolanaTransactionContainer = () => {
       });
   };
 
+  const handleLiquidateTransaction = async () => {
+    setStep(2);
+    onLiquidate(assets)
+      .then((hash) => {
+        setSnackbarMessage("Transaction successful: " + hash);
+        setSnackbarSeverity("success");
+        setAssets(0);
+      })
+      .catch((error) => {
+        console.error("Transaction error:", error);
+        setSnackbarMessage(error.message || "Transaction failed");
+        setSnackbarSeverity("error");
+      })
+      .finally(() => {
+        setStep(1);
+        setSnackbarOpen(true);
+        refetch();
+      });
+  };
+
   const handleTransaction = async () => {
     switch (action) {
       case "deposit":
@@ -110,6 +135,9 @@ export const VaultSolanaTransactionContainer = () => {
         break;
       case "redeem":
         await handleRedeemTransaction();
+        break;
+      case "liquidate":
+        await handleLiquidateTransaction();
         break;
       default:
         break;

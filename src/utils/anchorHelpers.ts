@@ -28,6 +28,7 @@ export function makeProvider(connection, wallet) {
 export function makeVaultProgram(provider) {
   return new Program(idl, provider);
 }
+
 export const getVaultStatePda = (programIdPk, vaultId) => {
   const VAULT_STATE_SEED = "vault_state";
 
@@ -98,6 +99,7 @@ export async function getUserBalanceByAta(
 
   return balance;
 }
+
 export const useProgram = () => {
   const { connection } = useConnection();
   const wallet = useWallet();
@@ -112,20 +114,153 @@ export const useProgram = () => {
   return useMemo(() => program, [program]);
 };
 
+export function useVault(vaultId) {
+  const { connection } = useConnection();
+  const { publicKey, signTransaction, signAllTransactions } = useWallet();
+  const [config, setConfig] = useState<any>(null);
+  const [loading, setLoading] = useState(false);
+  const [error, setError] = useState<Error | null>(null);
+
+  const program = useProgram();
+
+  useEffect(() => {
+    if (!connection || !publicKey) {
+      setConfig(null);
+      return;
+    }
+
+    setLoading(true);
+    setError(null);
+
+    (async () => {
+      try {
+        const connection = program.provider.connection;
+        const authorityAddress = vaultAuthorityAddress(
+          program.programId,
+          vaultId
+        );
+        const vaultStatePk = getVaultStatePda(program.programId, vaultId);
+
+        const vaultState = await getVaultStateById(program, vaultId);
+        const assetVaultPk = vaultState.assetVault;
+        const shareMintPk = vaultState.shareMint;
+
+        const assetVaultInfo = await connection.getAccountInfo(assetVaultPk);
+        const assetTokenProgram = assetVaultInfo?.owner;
+        const assetVault = await getAccount(
+          connection,
+          assetVaultPk,
+          connection.commitment,
+          assetTokenProgram
+        );
+
+        const assetMintPk = assetVault.mint;
+
+        const [{ decimals: assetTokenDecimal }, shareMintInfo] =
+          await Promise.all([
+            getMint(
+              connection,
+              assetMintPk,
+              connection.commitment,
+              assetTokenProgram
+            ),
+            connection.getAccountInfo(shareMintPk)
+          ]);
+
+        if (!shareMintInfo) {
+          throw new Error("Failed to retrieve mint information");
+        }
+
+        const shareTokenProgram = shareMintInfo.owner;
+
+        let liquidationConfig: {
+          mintPubkey: PublicKey;
+          tokenProgram: PublicKey;
+          redemptionProgramPubkey: PublicKey;
+        } | null = null;
+        if (vaultState.liquidationTokenVault) {
+          const liquidationTokenVaultAccount =
+            await program.provider.connection.getAccountInfo(
+              vaultState.liquidationTokenVault
+            );
+          if (!liquidationTokenVaultAccount) {
+            throw new Error(
+              `Failed to fetch liquidation token vault account at ${vaultState.liquidationTokenVault.toString()}`
+            );
+          }
+          const liquidationTokenProgram = liquidationTokenVaultAccount.owner;
+
+          // Get the mint public key from the liquidation token vault account
+          const liquidationTokenVaultTokenAccount = await getAccount(
+            connection,
+            vaultState.liquidationTokenVault,
+            connection.commitment,
+            liquidationTokenProgram
+          );
+          const liquidationTokenMintPubkey =
+            liquidationTokenVaultTokenAccount.mint;
+
+          liquidationConfig = {
+            mintPubkey: liquidationTokenMintPubkey,
+            tokenProgram: liquidationTokenProgram,
+            redemptionProgramPubkey: vaultState.redemptionProgram
+          };
+        }
+
+        const config = {
+          adminKp: vaultState.admin,
+          statePubkey: vaultStatePk,
+          vaultId,
+          authorityPubkey: authorityAddress,
+          state: vaultState,
+          program,
+          assetMintPubkey: assetMintPk,
+          assetTokenProgram,
+          assetVaultPubkey: vaultState.assetVault,
+          assetTokenDecimal,
+          shareMintPubkey: vaultState.shareMint,
+          shareTokenProgram,
+          navProviderProgram: vaultState.navProviderProgram,
+
+          // Handle liquidation configuration if available
+          liquidationTokenVaultPubkey: vaultState.liquidationTokenVault || null,
+          liquidationConfig
+        };
+
+        setConfig(config);
+      } catch (err) {
+        setError(err instanceof Error ? err : new Error(String(err)));
+      } finally {
+        setLoading(false);
+      }
+    })();
+  }, [
+    connection,
+    publicKey,
+    signTransaction,
+    signAllTransactions,
+    program,
+    vaultId
+  ]);
+
+  return { config, loading, error };
+}
+
 export const useDeposit = ({ vaultId }) => {
   const wallet = useWallet();
   const [loading, setLoading] = useState(false);
 
+  const vault = useVault(vaultId);
+
   const program = useProgram();
-
-  const vaultStatePk = getVaultStatePda(program.programId, vaultId);
-  const authorityAddress = vaultAuthorityAddress(program.programId, vaultId);
-
   const onDeposit = useCallback(
-    async (amountTokens) => {
+    async (amountTokens: number) => {
       const { publicKey: userPk, sendTransaction } = wallet;
-      if (!userPk || !sendTransaction) {
-        alert("Please connect your wallet");
+      if (!userPk || !sendTransaction || !vault) {
+        return;
+      }
+      const { config } = vault;
+      if (!config) {
         return;
       }
       setLoading(true);
@@ -133,44 +268,27 @@ export const useDeposit = ({ vaultId }) => {
       try {
         const connection = program.provider.connection;
 
-        const vaultState = await getVaultStateById(program, vaultId);
-        const assetVaultPk = vaultState.assetVault;
-        const shareMintPk = vaultState.shareMint;
-        const navProviderProgramPk = vaultState.navProviderProgram;
-        const liquidationTokenVaultPk = vaultState.liquidationTokenVault;
+        const assetVaultPk = config.assetVaultPubkey;
+        const shareMintPk = config.shareMintPubkey;
+        const navProviderProgramPk = config.navProviderProgram;
 
-        const liquidationTokenMintPk = liquidationTokenVaultPk
-          ? (await getAccount(connection, liquidationTokenVaultPk)).mint
-          : null;
-
-        const assetVaultState = await getAccount(connection, assetVaultPk);
-        const assetMintPk = assetVaultState.mint;
-
-        const [{ decimals: tokenDecimal }, shareMintInfo, assetMintInfo] =
-          await Promise.all([
-            getMint(connection, assetMintPk),
-            connection.getAccountInfo(shareMintPk),
-            connection.getAccountInfo(assetMintPk)
-          ]);
-
-        if (!shareMintInfo || !assetMintInfo) {
-          throw new Error("Failed to retrieve mint information");
-        }
-
-        const amount = toBaseUnits(amountTokens.toString(), tokenDecimal);
+        const amount = toBaseUnits(
+          amountTokens.toString(),
+          config.assetTokenDecimal
+        );
 
         const [operatorAssetAta, operatorShareAta] = await Promise.all([
           getAssociatedTokenAddress(
-            assetMintPk,
+            config.assetMintPubkey,
             userPk,
             false,
-            assetMintInfo.owner
+            config.assetTokenProgram
           ),
           getAssociatedTokenAddress(
-            shareMintPk,
+            config.shareMintPubkey,
             userPk,
             false,
-            shareMintInfo.owner
+            config.shareTokenProgram
           )
         ]);
 
@@ -180,17 +298,17 @@ export const useDeposit = ({ vaultId }) => {
           .deposit(amount)
           .accountsPartial({
             operator: userPk,
-            vaultState: vaultStatePk,
-            vaultAuthority: authorityAddress,
+            vaultState: config.statePubkey,
+            vaultAuthority: config.authorityPubkey,
             operatorAssetAta,
             operatorShareAta,
-            assetMint: assetMintPk,
+            assetMint: config.assetMintPubkey,
             assetVault: assetVaultPk,
             shareMint: shareMintPk,
-            assetTokenProgram: assetMintInfo.owner,
-            shareTokenProgram: shareMintInfo.owner,
-            liquidationTokenMint: liquidationTokenMintPk!,
-            liquidationTokenVault: liquidationTokenVaultPk,
+            assetTokenProgram: config.assetTokenProgram,
+            shareTokenProgram: config.shareTokenProgram,
+            liquidationTokenMint: config?.liquidationConfig?.mintPubkey || null,
+            liquidationTokenVault: config.liquidationTokenVaultPubkey,
             navProviderProgram: navProviderProgramPk
           })
           .remainingAccounts([
@@ -207,7 +325,7 @@ export const useDeposit = ({ vaultId }) => {
               operatorShareAta,
               userPk,
               shareMintPk,
-              shareMintInfo.owner
+              config.shareTokenProgram
             )
           );
         }
@@ -220,14 +338,13 @@ export const useDeposit = ({ vaultId }) => {
         const signature = await sendTransaction(tx, connection);
         console.log("Deposit successful, signature:", signature);
         return signature;
-      } catch (err) {
-        console.error("deposit error:", err);
+      } catch (err: any) {
         throw new Error(err instanceof Error ? err.message : String(err));
       } finally {
         setLoading(false);
       }
     },
-    [wallet, program, vaultId, vaultStatePk, authorityAddress]
+    [wallet, vault, program.provider.connection, program.methods]
   );
 
   return { onDeposit, loading };
@@ -235,60 +352,42 @@ export const useDeposit = ({ vaultId }) => {
 
 export const useRedeem = ({ vaultId }) => {
   const wallet = useWallet();
-  const program = useProgram();
   const [loading, setLoading] = useState(false);
 
-  const vaultStatePk = getVaultStatePda(program.programId, vaultId);
-  const authorityAddress = vaultAuthorityAddress(program.programId, vaultId);
+  const vault = useVault(vaultId);
+  const program = useProgram();
 
   const onRedeem = useCallback(
-    async (amountTokens) => {
+    async (amountTokens: number) => {
       const { publicKey: userPk, sendTransaction } = wallet;
-      if (!userPk || !sendTransaction) {
-        alert("Please connect your wallet");
+      if (!userPk || !sendTransaction || !vault) {
+        return;
+      }
+      const { config } = vault;
+      if (!config) {
         return;
       }
       setLoading(true);
 
       try {
-        const connection = program.provider.connection;
-
-        const vaultState = await getVaultStateById(program, vaultId);
-        const assetVaultPk = vaultState.assetVault;
-        const shareMintPk = vaultState.shareMint;
-        const navProviderProgramPk = vaultState.navProviderProgram;
-        const liquidationTokenVaultPk = vaultState.liquidationTokenVault;
-
-        const liquidationTokenMintPk = liquidationTokenVaultPk
-          ? (await getAccount(connection, liquidationTokenVaultPk)).mint
-          : null;
-
-        const assetVaultState = await getAccount(connection, assetVaultPk);
-        const assetMintPk = assetVaultState.mint;
-
-        const [shareMintInfo, assetMintInfo] = await Promise.all([
-          connection.getAccountInfo(shareMintPk),
-          connection.getAccountInfo(assetMintPk)
-        ]);
-
-        if (!shareMintInfo || !assetMintInfo) {
-          throw new Error("Failed to retrieve mint information");
-        }
+        const assetVaultPk = config.assetVaultPubkey;
+        const shareMintPk = config.shareMintPubkey;
+        const navProviderProgramPk = config.navProviderProgram;
 
         const amount = new BN(amountTokens);
 
         const [operatorAssetAta, operatorShareAta] = await Promise.all([
           getAssociatedTokenAddress(
-            assetMintPk,
+            config.assetMintPubkey,
             userPk,
             false,
-            assetMintInfo.owner
+            config.assetTokenProgram
           ),
           getAssociatedTokenAddress(
-            shareMintPk,
+            config.shareMintPubkey,
             userPk,
             false,
-            shareMintInfo.owner
+            config.shareTokenProgram
           )
         ]);
 
@@ -296,17 +395,17 @@ export const useRedeem = ({ vaultId }) => {
           .redeem(amount)
           .accountsPartial({
             operator: userPk,
-            vaultState: vaultStatePk,
-            vaultAuthority: authorityAddress,
+            vaultState: config.statePubkey,
+            vaultAuthority: config.authorityPubkey,
             operatorAssetAta,
             operatorShareAta,
-            assetMint: assetMintPk,
+            assetMint: config.assetMintPubkey,
             assetVault: assetVaultPk,
             shareMint: shareMintPk,
-            assetTokenProgram: assetMintInfo.owner,
-            shareTokenProgram: shareMintInfo.owner,
-            liquidationTokenMint: liquidationTokenMintPk!,
-            liquidationTokenVault: liquidationTokenVaultPk,
+            assetTokenProgram: config.assetTokenProgram,
+            shareTokenProgram: config.shareTokenProgram,
+            liquidationTokenMint: config?.liquidationConfig?.mintPubkey || null,
+            liquidationTokenVault: config.liquidationTokenVaultPubkey,
             navProviderProgram: navProviderProgramPk
           })
           .remainingAccounts([
@@ -316,17 +415,18 @@ export const useRedeem = ({ vaultId }) => {
         console.log("Redeem signature:", signature);
         return signature;
       } catch (err) {
-        console.error("Error redeem:", err);
-        throw new Error(err instanceof Error ? err.message : String(err));
+        console.error("Ошибка депозита:", err);
+        throw new Error(
+          `Redeem failed: ${err instanceof Error ? err.message : "Unknown error"}`
+        );
       } finally {
         setLoading(false);
       }
     },
-    [wallet, program, vaultId, vaultStatePk, authorityAddress]
+    [wallet, vault, program.methods]
   );
   return { onRedeem, loading };
 };
-
 export const useTokenBalanceState = ({ vaultId = 0, type }) => {
   const program = useProgram();
   const { publicKey: userPk } = useWallet();
@@ -394,127 +494,6 @@ export const useTokenBalanceState = ({ vaultId = 0, type }) => {
   };
 };
 
-export function useVault(vaultId) {
-  const { connection } = useConnection();
-  const { publicKey, signTransaction, signAllTransactions } = useWallet();
-  const [vault, setVault] = useState<any>(null);
-  const [loading, setLoading] = useState(false);
-  const [error, setError] = useState<Error | null>(null);
-
-  const program = useProgram();
-
-  useEffect(() => {
-    if (!connection || !publicKey) {
-      setVault(null);
-      return;
-    }
-
-    setLoading(true);
-    setError(null);
-
-    (async () => {
-      try {
-        const connection = program.provider.connection;
-        const authorityAddress = vaultAuthorityAddress(
-          program.programId,
-          vaultId
-        );
-        const vaultStatePk = getVaultStatePda(program.programId, vaultId);
-
-        const vaultState = await getVaultStateById(program, vaultId);
-        const assetVaultPk = vaultState.assetVault;
-        const shareMintPk = vaultState.shareMint;
-
-        const assetVaultState = await getAccount(connection, assetVaultPk);
-        const assetMintPk = assetVaultState.mint;
-
-        const [{ decimals: assetTokenDecimal }, shareMintInfo, assetMintInfo] =
-          await Promise.all([
-            getMint(connection, assetMintPk),
-            connection.getAccountInfo(shareMintPk),
-            connection.getAccountInfo(assetMintPk)
-          ]);
-
-        if (!shareMintInfo || !assetMintInfo) {
-          throw new Error("Failed to retrieve mint information");
-        }
-
-        const assetTokenProgram = assetMintInfo.owner;
-        const shareTokenProgram = shareMintInfo.owner;
-
-        let liquidationConfig: {
-          mintPubkey: PublicKey;
-          tokenProgram: PublicKey;
-          redemptionProgramPubkey: PublicKey;
-        } | null = null;
-        if (vaultState.liquidationTokenVault) {
-          const liquidationTokenVaultAccount =
-            await program.provider.connection.getAccountInfo(
-              vaultState.liquidationTokenVault
-            );
-          if (!liquidationTokenVaultAccount) {
-            throw new Error(
-              `Failed to fetch liquidation token vault account at ${vaultState.liquidationTokenVault.toString()}`
-            );
-          }
-          const liquidationTokenProgram = liquidationTokenVaultAccount.owner;
-
-          // Get the mint public key from the liquidation token vault account
-          const liquidationTokenVaultTokenAccount = await getAccount(
-            connection,
-            vaultState.liquidationTokenVault,
-            connection.commitment,
-            liquidationTokenProgram
-          );
-          const liquidationTokenMintPubkey =
-            liquidationTokenVaultTokenAccount.mint;
-
-          liquidationConfig = {
-            mintPubkey: liquidationTokenMintPubkey,
-            tokenProgram: liquidationTokenProgram,
-            redemptionProgramPubkey: vaultState.redemptionProgram
-          };
-        }
-
-        const config = {
-          adminKp: vaultState.admin,
-          statePubkey: vaultStatePk,
-          vaultId,
-          authorityPubkey: authorityAddress,
-          state: vaultState,
-          program,
-          assetMintPubkey: assetMintPk,
-          assetTokenProgram,
-          assetVaultPubkey: vaultState.assetVault,
-          assetTokenDecimal,
-          shareMintPubkey: vaultState.shareMint,
-          shareTokenProgram: shareTokenProgram,
-          navProviderProgram: vaultState.navProviderProgram,
-
-          // Handle liquidation configuration if available
-          liquidationTokenVaultPubkey: vaultState.liquidationTokenVault || null,
-          liquidationConfig
-        };
-
-        setVault(config);
-      } catch (err) {
-        setError(err as Error);
-      } finally {
-        setLoading(false);
-      }
-    })();
-  }, [
-    connection,
-    publicKey,
-    signTransaction,
-    signAllTransactions,
-    program,
-    vaultId
-  ]);
-
-  return { vault, loading, error };
-}
-
 export const useAddLiquidator = (vaultId) => {
   const [loading, setLoading] = useState(false);
   const program = useProgram();
@@ -548,4 +527,109 @@ export const useAddLiquidator = (vaultId) => {
     addLiquidator,
     loading
   };
+};
+
+export const useLiquidate = ({ vaultId }) => {
+  const wallet = useWallet();
+  const [loading, setLoading] = useState(false);
+
+  const program = useProgram();
+  const vault = useVault(vaultId);
+
+  const onLiquidate = useCallback(
+    async (amountTokens: number) => {
+      const { publicKey: liquidatorPubkey, sendTransaction } = wallet;
+      if (!liquidatorPubkey || !sendTransaction || !vault) {
+        return;
+      }
+      const { config } = vault;
+      if (!config) {
+        return;
+      }
+      setLoading(true);
+
+      try {
+        const assetVaultPk = config.assetVaultPubkey;
+        const shareMintPk = config.shareMintPubkey;
+        const navProviderProgramPk = config.navProviderProgram;
+
+        const shares = new BN(amountTokens);
+
+        const [liquidatorAssetAta, liquidatorShareAta] = await Promise.all([
+          getAssociatedTokenAddress(
+            config.assetMintPubkey,
+            liquidatorPubkey,
+            false,
+            config.assetTokenProgram
+          ),
+          getAssociatedTokenAddress(
+            config.shareMintPubkey,
+            liquidatorPubkey,
+            false,
+            config.shareTokenProgram
+          )
+        ]);
+        const remainingAccounts: any[] = [];
+        const navProviderAccounts = navProviderProgramPk
+          ? [
+              { pubkey: PublicKey.default, isSigner: false, isWritable: false },
+              { pubkey: PublicKey.default, isSigner: false, isWritable: false }
+            ]
+          : [];
+        const navProviderAccountsLength = navProviderAccounts.length;
+
+        remainingAccounts.push(...navProviderAccounts);
+
+        let liquidatorLiquidationTokenAta: PublicKey | null = null;
+
+        if (config?.liquidationConfig) {
+          liquidatorLiquidationTokenAta = await getAssociatedTokenAddress(
+            config?.liquidationConfig?.mintPubkey,
+            liquidatorPubkey,
+            false,
+            config?.liquidationConfig?.tokenProgram
+          );
+
+          remainingAccounts.push(
+            ...(config?.liquidationConfig?.redemptionProgramPubkey
+              ? [config.liquidationConfig.redemptionProgramPubkey]
+              : [])
+          );
+        }
+
+        const signature = await program.methods
+          .liquidate(shares, null, navProviderAccountsLength)
+          .accountsPartial({
+            liquidator: liquidatorPubkey,
+            vaultState: config.statePubkey,
+            vaultAuthority: config.authorityPubkey,
+            liquidatorAssetAta,
+            liquidatorShareAta,
+            assetMint: config.assetMintPubkey,
+            assetVault: assetVaultPk,
+            shareMint: shareMintPk,
+            assetTokenProgram: config.assetTokenProgram,
+            shareTokenProgram: config.shareTokenProgram,
+            liquidatorLiquidationAta: liquidatorLiquidationTokenAta!,
+            liquidationTokenMint: config?.liquidationConfig?.mintPubkey || null,
+            liquidationTokenVault: config.liquidationTokenVaultPubkey,
+            navProviderProgram: navProviderProgramPk,
+            liquidationTokenProgram:
+              config?.liquidationConfig?.tokenProgram || null,
+            redemptionProgram:
+              config?.liquidationConfig?.redemptionProgramPubkey || null
+          })
+          .remainingAccounts(remainingAccounts)
+          .rpc();
+        console.log("Redeem signature:", signature);
+        return signature;
+      } catch (err: any) {
+        throw new Error(`Liquidate failed: ${err.message || err}`);
+      } finally {
+        setLoading(false);
+      }
+    },
+    [vault, wallet, program.methods]
+  );
+  return { onLiquidate, loading };
 };
