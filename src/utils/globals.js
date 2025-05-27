@@ -571,11 +571,21 @@ export const blockchainInfo = {
     icon: solanaIcon,
     assets: [
       {
-        vaultAddress: "9N3yqarWXmXJ9NQBGgN47JXV82smby8nSMffkwetgYov",
-        address: "need address",
+        vaultAddress: "9L4WxKkUHKBZ96EpHBc7APqvEhobmY1A2ENk5dUfdrpw",
+        address: "HH7HCHymx28RKrfUh8QgJBpEe92LQwSuvFENUVkcwQeg",
         vaultId: "0",
         name: "Solana",
-        symbol: "SPL",
+        symbol: "SPL vault0",
+        RepresentationTokenName: "sSPL vault0",
+        icon: "/solana-sol-logo.png"
+      },
+      {
+        vaultAddress: "AvNSrKuttzfUV68siGaKVcJhMDXCcPads9iNVoCiuuDz",
+        address: "5oFHj4eGMNbwXKPecjCV9dqQXBbcnpcPC9o8yropms7z",
+        vaultId: "1",
+        name: "Solana",
+        symbol: "SPL vault1",
+        RepresentationTokenName: "sSPL vault1",
         icon: "/solana-sol-logo.png"
       }
     ]

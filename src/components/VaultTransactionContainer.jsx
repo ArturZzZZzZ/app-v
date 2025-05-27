@@ -131,7 +131,11 @@ export const VaultSolanaTransactionContainer = () => {
       snackbarSeverity={snackbarSeverity}
       handleSnackbarClose={handleSnackbarClose}
       maxAssets={maxAssets}
-      tokenSymbol={assetSymbol}
+      tokenSymbol={
+        action === "deposit"
+          ? assetSymbol
+          : selectedAsset.representationTokenName || assetSymbol
+      }
     />
   );
 };
