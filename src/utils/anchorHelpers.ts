@@ -1,4 +1,4 @@
-import { use, useCallback, useEffect, useMemo, useRef, useState } from "react";
+import { useCallback, useEffect, useMemo, useRef, useState } from "react";
 
 import { AnchorProvider, BN, Program } from "@coral-xyz/anchor";
 import {
@@ -666,6 +666,46 @@ export const useChangeAdmin = (vaultId) => {
 
   return {
     changeAdmin,
+    loading
+  };
+};
+
+export const useAddRedeemer = (vaultId) => {
+  const [loading, setLoading] = useState(false);
+
+  const program = useProgram();
+
+  const addRedeemer = async (redeemerAddress: string) => {
+    console.log("addRedeemer", redeemerAddress);
+    try {
+      setLoading(true);
+      const vaultState = await getVaultStateById(program, vaultId);
+      const adminPk = vaultState.admin;
+      const vaultStatePk = getVaultStatePda(program.programId, vaultId);
+      console.log({
+        vaultStatePk: vaultStatePk.toString(),
+        adminPk: adminPk.toString()
+      });
+      const signature = await program.methods
+        .addOperator(new PublicKey(redeemerAddress))
+        .accountsPartial({ vaultState: vaultStatePk, admin: adminPk })
+        .rpc();
+      console.log(
+        `Liquidator added successfully. Transaction signature: ${signature}`
+      );
+      return signature;
+    } catch (error) {
+      console.error("Error adding liquidator:", error);
+      throw new Error(
+        `Failed to add redeemer: ${error instanceof Error ? error.message : String(error)}`
+      );
+    } finally {
+      setLoading(false);
+    }
+  };
+
+  return {
+    addRedeemer,
     loading
   };
 };

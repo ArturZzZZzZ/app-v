@@ -1,7 +1,11 @@
 import { useState } from "react";
 
 import { useAppContext } from "../utils/AppContext";
-import { useAddLiquidator, useChangeAdmin } from "../utils/anchorHelpers";
+import {
+  useAddLiquidator,
+  useAddRedeemer,
+  useChangeAdmin
+} from "../utils/anchorHelpers";
 import VaultAdminUI from "./ui/VaultAdminUI";
 
 export const VaultAdminContainer = () => {
@@ -23,8 +27,11 @@ export const VaultAdminContainer = () => {
 
   const { changeAdmin, loading: isLoadingChangeAdmin } =
     useChangeAdmin(vaultId);
+  const { addRedeemer, loading: isLoadingAddRedeemer } =
+    useAddRedeemer(vaultId);
 
-  const isLoading = isLoadingAddLiquidator || isLoadingChangeAdmin;
+  const isLoading =
+    isLoadingAddLiquidator || isLoadingChangeAdmin || isLoadingAddRedeemer;
 
   const getButtonText = () => {
     switch (step) {
@@ -74,6 +81,7 @@ export const VaultAdminContainer = () => {
         setStep(1);
       });
   };
+
   const handleChangeAdmin = async () => {
     console.log("handleAddLiquidator");
     setStep(2);
@@ -101,11 +109,38 @@ export const VaultAdminContainer = () => {
       });
   };
 
+  const handleAddRedeemer = async () => {
+    console.log("handleAddRedeemer");
+    setStep(2);
+    addRedeemer(inputValue)
+      .then((hash) => {
+        setSnackbar({
+          open: true,
+          message: "Transaction successful: " + hash,
+          severity: "success"
+        });
+        setStep(1);
+        setInputValue("");
+      })
+      .catch((error) => {
+        console.error("Transaction error1111111:", error);
+        setStep(1);
+        setSnackbar({
+          open: true,
+          message: error.message || "Transaction failed",
+          severity: "error"
+        });
+      })
+      .finally(() => {
+        setStep(1);
+      });
+  };
+
   const onAction = () => {
     if (!inputValue) return;
     const activeAction =
       activeTab === 0
-        ? () => {}
+        ? handleAddRedeemer
         : activeTab === 1
           ? handleChangeAdmin
           : handleAddLiquidator;
