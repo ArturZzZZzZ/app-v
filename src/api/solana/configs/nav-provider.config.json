@@ -1,0 +1,38 @@
+{
+  "localnet": {
+    "AppjFPg5LcpPgfYpKjsECx1E4wW6LVirQTq7M7iyPyMA": {
+      "default": {
+        "name": "mock-nav-provider",
+        "accounts": [null, null]
+      }
+    },
+    "zg8bo1F8M9KYiJfmPLBPHQmLKXqs6QTS65GMNbnXoGB": {
+      "FubtUcvhSCr3VPXEcxouoQjKQ7NWTCzXyECe76B7L3f8": {
+        "name": "redstone-nav-provider",
+        "accounts": [
+          "5CUck7kbfDCh9PZ9R8ijG3RXwqSrHCY9pygGpE2Gjhdw",
+          "74o5fhuMC33HgfUqvv2TdpYiKvEWfcRTS1E8zxK6ESjN"
+        ]
+      }
+    }
+  },
+  "devnet": {
+    "AppjFPg5LcpPgfYpKjsECx1E4wW6LVirQTq7M7iyPyMA": {
+      "default": {
+        "name": "mock-nav-provider",
+        "accounts": [null, null]
+      }
+    },
+    "zg8bo1F8M9KYiJfmPLBPHQmLKXqs6QTS65GMNbnXoGB": {
+      "8gtwE3zCWEarQaX2ud9Bjc9C1HtCCnS3NKwk41QCtsKY": {
+        "name": "redstone-nav-provider",
+        "accounts": [
+          "FVNv59h2v5PWDJ1LKhgZpvEKJRHduuXsM4Rg2rkfBvEv",
+          "AhQGbBqhbcqJhV7WJ5GktjtjM7dHBPYv2uFhL7Cy7gzQ"
+        ]
+      }
+    }
+  },
+  "testnet": {},
+  "mainnet": {}
+}

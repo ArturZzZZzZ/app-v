@@ -1,5 +1,7 @@
 import React, { useEffect, useState } from "react";
 
+import { useGetNavProviderAccounts } from "@/api/solana/helpers";
+
 import { useAppContext } from "../utils/AppContext";
 import {
   useDeposit,
@@ -10,6 +12,7 @@ import {
 import VaultTransactionUI from "./ui/VaultTransactionUI";
 
 export const VaultSolanaTransactionContainer = () => {
+  useGetNavProviderAccounts({ vaultId: 1 });
   const [assets, setAssets] = useState(0);
   const [action, setAction] = useState<"deposit" | "redeem" | "liquidate">(
     "deposit"

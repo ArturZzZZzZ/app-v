@@ -1,5 +1,6 @@
 import { useCallback, useEffect, useMemo, useRef, useState } from "react";
 
+import { useGetNavProviderAccounts } from "@/api/solana/helpers";
 import { AnchorProvider, BN, Program } from "@coral-xyz/anchor";
 import {
   createAssociatedTokenAccountInstruction,
@@ -246,11 +247,15 @@ export const useDeposit = ({ vaultId }) => {
 
   const vault = useVault(vaultId);
 
+  const { accounts } = useGetNavProviderAccounts({
+    vaultId: vaultId
+  });
+
   const program = useProgram();
   const onDeposit = useCallback(
     async (amountTokens: number) => {
       const { publicKey: userPk, sendTransaction } = wallet;
-      if (!userPk || !sendTransaction || !vault) {
+      if (!userPk || !sendTransaction || !vault || !accounts) {
         return;
       }
       const { config } = vault;
@@ -306,9 +311,7 @@ export const useDeposit = ({ vaultId }) => {
             liquidationTokenVault: config.liquidationTokenVaultPubkey!,
             navProviderProgram: navProviderProgramPk
           })
-          .remainingAccounts([
-            { pubkey: PublicKey.default, isSigner: false, isWritable: false }
-          ])
+          .remainingAccounts(accounts)
           .instruction();
 
         const tx = new Transaction();
@@ -339,7 +342,7 @@ export const useDeposit = ({ vaultId }) => {
         setLoading(false);
       }
     },
-    [wallet, vault, program.provider.connection, program.methods]
+    [wallet, vault, accounts, program.provider.connection, program.methods]
   );
 
   return { onDeposit, loading };
@@ -352,10 +355,14 @@ export const useRedeem = ({ vaultId }) => {
   const vault = useVault(vaultId);
   const program = useProgram();
 
+  const { accounts } = useGetNavProviderAccounts({
+    vaultId: vaultId
+  });
+
   const onRedeem = useCallback(
     async (amountTokens: number) => {
       const { publicKey: userPk, sendTransaction } = wallet;
-      if (!userPk || !sendTransaction || !vault) {
+      if (!userPk || !sendTransaction || !vault || !accounts) {
         return;
       }
       const { config } = vault;
@@ -404,9 +411,7 @@ export const useRedeem = ({ vaultId }) => {
             liquidationTokenVault: config.liquidationTokenVaultPubkey!,
             navProviderProgram: navProviderProgramPk
           })
-          .remainingAccounts([
-            { pubkey: PublicKey.default, isSigner: false, isWritable: false }
-          ])
+          .remainingAccounts(accounts)
           .rpc();
         console.log("Redeem signature:", signature);
         return signature;
@@ -419,7 +424,7 @@ export const useRedeem = ({ vaultId }) => {
         setLoading(false);
       }
     },
-    [wallet, vault, program.methods]
+    [wallet, vault, accounts, program.methods]
   );
   return { onRedeem, loading };
 };
@@ -495,11 +500,14 @@ export const useLiquidate = ({ vaultId }) => {
 
   const program = useProgram();
   const vault = useVault(vaultId);
+  const { accounts } = useGetNavProviderAccounts({
+    vaultId: vaultId
+  });
 
   const onLiquidate = useCallback(
     async (amountTokens: number) => {
       const { publicKey: liquidatorPubkey, sendTransaction } = wallet;
-      if (!liquidatorPubkey || !sendTransaction || !vault) {
+      if (!liquidatorPubkey || !sendTransaction || !vault || !accounts) {
         return;
       }
       const { config } = vault;
@@ -530,12 +538,7 @@ export const useLiquidate = ({ vaultId }) => {
           )
         ]);
         const remainingAccounts: any[] = [];
-        const navProviderAccounts = navProviderProgramPk
-          ? [
-              { pubkey: PublicKey.default, isSigner: false, isWritable: false },
-              { pubkey: PublicKey.default, isSigner: false, isWritable: false }
-            ]
-          : [];
+        const navProviderAccounts = navProviderProgramPk ? accounts : [];
         const navProviderAccountsLength = navProviderAccounts.length;
 
         remainingAccounts.push(...navProviderAccounts);
@@ -590,7 +593,7 @@ export const useLiquidate = ({ vaultId }) => {
         setLoading(false);
       }
     },
-    [vault, wallet, program.methods]
+    [wallet, vault, accounts, program.methods]
   );
   return { onLiquidate, loading };
 };
