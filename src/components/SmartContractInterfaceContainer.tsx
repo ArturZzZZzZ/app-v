@@ -13,13 +13,14 @@ import {
 
 import { useVault } from "@/utils/anchorHelpers";
 
-import { Asset } from "./SecuritizeCreditVault/smartContractInterface/Asset";
-import { BalanceOf } from "./SecuritizeCreditVault/smartContractInterface/BalanceOf";
-import { ConvertToAssets } from "./SecuritizeCreditVault/smartContractInterface/ConverToAssets";
-import { ConvertToShares } from "./SecuritizeCreditVault/smartContractInterface/ConverToShares";
-import { Decimal } from "./SecuritizeCreditVault/smartContractInterface/Decimal";
-import { GetShareValue } from "./SecuritizeCreditVault/smartContractInterface/GetShareValue";
-import { GetTotalAssets } from "./SecuritizeCreditVault/smartContractInterface/GetTotalAssets";
+import { AdminRole } from "./SecuritizeCreditVault/solanaSmartContractInterface/AdminRole";
+import { Asset } from "./SecuritizeCreditVault/solanaSmartContractInterface/Asset";
+import { BalanceOf } from "./SecuritizeCreditVault/solanaSmartContractInterface/BalanceOf";
+import { ConvertToAssets } from "./SecuritizeCreditVault/solanaSmartContractInterface/ConverToAssets";
+import { ConvertToShares } from "./SecuritizeCreditVault/solanaSmartContractInterface/ConverToShares";
+import { Decimal } from "./SecuritizeCreditVault/solanaSmartContractInterface/Decimal";
+import { GetShareValue } from "./SecuritizeCreditVault/solanaSmartContractInterface/GetShareValue";
+import { GetTotalAssets } from "./SecuritizeCreditVault/solanaSmartContractInterface/GetTotalAssets";
 
 export const SmartContractInterfaceContainer: React.FC = () => {
   const [tabValue, setTabValue] = useState(0);
@@ -101,6 +102,7 @@ export const SmartContractInterfaceContainer: React.FC = () => {
           <Decimal setSnackbar={setSnackbar} />
           <GetShareValue setSnackbar={setSnackbar} />
           <GetTotalAssets setSnackbar={setSnackbar} />
+          <AdminRole setSnackbar={setSnackbar} />
         </Box>
       </Paper>
       <Snackbar

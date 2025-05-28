@@ -1,4 +1,4 @@
-import { useCallback, useEffect, useMemo, useRef, useState } from "react";
+import { use, useCallback, useEffect, useMemo, useRef, useState } from "react";
 
 import { AnchorProvider, BN, Program } from "@coral-xyz/anchor";
 import {
@@ -9,6 +9,7 @@ import {
 } from "@solana/spl-token";
 import { useConnection, useWallet } from "@solana/wallet-adapter-react";
 import { PublicKey, Transaction } from "@solana/web3.js";
+import { set } from "date-fns";
 
 import idl from "../api/solana/idls/sc_vault.json";
 import { TokenBalance, VaultConfig } from "./type";
@@ -704,5 +705,50 @@ export const useAddRedeemer = (vaultId) => {
   return {
     addRedeemer,
     loading
+  };
+};
+
+export const useIsRole = ({ vaultId }) => {
+  const [value, setValue] = useState<string | null>(null);
+  const [loading, setLoading] = useState(false);
+
+  const program = useProgram();
+
+  const isRole = useCallback(
+    async ({
+      role,
+      userAddress
+    }: {
+      role: "isAdmin" | "isLiquidator" | "isOperator";
+      userAddress: string;
+    }) => {
+      try {
+        setLoading(true);
+        const userPubkey = new PublicKey(userAddress);
+        const methodFn = program.methods[role];
+        const vaultStatePk = getVaultStatePda(program.programId, vaultId);
+        const isRole = await methodFn(userPubkey)
+          .accountsPartial({
+            vaultState: vaultStatePk
+          })
+          .view();
+        setValue(isRole.toString());
+        return isRole;
+      } catch (error) {
+        console.error("Error isRole:", error);
+        throw new Error(
+          `Failed to isRole: ${error instanceof Error ? error.message : String(error)}`
+        );
+      } finally {
+        setLoading(false);
+      }
+    },
+    [program.methods, program.programId, vaultId]
+  );
+
+  return {
+    value,
+    execute: isRole,
+    isLoading: loading
   };
 };

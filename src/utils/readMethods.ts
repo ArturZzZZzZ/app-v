@@ -7,7 +7,6 @@ import { PublicKey } from "@solana/web3.js";
 import {
   getUserBalanceByAta,
   getVaultStateById,
-  getVaultStatePda,
   useProgram,
   useVault
 } from "./anchorHelpers";
