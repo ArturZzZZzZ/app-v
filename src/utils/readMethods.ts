@@ -61,6 +61,8 @@ export const useTokenBalanceStateByAddress = ({
           tokenProgram: mintInfo?.owner,
           userPubkey: userPk
         });
+        console.log(123);
+        console.log(`Fetched ${type} balance for user ${userBalance}:`);
 
         if (!cancelledRef.current) {
           setBalanceState(userBalance);

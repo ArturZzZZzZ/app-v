@@ -26,6 +26,7 @@ export const BalanceOf = ({ setSnackbar }) => {
     vaultId: vaultId,
     type: "deposit"
   });
+  console.log("balanceState", balanceState);
   const handler = () => {
     if (!inputValue) {
       return;
