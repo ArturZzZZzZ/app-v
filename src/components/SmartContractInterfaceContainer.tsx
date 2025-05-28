@@ -11,6 +11,7 @@ import {
   Tabs
 } from "@mui/material";
 
+import { Asset } from "./SecuritizeCreditVault/smartContractInterface/Asset";
 import { BalanceOf } from "./SecuritizeCreditVault/smartContractInterface/BalanceOf";
 
 export const SmartContractInterfaceContainer: React.FC = () => {
@@ -87,6 +88,7 @@ export const SmartContractInterfaceContainer: React.FC = () => {
         </Tabs>
         <Box mt={3}>
           <BalanceOf setSnackbar={setSnackbar} />
+          <Asset setSnackbar={setSnackbar} />
         </Box>
       </Paper>
       <Snackbar

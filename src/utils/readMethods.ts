@@ -1,4 +1,4 @@
-import { useCallback, useEffect, useRef, useState } from "react";
+import { useCallback, useRef, useState } from "react";
 
 import { getAccount } from "@solana/spl-token";
 import { PublicKey } from "@solana/web3.js";
@@ -86,3 +86,53 @@ export const useTokenBalanceStateByAddress = ({
     activeType
   };
 };
+
+export function useAssetMintPubkey() {
+  const [assetMintPk, setAssetMintPk] = useState<PublicKey | null>(null);
+  const [isLoading, setIsLoading] = useState(false);
+
+  const program = useProgram();
+
+  const fetchAssetMintPubkey = useCallback(
+    async ({ vaultId }: { vaultId: number }) => {
+      setIsLoading(true);
+      try {
+        const connection = program.provider.connection;
+        const vaultState = await getVaultStateById(program, vaultId);
+        const assetVaultPk = vaultState.assetVault;
+
+        const assetVaultAccountInfo =
+          await connection.getAccountInfo(assetVaultPk);
+        if (!assetVaultAccountInfo) {
+          throw new Error("Failed to fetch asset vault account");
+        }
+
+        const assetTokenProgram = assetVaultAccountInfo.owner;
+
+        const assetVault = await getAccount(
+          connection,
+          assetVaultPk,
+          connection.commitment,
+          assetTokenProgram
+        );
+
+        const mintPk = assetVault.mint;
+        setAssetMintPk(mintPk);
+        return mintPk;
+      } catch (err) {
+        const error = err instanceof Error ? err : new Error(String(err));
+        setAssetMintPk(null);
+        throw error;
+      } finally {
+        setIsLoading(false);
+      }
+    },
+    [program]
+  );
+
+  return {
+    assetMintPk,
+    isLoading,
+    fetchAssetMintPubkey
+  };
+}

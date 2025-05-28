@@ -1,5 +1,3 @@
-import { useState } from "react";
-
 import ExpandMoreIcon from "@mui/icons-material/ExpandMore";
 import {
   Accordion,
@@ -9,41 +7,36 @@ import {
   Button,
   CircularProgress,
   Paper,
-  TextField,
   Typography
 } from "@mui/material";
+import { set } from "date-fns";
 
 import { useAppContext } from "@/utils/AppContext";
-import { useTokenBalanceStateByAddress } from "@/utils/readMethods";
+import { useAssetMintPubkey } from "@/utils/readMethods";
 
-export const BalanceOf = ({ setSnackbar }) => {
-  const [inputValue, setInputValue] = useState("");
-
+export const Asset = ({ setSnackbar }) => {
   const ctx = useAppContext();
   const vaultId = ctx.solanaVaultId;
 
-  const { balanceState, isLoading, refetch } = useTokenBalanceStateByAddress({
-    vaultId: vaultId,
-    type: "deposit"
-  });
+  const { assetMintPk, fetchAssetMintPubkey, isLoading } = useAssetMintPubkey();
   const handler = () => {
     setSnackbar({
       open: true,
-      message: `Executing balanceOf for ${inputValue}`,
+      message: `Executing assets...`,
       severity: "info"
     });
-    refetch(inputValue)
+    fetchAssetMintPubkey({ vaultId })
       .then(() => {
         setSnackbar({
           open: true,
-          message: `Executed balanceOf for ${inputValue}`,
+          message: `Executed assets `,
           severity: "success"
         });
       })
       .catch((error) => {
         setSnackbar({
           open: true,
-          message: `Error executing balanceOf: ${error.message}`,
+          message: `Error executing assets: ${error.message}`,
           severity: "error"
         });
       });
@@ -51,21 +44,10 @@ export const BalanceOf = ({ setSnackbar }) => {
   return (
     <Accordion>
       <AccordionSummary expandIcon={<ExpandMoreIcon />}>
-        <Typography>balanceOf</Typography>
+        <Typography>assets</Typography>
       </AccordionSummary>
       <AccordionDetails>
         <Box>
-          <TextField
-            label={`account (address)`}
-            value={inputValue}
-            onChange={(e) => {
-              setInputValue(e.target.value);
-            }}
-            fullWidth
-            required
-            disabled={isLoading}
-            sx={{ mb: 2 }}
-          />
           <Button
             variant="contained"
             color="primary"
@@ -76,10 +58,10 @@ export const BalanceOf = ({ setSnackbar }) => {
             {isLoading ? (
               <CircularProgress size={24} sx={{ color: "inherit", mr: 2 }} />
             ) : (
-              `Execute balanceOf`
+              `Execute Assets`
             )}
           </Button>
-          {balanceState && (
+          {assetMintPk && (
             <Box sx={{ mt: 2 }}>
               <Typography variant="body1">
                 <strong>Execution Result:</strong>
@@ -89,7 +71,7 @@ export const BalanceOf = ({ setSnackbar }) => {
                 sx={{ p: 2, mt: 1, backgroundColor: "#f5f5f5" }}
               >
                 <Typography variant="body2" sx={{ whiteSpace: "pre-wrap" }}>
-                  {balanceState.amount}
+                  {assetMintPk.toString()}
                 </Typography>
               </Paper>
             </Box>
