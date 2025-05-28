@@ -1,12 +1,14 @@
 import { useCallback, useRef, useState } from "react";
 
+import { BN } from "@coral-xyz/anchor";
 import { getAccount } from "@solana/spl-token";
 import { PublicKey } from "@solana/web3.js";
 
 import {
   getUserBalanceByAta,
   getVaultStateById,
-  useProgram
+  useProgram,
+  useVault
 } from "./anchorHelpers";
 import { TokenBalance } from "./type";
 
@@ -136,3 +138,58 @@ export function useAssetMintPubkey() {
     fetchAssetMintPubkey
   };
 }
+
+export const useConvertToAssets = ({ vaultId }: { vaultId: number }) => {
+  const vault = useVault(vaultId);
+  const [isLoading, setIsLoading] = useState(false);
+  const [error, setError] = useState<Error | null>(null);
+  const [assets, setAssets] = useState<BN | null>(null);
+
+  const convertToAssets = useCallback(
+    async (shares: number | BN): Promise<BN | null> => {
+      if (!vault.config) return null;
+
+      const { config } = vault;
+      const program = config.program;
+      setIsLoading(true);
+      setError(null);
+
+      try {
+        const navProviderAccounts = [
+          { pubkey: PublicKey.default, isSigner: false, isWritable: false }
+        ];
+
+        const roundingArg = { floor: {} };
+
+        const assets = await program.methods
+          .convertToAssets(new BN(shares), roundingArg)
+          .accountsPartial({
+            vaultState: config.statePubkey,
+            assetMint: config.assetMintPubkey,
+            assetVault: config.assetVaultPubkey,
+            shareMint: config.shareMintPubkey,
+            liquidationTokenMint: config.liquidationConfig?.mintPubkey! ?? null,
+            liquidationTokenVault: config.liquidationTokenVaultPubkey!
+          })
+          .remainingAccounts(navProviderAccounts)
+          .view();
+        setAssets(assets);
+        return assets;
+      } catch (err) {
+        const e = err instanceof Error ? err : new Error(String(err));
+        setError(e);
+        return null;
+      } finally {
+        setIsLoading(false);
+      }
+    },
+    [vault]
+  );
+
+  return {
+    assets,
+    convertToAssets,
+    isLoading,
+    error
+  };
+};

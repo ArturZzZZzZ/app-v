@@ -11,8 +11,11 @@ import {
   Tabs
 } from "@mui/material";
 
+import { useVault } from "@/utils/anchorHelpers";
+
 import { Asset } from "./SecuritizeCreditVault/smartContractInterface/Asset";
 import { BalanceOf } from "./SecuritizeCreditVault/smartContractInterface/BalanceOf";
+import { ConvertToAssets } from "./SecuritizeCreditVault/smartContractInterface/ConverToAssets";
 
 export const SmartContractInterfaceContainer: React.FC = () => {
   const [tabValue, setTabValue] = useState(0);
@@ -89,6 +92,7 @@ export const SmartContractInterfaceContainer: React.FC = () => {
         <Box mt={3}>
           <BalanceOf setSnackbar={setSnackbar} />
           <Asset setSnackbar={setSnackbar} />
+          <ConvertToAssets setSnackbar={setSnackbar} />
         </Box>
       </Paper>
       <Snackbar

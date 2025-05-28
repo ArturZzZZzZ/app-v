@@ -14,39 +14,39 @@ import {
 } from "@mui/material";
 
 import { useAppContext } from "@/utils/AppContext";
-import { useTokenBalanceStateByAddress } from "@/utils/readMethods";
+import { useConvertToAssets } from "@/utils/readMethods";
 
-export const BalanceOf = ({ setSnackbar }) => {
+export const ConvertToAssets = ({ setSnackbar }) => {
   const [inputValue, setInputValue] = useState("");
+  const methodName = "convertToAssets";
 
   const ctx = useAppContext();
   const vaultId = ctx.solanaVaultId;
-
-  const { balanceState, isLoading, refetch } = useTokenBalanceStateByAddress({
-    vaultId: vaultId,
-    type: "deposit"
+  const { assets, convertToAssets, isLoading } = useConvertToAssets({
+    vaultId
   });
+
   const handler = () => {
     if (!inputValue) {
       return;
     }
     setSnackbar({
       open: true,
-      message: `Executing balanceOf for ${inputValue}`,
+      message: `Executing ${methodName}`,
       severity: "info"
     });
-    refetch(inputValue)
+    convertToAssets(Number(inputValue))
       .then(() => {
         setSnackbar({
           open: true,
-          message: `Executed balanceOf for ${inputValue}`,
+          message: `Executed ${methodName}`,
           severity: "success"
         });
       })
       .catch((error) => {
         setSnackbar({
           open: true,
-          message: `Error executing balanceOf: ${error.message}`,
+          message: `Error executing ${methodName}: ${error.message}`,
           severity: "error"
         });
       });
@@ -54,12 +54,12 @@ export const BalanceOf = ({ setSnackbar }) => {
   return (
     <Accordion>
       <AccordionSummary expandIcon={<ExpandMoreIcon />}>
-        <Typography>balanceOf</Typography>
+        <Typography>{methodName}</Typography>
       </AccordionSummary>
       <AccordionDetails>
         <Box>
           <TextField
-            label={`account (address)`}
+            label={`shares`}
             value={inputValue}
             onChange={(e) => {
               setInputValue(e.target.value);
@@ -79,10 +79,10 @@ export const BalanceOf = ({ setSnackbar }) => {
             {isLoading ? (
               <CircularProgress size={24} sx={{ color: "inherit", mr: 2 }} />
             ) : (
-              `Execute balanceOf`
+              `Execute ${methodName}`
             )}
           </Button>
-          {balanceState && (
+          {assets && (
             <Box sx={{ mt: 2 }}>
               <Typography variant="body1">
                 <strong>Execution Result:</strong>
@@ -92,7 +92,7 @@ export const BalanceOf = ({ setSnackbar }) => {
                 sx={{ p: 2, mt: 1, backgroundColor: "#f5f5f5" }}
               >
                 <Typography variant="body2" sx={{ whiteSpace: "pre-wrap" }}>
-                  {balanceState.amount}
+                  {assets.toString()}
                 </Typography>
               </Paper>
             </Box>

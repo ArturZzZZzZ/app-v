@@ -11,7 +11,7 @@ import { useConnection, useWallet } from "@solana/wallet-adapter-react";
 import { PublicKey, Transaction } from "@solana/web3.js";
 
 import idl from "../api/solana/idls/sc_vault.json";
-import { TokenBalance } from "./type";
+import { TokenBalance, VaultConfig } from "./type";
 
 export function makeProvider(connection, wallet) {
   const opts = AnchorProvider.defaultOptions();
@@ -111,7 +111,7 @@ export const useProgram = () => {
 export function useVault(vaultId) {
   const { connection } = useConnection();
   const { publicKey, signTransaction, signAllTransactions } = useWallet();
-  const [config, setConfig] = useState<any>(null);
+  const [config, setConfig] = useState<VaultConfig | null>(null);
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState<Error | null>(null);
 
@@ -136,6 +136,7 @@ export function useVault(vaultId) {
         const vaultStatePk = getVaultStatePda(program.programId, vaultId);
 
         const vaultState = await getVaultStateById(program, vaultId);
+        console.log(vaultState);
         const assetVaultPk = vaultState.assetVault;
         const shareMintPk = vaultState.shareMint;
 
@@ -209,7 +210,7 @@ export function useVault(vaultId) {
           state: vaultState,
           program,
           assetMintPubkey: assetMintPk,
-          assetTokenProgram,
+          assetTokenProgram: assetTokenProgram || null,
           assetVaultPubkey: vaultState.assetVault,
           assetTokenDecimal,
           shareMintPubkey: vaultState.shareMint,
@@ -276,7 +277,7 @@ export const useDeposit = ({ vaultId }) => {
             config.assetMintPubkey,
             userPk,
             false,
-            config.assetTokenProgram
+            config.assetTokenProgram!
           ),
           getAssociatedTokenAddress(
             config.shareMintPubkey,
@@ -299,10 +300,11 @@ export const useDeposit = ({ vaultId }) => {
             assetMint: config.assetMintPubkey,
             assetVault: assetVaultPk,
             shareMint: shareMintPk,
-            assetTokenProgram: config.assetTokenProgram,
-            shareTokenProgram: config.shareTokenProgram,
-            liquidationTokenMint: config?.liquidationConfig?.mintPubkey || null,
-            liquidationTokenVault: config.liquidationTokenVaultPubkey,
+            assetTokenProgram: config.assetTokenProgram!,
+            shareTokenProgram: config.shareTokenProgram!,
+            liquidationTokenMint:
+              config?.liquidationConfig?.mintPubkey! || null,
+            liquidationTokenVault: config.liquidationTokenVaultPubkey!,
             navProviderProgram: navProviderProgramPk
           })
           .remainingAccounts([
@@ -375,7 +377,7 @@ export const useRedeem = ({ vaultId }) => {
             config.assetMintPubkey,
             userPk,
             false,
-            config.assetTokenProgram
+            config.assetTokenProgram!
           ),
           getAssociatedTokenAddress(
             config.shareMintPubkey,
@@ -396,10 +398,11 @@ export const useRedeem = ({ vaultId }) => {
             assetMint: config.assetMintPubkey,
             assetVault: assetVaultPk,
             shareMint: shareMintPk,
-            assetTokenProgram: config.assetTokenProgram,
-            shareTokenProgram: config.shareTokenProgram,
-            liquidationTokenMint: config?.liquidationConfig?.mintPubkey || null,
-            liquidationTokenVault: config.liquidationTokenVaultPubkey,
+            assetTokenProgram: config.assetTokenProgram!,
+            shareTokenProgram: config.shareTokenProgram!,
+            liquidationTokenMint:
+              config?.liquidationConfig?.mintPubkey! || null,
+            liquidationTokenVault: config.liquidationTokenVaultPubkey!,
             navProviderProgram: navProviderProgramPk
           })
           .remainingAccounts([
@@ -518,7 +521,7 @@ export const useLiquidate = ({ vaultId }) => {
             config.assetMintPubkey,
             liquidatorPubkey,
             false,
-            config.assetTokenProgram
+            config.assetTokenProgram!
           ),
           getAssociatedTokenAddress(
             config.shareMintPubkey,
@@ -566,16 +569,17 @@ export const useLiquidate = ({ vaultId }) => {
             assetMint: config.assetMintPubkey,
             assetVault: assetVaultPk,
             shareMint: shareMintPk,
-            assetTokenProgram: config.assetTokenProgram,
-            shareTokenProgram: config.shareTokenProgram,
+            assetTokenProgram: config.assetTokenProgram!,
+            shareTokenProgram: config.shareTokenProgram!,
             liquidatorLiquidationAta: liquidatorLiquidationTokenAta!,
-            liquidationTokenMint: config?.liquidationConfig?.mintPubkey || null,
-            liquidationTokenVault: config.liquidationTokenVaultPubkey,
+            liquidationTokenMint:
+              config?.liquidationConfig?.mintPubkey! || null,
+            liquidationTokenVault: config.liquidationTokenVaultPubkey!,
             navProviderProgram: navProviderProgramPk,
             liquidationTokenProgram:
-              config?.liquidationConfig?.tokenProgram || null,
+              config?.liquidationConfig?.tokenProgram! || null,
             redemptionProgram:
-              config?.liquidationConfig?.redemptionProgramPubkey || null
+              config?.liquidationConfig?.redemptionProgramPubkey! || null
           })
           .remainingAccounts(remainingAccounts)
           .rpc();
