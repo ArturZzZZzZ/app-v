@@ -1,4 +1,3 @@
-// SmartContractInterfaceContainer.tsx
 import React, { useState } from "react";
 
 import {
@@ -11,8 +10,6 @@ import {
   Tabs
 } from "@mui/material";
 
-import { useVault } from "@/utils/anchorHelpers";
-
 import { Asset } from "./SecuritizeCreditVault/solanaSmartContractInterface/Asset";
 import { BalanceOf } from "./SecuritizeCreditVault/solanaSmartContractInterface/BalanceOf";
 import { ConvertToAssets } from "./SecuritizeCreditVault/solanaSmartContractInterface/ConverToAssets";
@@ -24,14 +21,8 @@ import { Role } from "./SecuritizeCreditVault/solanaSmartContractInterface/Role"
 
 export const SmartContractInterfaceContainer: React.FC = () => {
   const [tabValue, setTabValue] = useState(0);
-  const [expanded, setExpanded] = useState<string | false>(false);
-  const [inputValues, setInputValues] = useState<
-    Record<string, Record<string, string>>
-  >({});
-  const [executionResults, setExecutionResults] = useState<
-    Record<string, string>
-  >({});
-  const [loading, setLoading] = useState(false);
+  const [, setExpanded] = useState<string | false>(false);
+
   const [snackbar, setSnackbar] = useState({
     open: false,
     message: "",
@@ -43,45 +34,9 @@ export const SmartContractInterfaceContainer: React.FC = () => {
     setExpanded(false);
   };
 
-  const handlePanelChange = (panel: string | false) => {
-    setExpanded(panel);
-  };
-
-  const handleInputChange = (
-    methodName: string,
-    inputName: string,
-    value: string
-  ) => {
-    setInputValues((prev) => ({
-      ...prev,
-      [methodName]: {
-        ...prev[methodName],
-        [inputName]: value
-      }
-    }));
-  };
-
-  const handleExecute = (method: { name: string }) => {
-    setLoading(true);
-    setSnackbar({
-      open: true,
-      message: `Executing ${method.name}...`,
-      severity: "info"
-    });
-    setTimeout(() => {
-      setExecutionResults((prev) => ({
-        ...prev,
-        [method.name]: `Mock result for ${method.name} with inputs ${JSON.stringify(inputValues[method.name])}`
-      }));
-      setLoading(false);
-      setSnackbar({
-        open: true,
-        message: `${method.name} executed successfully!`,
-        severity: "success"
-      });
-      setInputValues({});
-    }, 1000);
-  };
+  //   const handlePanelChange = (panel: string | false) => {
+  //     setExpanded(panel);
+  //   };
 
   const handleSnackbarClose = () => {
     setSnackbar((prev) => ({ ...prev, open: false }));

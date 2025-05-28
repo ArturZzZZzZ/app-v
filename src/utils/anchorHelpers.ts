@@ -1,4 +1,4 @@
-import { use, useCallback, useEffect, useMemo, useRef, useState } from "react";
+import { useCallback, useEffect, useMemo, useRef, useState } from "react";
 
 import { AnchorProvider, BN, Program } from "@coral-xyz/anchor";
 import {
@@ -9,7 +9,6 @@ import {
 } from "@solana/spl-token";
 import { useConnection, useWallet } from "@solana/wallet-adapter-react";
 import { PublicKey, Transaction } from "@solana/web3.js";
-import { set } from "date-fns";
 
 import idl from "../api/solana/idls/sc_vault.json";
 import { TokenBalance, VaultConfig } from "./type";
