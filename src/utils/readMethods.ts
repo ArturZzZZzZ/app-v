@@ -1,7 +1,7 @@
 import { useCallback, useRef, useState } from "react";
 
 import { BN } from "@coral-xyz/anchor";
-import { getAccount } from "@solana/spl-token";
+import { getAccount, getMint } from "@solana/spl-token";
 import { PublicKey } from "@solana/web3.js";
 
 import {
@@ -96,12 +96,13 @@ export function useAssetMintPubkey() {
   const program = useProgram();
 
   const fetchAssetMintPubkey = useCallback(
-    async ({ vaultId }: { vaultId: number }) => {
+    async ({ vaultId }) => {
       setIsLoading(true);
       try {
         const connection = program.provider.connection;
         const vaultState = await getVaultStateById(program, vaultId);
         const assetVaultPk = vaultState.assetVault;
+        console.log("Fetching asset mint pubkey for vaultId:", vaultId);
 
         const assetVaultAccountInfo =
           await connection.getAccountInfo(assetVaultPk);
@@ -193,3 +194,110 @@ export const useConvertToAssets = ({ vaultId }: { vaultId: number }) => {
     error
   };
 };
+
+export const useConvertToShares = ({ vaultId }: { vaultId: number }) => {
+  const vault = useVault(vaultId);
+  const [isLoading, setIsLoading] = useState(false);
+  const [error, setError] = useState<Error | null>(null);
+  const [assets, setAssets] = useState<BN | null>(null);
+
+  const convertToShares = useCallback(
+    async (shares: number | BN): Promise<BN | null> => {
+      if (!vault.config) return null;
+
+      const { config } = vault;
+      const program = config.program;
+      setIsLoading(true);
+      setError(null);
+
+      try {
+        const navProviderAccounts = [
+          { pubkey: PublicKey.default, isSigner: false, isWritable: false }
+        ];
+
+        const roundingArg = { floor: {} };
+
+        const assets = await program.methods
+          .convertToShares(new BN(shares), roundingArg)
+          .accountsPartial({
+            vaultState: config.statePubkey,
+            assetMint: config.assetMintPubkey,
+            assetVault: config.assetVaultPubkey,
+            shareMint: config.shareMintPubkey,
+            liquidationTokenMint: config.liquidationConfig?.mintPubkey! ?? null,
+            liquidationTokenVault: config.liquidationTokenVaultPubkey!
+          })
+          .remainingAccounts(navProviderAccounts)
+          .view();
+        setAssets(assets);
+        return assets;
+      } catch (err) {
+        const e = err instanceof Error ? err : new Error(String(err));
+        setError(e);
+        return null;
+      } finally {
+        setIsLoading(false);
+      }
+    },
+    [vault]
+  );
+
+  return {
+    assets,
+    convertToShares,
+    isLoading,
+    error
+  };
+};
+
+export function useAssetTokenDecimal() {
+  const program = useProgram();
+  const connection = program.provider.connection;
+
+  const [decimals, setDecimals] = useState<number | null>(null);
+  const [loading, setLoading] = useState<boolean>(false);
+
+  const fetchDecimals = useCallback(
+    async ({ vaultId }) => {
+      setLoading(true);
+
+      try {
+        const vaultState = await getVaultStateById(program, vaultId);
+
+        const assetVaultInfo = await connection.getAccountInfo(
+          vaultState.assetVault
+        );
+        const assetTokenProgram = assetVaultInfo?.owner;
+
+        const assetVaultPubkey = new PublicKey(vaultState.assetVault);
+        const assetVault = await getAccount(
+          connection,
+          assetVaultPubkey,
+          connection.commitment,
+          assetTokenProgram
+        );
+
+        const assetMintPk = assetVault.mint;
+
+        const mintInfo = await getMint(
+          connection,
+          assetMintPk,
+          connection.commitment,
+          assetTokenProgram
+        );
+
+        setDecimals(mintInfo.decimals);
+        return mintInfo.decimals;
+      } catch (err) {
+        const e = err instanceof Error ? err : new Error(String(err));
+
+        throw e;
+      } finally {
+        setLoading(false);
+      }
+    },
+    [connection, program]
+  );
+
+  return { decimals, isLoading: loading, fetchDecimals };
+}

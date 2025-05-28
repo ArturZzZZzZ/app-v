@@ -20,7 +20,7 @@ export const BalanceOf = ({ setSnackbar }) => {
   const [inputValue, setInputValue] = useState("");
 
   const ctx = useAppContext();
-  const vaultId = ctx.solanaVaultId;
+  const vaultId = ctx.selectedAsset.solanaVaultId;
 
   const { balanceState, isLoading, refetch } = useTokenBalanceStateByAddress({
     vaultId: vaultId,
@@ -46,7 +46,7 @@ export const BalanceOf = ({ setSnackbar }) => {
       .catch((error) => {
         setSnackbar({
           open: true,
-          message: `Error executing balanceOf: ${error.message}`,
+          message: `Error executing balanceOf: ${error}`,
           severity: "error"
         });
       });

@@ -21,7 +21,7 @@ export const ConvertToAssets = ({ setSnackbar }) => {
   const methodName = "convertToAssets";
 
   const ctx = useAppContext();
-  const vaultId = ctx.solanaVaultId;
+  const vaultId = ctx.selectedAsset.solanaVaultId;
   const { assets, convertToAssets, isLoading } = useConvertToAssets({
     vaultId
   });

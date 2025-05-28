@@ -11,31 +11,32 @@ import {
 } from "@mui/material";
 
 import { useAppContext } from "@/utils/AppContext";
-import { useAssetMintPubkey } from "@/utils/readMethods";
+import { useAssetTokenDecimal } from "@/utils/readMethods";
 
-export const Asset = ({ setSnackbar }) => {
+export const Decimal = ({ setSnackbar }) => {
   const ctx = useAppContext();
   const vaultId = ctx.selectedAsset.solanaVaultId;
+  const methodName = "decimal";
 
-  const { assetMintPk, fetchAssetMintPubkey, isLoading } = useAssetMintPubkey();
+  const { decimals, fetchDecimals, isLoading } = useAssetTokenDecimal();
   const handler = () => {
     setSnackbar({
       open: true,
-      message: `Executing assets...`,
+      message: `Executing ${methodName}...`,
       severity: "info"
     });
-    fetchAssetMintPubkey({ vaultId })
+    fetchDecimals({ vaultId })
       .then(() => {
         setSnackbar({
           open: true,
-          message: `Executed assets `,
+          message: `Executed ${methodName} `,
           severity: "success"
         });
       })
       .catch((error) => {
         setSnackbar({
           open: true,
-          message: `Error executing assets: ${error.message}`,
+          message: `Error executing ${methodName}: ${error.message}`,
           severity: "error"
         });
       });
@@ -43,7 +44,7 @@ export const Asset = ({ setSnackbar }) => {
   return (
     <Accordion>
       <AccordionSummary expandIcon={<ExpandMoreIcon />}>
-        <Typography>assets</Typography>
+        <Typography>{methodName}</Typography>
       </AccordionSummary>
       <AccordionDetails>
         <Box>
@@ -57,10 +58,10 @@ export const Asset = ({ setSnackbar }) => {
             {isLoading ? (
               <CircularProgress size={24} sx={{ color: "inherit", mr: 2 }} />
             ) : (
-              `Execute Assets`
+              `Execute ${methodName}`
             )}
           </Button>
-          {assetMintPk && (
+          {decimals && (
             <Box sx={{ mt: 2 }}>
               <Typography variant="body1">
                 <strong>Execution Result:</strong>
@@ -70,7 +71,7 @@ export const Asset = ({ setSnackbar }) => {
                 sx={{ p: 2, mt: 1, backgroundColor: "#f5f5f5" }}
               >
                 <Typography variant="body2" sx={{ whiteSpace: "pre-wrap" }}>
-                  {assetMintPk.toString()}
+                  {decimals.toString()}
                 </Typography>
               </Paper>
             </Box>

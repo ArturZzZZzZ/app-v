@@ -1,3 +1,5 @@
+import { useState } from "react";
+
 import ExpandMoreIcon from "@mui/icons-material/ExpandMore";
 import {
   Accordion,
@@ -7,35 +9,44 @@ import {
   Button,
   CircularProgress,
   Paper,
+  TextField,
   Typography
 } from "@mui/material";
 
 import { useAppContext } from "@/utils/AppContext";
-import { useAssetMintPubkey } from "@/utils/readMethods";
+import { useConvertToShares } from "@/utils/readMethods";
 
-export const Asset = ({ setSnackbar }) => {
+export const ConvertToShares = ({ setSnackbar }) => {
+  const [inputValue, setInputValue] = useState("");
+  const methodName = "convertToShares";
+
   const ctx = useAppContext();
   const vaultId = ctx.selectedAsset.solanaVaultId;
+  const { assets, convertToShares, isLoading } = useConvertToShares({
+    vaultId
+  });
 
-  const { assetMintPk, fetchAssetMintPubkey, isLoading } = useAssetMintPubkey();
   const handler = () => {
+    if (!inputValue) {
+      return;
+    }
     setSnackbar({
       open: true,
-      message: `Executing assets...`,
+      message: `Executing ${methodName}`,
       severity: "info"
     });
-    fetchAssetMintPubkey({ vaultId })
+    convertToShares(Number(inputValue))
       .then(() => {
         setSnackbar({
           open: true,
-          message: `Executed assets `,
+          message: `Executed ${methodName}`,
           severity: "success"
         });
       })
       .catch((error) => {
         setSnackbar({
           open: true,
-          message: `Error executing assets: ${error.message}`,
+          message: `Error executing ${methodName}: ${error.message}`,
           severity: "error"
         });
       });
@@ -43,10 +54,21 @@ export const Asset = ({ setSnackbar }) => {
   return (
     <Accordion>
       <AccordionSummary expandIcon={<ExpandMoreIcon />}>
-        <Typography>assets</Typography>
+        <Typography>{methodName}</Typography>
       </AccordionSummary>
       <AccordionDetails>
         <Box>
+          <TextField
+            label={`shares`}
+            value={inputValue}
+            onChange={(e) => {
+              setInputValue(e.target.value);
+            }}
+            fullWidth
+            required
+            disabled={isLoading}
+            sx={{ mb: 2 }}
+          />
           <Button
             variant="contained"
             color="primary"
@@ -57,10 +79,10 @@ export const Asset = ({ setSnackbar }) => {
             {isLoading ? (
               <CircularProgress size={24} sx={{ color: "inherit", mr: 2 }} />
             ) : (
-              `Execute Assets`
+              `Execute ${methodName}`
             )}
           </Button>
-          {assetMintPk && (
+          {assets && (
             <Box sx={{ mt: 2 }}>
               <Typography variant="body1">
                 <strong>Execution Result:</strong>
@@ -70,7 +92,7 @@ export const Asset = ({ setSnackbar }) => {
                 sx={{ p: 2, mt: 1, backgroundColor: "#f5f5f5" }}
               >
                 <Typography variant="body2" sx={{ whiteSpace: "pre-wrap" }}>
-                  {assetMintPk.toString()}
+                  {assets.toString()}
                 </Typography>
               </Paper>
             </Box>
