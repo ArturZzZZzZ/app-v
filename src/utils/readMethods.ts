@@ -301,3 +301,53 @@ export function useAssetTokenDecimal() {
 
   return { decimals, isLoading: loading, fetchDecimals };
 }
+
+export const useGetShareValue = ({ vaultId }: { vaultId: number }) => {
+  const vault = useVault(vaultId);
+  const [isLoading, setIsLoading] = useState(false);
+  const [error, setError] = useState<Error | null>(null);
+  const [value, setValue] = useState<BN | null>(null);
+
+  const getShareValue = useCallback(async () => {
+    if (!vault.config) return null;
+
+    const { config } = vault;
+    const program = config.program;
+    setIsLoading(true);
+    setError(null);
+
+    try {
+      const navProviderAccounts = [
+        { pubkey: PublicKey.default, isSigner: false, isWritable: false }
+      ];
+
+      const assets = await program.methods
+        .getShareValue()
+        .accountsPartial({
+          vaultState: config.statePubkey,
+          assetMint: config.assetMintPubkey,
+          assetVault: config.assetVaultPubkey,
+          shareMint: config.shareMintPubkey,
+          liquidationTokenMint: config.liquidationConfig?.mintPubkey! ?? null,
+          liquidationTokenVault: config.liquidationTokenVaultPubkey!
+        })
+        .remainingAccounts(navProviderAccounts)
+        .view();
+      setValue(assets);
+      return assets;
+    } catch (err) {
+      const e = err instanceof Error ? err : new Error(String(err));
+      setError(e);
+      return null;
+    } finally {
+      setIsLoading(false);
+    }
+  }, [vault]);
+
+  return {
+    value,
+    execute: getShareValue,
+    isLoading,
+    error
+  };
+};
