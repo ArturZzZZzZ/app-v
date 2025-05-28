@@ -13,7 +13,6 @@ import {
 
 import { useVault } from "@/utils/anchorHelpers";
 
-import { AdminRole } from "./SecuritizeCreditVault/solanaSmartContractInterface/AdminRole";
 import { Asset } from "./SecuritizeCreditVault/solanaSmartContractInterface/Asset";
 import { BalanceOf } from "./SecuritizeCreditVault/solanaSmartContractInterface/BalanceOf";
 import { ConvertToAssets } from "./SecuritizeCreditVault/solanaSmartContractInterface/ConverToAssets";
@@ -21,6 +20,7 @@ import { ConvertToShares } from "./SecuritizeCreditVault/solanaSmartContractInte
 import { Decimal } from "./SecuritizeCreditVault/solanaSmartContractInterface/Decimal";
 import { GetShareValue } from "./SecuritizeCreditVault/solanaSmartContractInterface/GetShareValue";
 import { GetTotalAssets } from "./SecuritizeCreditVault/solanaSmartContractInterface/GetTotalAssets";
+import { Role } from "./SecuritizeCreditVault/solanaSmartContractInterface/Role";
 
 export const SmartContractInterfaceContainer: React.FC = () => {
   const [tabValue, setTabValue] = useState(0);
@@ -102,7 +102,9 @@ export const SmartContractInterfaceContainer: React.FC = () => {
           <Decimal setSnackbar={setSnackbar} />
           <GetShareValue setSnackbar={setSnackbar} />
           <GetTotalAssets setSnackbar={setSnackbar} />
-          <AdminRole setSnackbar={setSnackbar} />
+          <Role setSnackbar={setSnackbar} role="isAdmin" />
+          <Role setSnackbar={setSnackbar} role="isLiquidator" />
+          <Role setSnackbar={setSnackbar} role="isOperator" />
         </Box>
       </Paper>
       <Snackbar

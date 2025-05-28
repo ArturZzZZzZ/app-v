@@ -16,9 +16,15 @@ import {
 import { useAppContext } from "@/utils/AppContext";
 import { useIsRole } from "@/utils/anchorHelpers";
 
-export const AdminRole = ({ setSnackbar }) => {
+export const Role = ({
+  setSnackbar,
+  role
+}: {
+  setSnackbar: any;
+  role: "isAdmin" | "isLiquidator" | "isOperator";
+}) => {
   const [inputValue, setInputValue] = useState("");
-  const methodName = "isAdmin";
+  const methodName = role;
 
   const ctx = useAppContext();
   const vaultId = ctx.selectedAsset.solanaVaultId;
@@ -35,7 +41,7 @@ export const AdminRole = ({ setSnackbar }) => {
       message: `Executing ${methodName}`,
       severity: "info"
     });
-    execute({ role: methodName, userAddress: inputValue })
+    execute({ role, userAddress: inputValue })
       .then(() => {
         setSnackbar({
           open: true,
