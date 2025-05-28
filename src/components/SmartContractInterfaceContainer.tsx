@@ -19,6 +19,7 @@ import { ConvertToAssets } from "./SecuritizeCreditVault/smartContractInterface/
 import { ConvertToShares } from "./SecuritizeCreditVault/smartContractInterface/ConverToShares";
 import { Decimal } from "./SecuritizeCreditVault/smartContractInterface/Decimal";
 import { GetShareValue } from "./SecuritizeCreditVault/smartContractInterface/GetShareValue";
+import { GetTotalAssets } from "./SecuritizeCreditVault/smartContractInterface/GetTotalAssets";
 
 export const SmartContractInterfaceContainer: React.FC = () => {
   const [tabValue, setTabValue] = useState(0);
@@ -99,6 +100,7 @@ export const SmartContractInterfaceContainer: React.FC = () => {
           <ConvertToShares setSnackbar={setSnackbar} />
           <Decimal setSnackbar={setSnackbar} />
           <GetShareValue setSnackbar={setSnackbar} />
+          <GetTotalAssets setSnackbar={setSnackbar} />
         </Box>
       </Paper>
       <Snackbar

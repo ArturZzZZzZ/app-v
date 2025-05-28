@@ -7,6 +7,7 @@ import { PublicKey } from "@solana/web3.js";
 import {
   getUserBalanceByAta,
   getVaultStateById,
+  getVaultStatePda,
   useProgram,
   useVault
 } from "./anchorHelpers";
@@ -347,6 +348,51 @@ export const useGetShareValue = ({ vaultId }: { vaultId: number }) => {
   return {
     value,
     execute: getShareValue,
+    isLoading,
+    error
+  };
+};
+
+export const useGetTotalAssets = ({ vaultId }: { vaultId: number }) => {
+  const [isLoading, setIsLoading] = useState(false);
+  const [error, setError] = useState<Error | null>(null);
+  const [value, setValue] = useState<string | null>(null);
+
+  const program = useProgram();
+
+  const getTotalAssets = useCallback(async () => {
+    if (!program) return null;
+
+    setIsLoading(true);
+    setError(null);
+
+    try {
+      const vaultState = await getVaultStateById(program, vaultId);
+      const assetVaultPk = vaultState.assetVault;
+      const assetVaultInfo =
+        await program.provider.connection.getAccountInfo(assetVaultPk);
+      const assetTokenProgram = assetVaultInfo?.owner;
+      const assetVault = await getAccount(
+        program.provider.connection,
+        assetVaultPk,
+        program.provider.connection.commitment,
+        assetTokenProgram
+      );
+
+      setValue(assetVault.amount.toString());
+      return assetVault.amount;
+    } catch (err) {
+      const e = err instanceof Error ? err : new Error(String(err));
+      setError(e);
+      return null;
+    } finally {
+      setIsLoading(false);
+    }
+  }, [program, vaultId]);
+
+  return {
+    value,
+    execute: getTotalAssets,
     isLoading,
     error
   };

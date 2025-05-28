@@ -136,7 +136,6 @@ export function useVault(vaultId) {
         const vaultStatePk = getVaultStatePda(program.programId, vaultId);
 
         const vaultState = await getVaultStateById(program, vaultId);
-        console.log(vaultState);
         const assetVaultPk = vaultState.assetVault;
         const shareMintPk = vaultState.shareMint;
 

@@ -13,10 +13,10 @@ import {
 import { useAppContext } from "@/utils/AppContext";
 import { useGetTotalAssets } from "@/utils/readMethods";
 
-export const GetShareValue = ({ setSnackbar }) => {
+export const GetTotalAssets = ({ setSnackbar }) => {
   const ctx = useAppContext();
   const vaultId = ctx.selectedAsset.solanaVaultId;
-  const methodName = "getShareValue";
+  const methodName = "getTotalAssets";
 
   const { value, execute, isLoading } = useGetTotalAssets({ vaultId });
   const handler = () => {
