@@ -23,6 +23,7 @@ import { VaultABI } from "../../utils/ABIs";
 import { useAppContext } from "../../utils/AppContext";
 // Import AppContext.js
 import AssetDisplay from "../Bridge/components/AssetDisplay";
+import { SmartContractInterfaceContainer } from "../SmartContractInterfaceContainer";
 import { VaultAdminContainer } from "../VaultAdminContainer";
 import { VaultSolanaTransactionContainer } from "../VaultTransactionContainer";
 import WalletDisplay from "../WalletDisplay/WalletDisplay";
@@ -106,7 +107,12 @@ function SecuritizeCreditVault() {
                 ))}
               {tabValue === 1 &&
                 (isSolana ? <VaultAdminContainer /> : <VaultAdmin />)}
-              {tabValue === 2 && <SmartContractInterface />}
+              {tabValue === 2 &&
+                (isSolana ? (
+                  <SmartContractInterfaceContainer />
+                ) : (
+                  <SmartContractInterface />
+                ))}
             </Box>
           </Box>
         </>

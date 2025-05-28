@@ -11,13 +11,7 @@ import { useConnection, useWallet } from "@solana/wallet-adapter-react";
 import { PublicKey, Transaction } from "@solana/web3.js";
 
 import idl from "../api/solana/idls/sc_vault.json";
-
-export interface TokenBalance {
-  amount: string;
-  decimals: number;
-  uiAmount: number;
-  uiAmountString: string;
-}
+import { TokenBalance } from "./type";
 
 export function makeProvider(connection, wallet) {
   const opts = AnchorProvider.defaultOptions();
