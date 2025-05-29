@@ -659,7 +659,6 @@ export const useChangeAdmin = (vaultId) => {
       const vaultState = await getVaultStateById(program, vaultId);
       const oldAdminKp = vaultState.admin;
       const vaultStatePk = getVaultStatePda(program.programId, vaultId);
-      console.log(123213, oldAdminKp.toString());
 
       const signature = await program.methods
         .changeAdmin(new PublicKey(newAdminAddress))
