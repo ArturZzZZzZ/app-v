@@ -22,8 +22,12 @@ import { LiquidationToken } from "./SecuritizeCreditVault/solanaSmartContractInt
 import { Paused } from "./SecuritizeCreditVault/solanaSmartContractInterface/read/Paused";
 import { Redemption } from "./SecuritizeCreditVault/solanaSmartContractInterface/read/Redemption";
 import { Role } from "./SecuritizeCreditVault/solanaSmartContractInterface/read/Role";
+import { AddRedeemer } from "./SecuritizeCreditVault/solanaSmartContractInterface/write/AddRedeemer";
+import { ChangeAdmin } from "./SecuritizeCreditVault/solanaSmartContractInterface/write/ChangeAdmin";
+import { Deposit } from "./SecuritizeCreditVault/solanaSmartContractInterface/write/Deposit";
+import { Liquidate } from "./SecuritizeCreditVault/solanaSmartContractInterface/write/Liquidate";
+import { Redeem } from "./SecuritizeCreditVault/solanaSmartContractInterface/write/Redeem";
 import { AddLiquidator } from "./SecuritizeCreditVault/solanaSmartContractInterface/write/addLiquidator";
-import { AddRedeemer } from "./SecuritizeCreditVault/solanaSmartContractInterface/write/addRedeemer";
 
 export const SmartContractInterfaceContainer: React.FC = () => {
   const [tabValue, setTabValue] = useState(0);
@@ -80,6 +84,10 @@ export const SmartContractInterfaceContainer: React.FC = () => {
             <>
               <AddLiquidator setSnackbar={setSnackbar} />
               <AddRedeemer setSnackbar={setSnackbar} />
+              <ChangeAdmin setSnackbar={setSnackbar} />
+              <Deposit setSnackbar={setSnackbar} />
+              <Liquidate setSnackbar={setSnackbar} />
+              <Redeem setSnackbar={setSnackbar} />
             </>
           )}
         </Box>

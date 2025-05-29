@@ -243,6 +243,7 @@ export function useVault(vaultId) {
 
 export const useDeposit = ({ vaultId }) => {
   const wallet = useWallet();
+  const [value, setValue] = useState<string | null>(null);
   const [loading, setLoading] = useState(false);
 
   const vault = useVault(vaultId);
@@ -336,6 +337,7 @@ export const useDeposit = ({ vaultId }) => {
 
         const signature = await sendTransaction(tx, connection);
         console.log("Deposit successful, signature:", signature);
+        setValue(signature);
         return signature;
       } catch (err: any) {
         throw new Error(err instanceof Error ? err.message : String(err));
@@ -346,10 +348,11 @@ export const useDeposit = ({ vaultId }) => {
     [wallet, vault, accounts, program.provider.connection, program.methods]
   );
 
-  return { onDeposit, loading };
+  return { onDeposit, loading, value };
 };
 
 export const useRedeem = ({ vaultId }) => {
+  const [value, setValue] = useState<string | null>(null);
   const wallet = useWallet();
   const [loading, setLoading] = useState(false);
 
@@ -415,6 +418,7 @@ export const useRedeem = ({ vaultId }) => {
           .remainingAccounts(accounts)
           .rpc();
         console.log("Redeem signature:", signature);
+        setValue(signature);
         return signature;
       } catch (err) {
         console.error("Ошибка депозита:", err);
@@ -427,7 +431,7 @@ export const useRedeem = ({ vaultId }) => {
     },
     [wallet, vault, accounts, program.methods]
   );
-  return { onRedeem, loading };
+  return { onRedeem, loading, value };
 };
 export const useTokenBalanceState = ({ vaultId = 0, type }) => {
   const program = useProgram();
@@ -500,6 +504,7 @@ export const useTokenBalanceState = ({ vaultId = 0, type }) => {
 };
 
 export const useLiquidate = ({ vaultId }) => {
+  const [value, setValue] = useState<string | null>(null);
   const wallet = useWallet();
   const [loading, setLoading] = useState(false);
 
@@ -591,6 +596,7 @@ export const useLiquidate = ({ vaultId }) => {
           .remainingAccounts(remainingAccounts)
           .rpc();
         console.log("Redeem signature:", signature);
+        setValue(signature);
         return signature;
       } catch (err: any) {
         throw new Error(`Liquidate failed: ${err.message || err}`);
@@ -600,7 +606,7 @@ export const useLiquidate = ({ vaultId }) => {
     },
     [wallet, vault, accounts, program.methods]
   );
-  return { onLiquidate, loading };
+  return { onLiquidate, loading, value };
 };
 
 export const useAddLiquidator = (vaultId) => {
@@ -642,6 +648,7 @@ export const useAddLiquidator = (vaultId) => {
 };
 
 export const useChangeAdmin = (vaultId) => {
+  const [value, setValue] = useState<string | null>(null);
   const [loading, setLoading] = useState(false);
 
   const program = useProgram();
@@ -661,6 +668,7 @@ export const useChangeAdmin = (vaultId) => {
       console.log(
         `changeAdmin successfully. Transaction signature: ${signature}`
       );
+      setValue(signature);
       return signature;
     } catch (error) {
       console.error("Error changeAdmin:", error);
@@ -674,7 +682,8 @@ export const useChangeAdmin = (vaultId) => {
 
   return {
     changeAdmin,
-    loading
+    loading,
+    value
   };
 };
 
