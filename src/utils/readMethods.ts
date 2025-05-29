@@ -1,5 +1,6 @@
 import { useCallback, useRef, useState } from "react";
 
+import { useGetNavProviderAccounts } from "@/api/solana/helpers";
 import { BN } from "@coral-xyz/anchor";
 import { getAccount, getMint } from "@solana/spl-token";
 import { PublicKey } from "@solana/web3.js";
@@ -147,10 +148,11 @@ export const useConvertToAssets = ({ vaultId }: { vaultId: number }) => {
   const [isLoading, setIsLoading] = useState(false);
   const [error, setError] = useState<Error | null>(null);
   const [assets, setAssets] = useState<BN | null>(null);
+  const { accounts } = useGetNavProviderAccounts({ vaultId });
 
   const convertToAssets = useCallback(
     async (shares: number | BN): Promise<BN | null> => {
-      if (!vault.config) return null;
+      if (!vault.config || !accounts) return null;
 
       const { config } = vault;
       const program = config.program;
@@ -158,9 +160,7 @@ export const useConvertToAssets = ({ vaultId }: { vaultId: number }) => {
       setError(null);
 
       try {
-        const navProviderAccounts = [
-          { pubkey: PublicKey.default, isSigner: false, isWritable: false }
-        ];
+        const navProviderAccounts = [...accounts];
 
         const roundingArg = { floor: {} };
 
@@ -186,7 +186,7 @@ export const useConvertToAssets = ({ vaultId }: { vaultId: number }) => {
         setIsLoading(false);
       }
     },
-    [vault]
+    [vault, accounts]
   );
 
   return {

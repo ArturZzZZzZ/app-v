@@ -258,6 +258,7 @@ export const useDeposit = ({ vaultId }) => {
       if (!userPk || !sendTransaction || !vault || !accounts) {
         return;
       }
+
       const { config } = vault;
       if (!config) {
         return;
@@ -444,17 +445,21 @@ export const useTokenBalanceState = ({ vaultId = 0, type }) => {
       setBalanceState(null);
       return;
     }
-
     try {
       const vaultState = await getVaultStateById(program, vaultId);
 
       let mintPk;
       if (type === "deposit") {
-        const assetVaultAccount = await getAccount(
+        const assetVaultPk = vaultState.assetVault;
+        const assetVaultInfo = await connection.getAccountInfo(assetVaultPk);
+        const assetTokenProgram = assetVaultInfo?.owner;
+        const assetVault = await getAccount(
           connection,
-          vaultState.assetVault
+          assetVaultPk,
+          connection.commitment,
+          assetTokenProgram
         );
-        mintPk = assetVaultAccount.mint;
+        mintPk = assetVault.mint;
       } else {
         // redeem
         mintPk = vaultState.shareMint;
@@ -682,10 +687,7 @@ export const useAddRedeemer = (vaultId) => {
       const vaultState = await getVaultStateById(program, vaultId);
       const adminPk = vaultState.admin;
       const vaultStatePk = getVaultStatePda(program.programId, vaultId);
-      console.log({
-        vaultStatePk: vaultStatePk.toString(),
-        adminPk: adminPk.toString()
-      });
+      console.log(vaultState);
       const signature = await program.methods
         .addOperator(new PublicKey(redeemerAddress))
         .accountsPartial({ vaultState: vaultStatePk, admin: adminPk })

@@ -20,7 +20,7 @@ export const VaultAdminContainer = () => {
   });
 
   const ctx = useAppContext();
-  const vaultId = ctx.solanaVaultId;
+  const vaultId = ctx.selectedAsset.solanaVaultId;
 
   const { addLiquidator, loading: isLoadingAddLiquidator } =
     useAddLiquidator(vaultId);

@@ -26,7 +26,7 @@ export const VaultSolanaTransactionContainer = () => {
   const ctx = useAppContext();
   const selectedAsset = ctx.selectedAsset;
   const assetSymbol = selectedAsset.assetSymbol;
-  const vaultId = ctx.solanaVaultId;
+  const vaultId = selectedAsset.solanaVaultId;
 
   const { onDeposit, loading: isLoadingDeposit } = useDeposit({
     vaultId
@@ -45,19 +45,23 @@ export const VaultSolanaTransactionContainer = () => {
   });
 
   useEffect(() => {
-    setMaxAssets(0);
-  }, [action]);
+    if (action !== activeType) {
+      setMaxAssets(0);
+    }
+  }, [action, activeType, vaultId]);
 
   useEffect(() => {
+    if ((balanceState as any) == 0) {
+      setMaxAssets(0);
+    }
     if (balanceState) {
-      console.log("Balance state:", balanceState, activeType);
       if (activeType === "deposit") {
         setMaxAssets(Number(balanceState.uiAmountString));
       } else if (activeType === "redeem" || activeType === "liquidate") {
         setMaxAssets(Number(balanceState.amount));
       }
     }
-  }, [activeType, balanceState]);
+  }, [action, activeType, balanceState]);
 
   const isLoading = isLoadingDeposit || isLoadingRedeem || isLoadingLiquidate;
 

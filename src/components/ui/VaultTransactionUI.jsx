@@ -74,13 +74,7 @@ function VaultTransactionUI({
             variant="contained"
             color="primary"
             onClick={handleTransaction}
-            disabled={
-              loading ||
-              !assets ||
-              isNaN(assets) ||
-              assets <= 0 ||
-              assets > maxAssets
-            }
+            disabled={loading || !assets || isNaN(assets) || assets <= 0}
             fullWidth
           >
             {loading ? (
