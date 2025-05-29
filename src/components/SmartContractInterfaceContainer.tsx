@@ -27,8 +27,11 @@ import { Deposit } from "./SecuritizeCreditVault/solanaSmartContractInterface/wr
 import { Liquidate } from "./SecuritizeCreditVault/solanaSmartContractInterface/write/Liquidate";
 import { OnPause } from "./SecuritizeCreditVault/solanaSmartContractInterface/write/OnPause copy";
 import { Redeem } from "./SecuritizeCreditVault/solanaSmartContractInterface/write/Redeem";
+import { RevokeLiquidator } from "./SecuritizeCreditVault/solanaSmartContractInterface/write/RevokeLiquidator";
+import { RevokeRedeemer } from "./SecuritizeCreditVault/solanaSmartContractInterface/write/RevokeRedeemer";
 import { SetLiquidationOpenToPublic } from "./SecuritizeCreditVault/solanaSmartContractInterface/write/SetLiquidationOpenToPublic";
 import { UnPause } from "./SecuritizeCreditVault/solanaSmartContractInterface/write/UnPause";
+import { UpdateNavProvider } from "./SecuritizeCreditVault/solanaSmartContractInterface/write/UpdateNavProvider";
 import { AddLiquidator } from "./SecuritizeCreditVault/solanaSmartContractInterface/write/addLiquidator";
 import { AddRedeemer } from "./SecuritizeCreditVault/solanaSmartContractInterface/write/addRedeemer";
 
@@ -94,6 +97,9 @@ export const SmartContractInterfaceContainer: React.FC = () => {
               <OnPause setSnackbar={setSnackbar} />
               <UnPause setSnackbar={setSnackbar} />
               <SetLiquidationOpenToPublic setSnackbar={setSnackbar} />
+              <UpdateNavProvider setSnackbar={setSnackbar} />
+              <RevokeLiquidator setSnackbar={setSnackbar} />
+              <RevokeRedeemer setSnackbar={setSnackbar} />
             </>
           )}
         </Box>
