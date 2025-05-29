@@ -32,8 +32,6 @@ import { RevokeRedeemer } from "./SecuritizeCreditVault/solanaSmartContractInter
 import { SetLiquidationOpenToPublic } from "./SecuritizeCreditVault/solanaSmartContractInterface/write/SetLiquidationOpenToPublic";
 import { UnPause } from "./SecuritizeCreditVault/solanaSmartContractInterface/write/UnPause";
 import { UpdateNavProvider } from "./SecuritizeCreditVault/solanaSmartContractInterface/write/UpdateNavProvider";
-import { AddLiquidator } from "./SecuritizeCreditVault/solanaSmartContractInterface/write/addLiquidator";
-import { AddRedeemer } from "./SecuritizeCreditVault/solanaSmartContractInterface/write/addRedeemer";
 
 export const SmartContractInterfaceContainer: React.FC = () => {
   const [tabValue, setTabValue] = useState(0);
