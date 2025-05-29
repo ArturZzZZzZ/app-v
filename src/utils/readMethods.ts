@@ -5,13 +5,14 @@ import { BN } from "@coral-xyz/anchor";
 import { getAccount, getMint } from "@solana/spl-token";
 import { PublicKey } from "@solana/web3.js";
 
+import { useVault } from "@/utils/anchorHelpers";
+
 import {
   getUserBalanceByAta,
   getVaultStateById,
-  useProgram,
-  useVault
+  useProgram
 } from "./anchorHelpers";
-import { TokenBalance } from "./type";
+import { LiquidationConfig, TokenBalance, VaultState } from "./type";
 
 type UseTokenBalanceStateProps = {
   vaultId?: number;
@@ -394,6 +395,77 @@ export const useGetTotalAssets = ({ vaultId }: { vaultId: number }) => {
   return {
     value,
     execute: getTotalAssets,
+    isLoading,
+    error
+  };
+};
+export const useVaultState = ({ vaultId }: { vaultId: number }) => {
+  const [isLoading, setIsLoading] = useState(false);
+  const [error, setError] = useState<Error | null>(null);
+  const [value, setValue] = useState<
+    (VaultState & { LiquidationConfig: LiquidationConfig }) | null
+  >(null);
+
+  const program = useProgram();
+
+  const getVaultState = useCallback(async () => {
+    if (!program) return null;
+
+    setIsLoading(true);
+    setError(null);
+
+    try {
+      const connection = program.provider.connection;
+      const vaultState = await getVaultStateById(program, vaultId);
+
+      let liquidationConfig: {
+        mintPubkey: PublicKey;
+        tokenProgram: PublicKey;
+        redemptionProgramPubkey: PublicKey;
+      } | null = null;
+      if (vaultState.liquidationTokenVault) {
+        const liquidationTokenVaultAccount =
+          await program.provider.connection.getAccountInfo(
+            vaultState.liquidationTokenVault
+          );
+        if (!liquidationTokenVaultAccount) {
+          throw new Error(
+            `Failed to fetch liquidation token vault account at ${vaultState.liquidationTokenVault.toString()}`
+          );
+        }
+        const liquidationTokenProgram = liquidationTokenVaultAccount.owner;
+
+        // Get the mint public key from the liquidation token vault account
+        const liquidationTokenVaultTokenAccount = await getAccount(
+          connection,
+          vaultState.liquidationTokenVault,
+          connection.commitment,
+          liquidationTokenProgram
+        );
+        const liquidationTokenMintPubkey =
+          liquidationTokenVaultTokenAccount.mint;
+
+        liquidationConfig = {
+          mintPubkey: liquidationTokenMintPubkey,
+          tokenProgram: liquidationTokenProgram,
+          redemptionProgramPubkey: vaultState.redemptionProgram
+        };
+      }
+
+      setValue({ ...vaultState, liquidationConfig });
+      return vaultState;
+    } catch (err) {
+      const e = err instanceof Error ? err : new Error(String(err));
+      setError(e);
+      return null;
+    } finally {
+      setIsLoading(false);
+    }
+  }, [program, vaultId]);
+
+  return {
+    value,
+    execute: getVaultState,
     isLoading,
     error
   };
