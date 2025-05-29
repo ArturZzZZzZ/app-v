@@ -606,6 +606,7 @@ export const useLiquidate = ({ vaultId }) => {
 export const useAddLiquidator = (vaultId) => {
   const [loading, setLoading] = useState(false);
   const program = useProgram();
+  const [value, setValue] = useState<string | null>(null);
 
   const addLiquidator = async (liquidatorAddress) => {
     try {
@@ -621,6 +622,7 @@ export const useAddLiquidator = (vaultId) => {
       console.log(
         `Liquidator added successfully. Transaction signature: ${signature}`
       );
+      setValue(signature);
       return signature;
     } catch (error) {
       console.error("Error adding liquidator:", error);
@@ -634,7 +636,8 @@ export const useAddLiquidator = (vaultId) => {
 
   return {
     addLiquidator,
-    loading
+    loading,
+    value
   };
 };
 
@@ -676,6 +679,7 @@ export const useChangeAdmin = (vaultId) => {
 };
 
 export const useAddRedeemer = (vaultId) => {
+  const [value, setValue] = useState<string | null>(null);
   const [loading, setLoading] = useState(false);
 
   const program = useProgram();
@@ -695,6 +699,7 @@ export const useAddRedeemer = (vaultId) => {
       console.log(
         `Liquidator added successfully. Transaction signature: ${signature}`
       );
+      setValue(signature);
       return signature;
     } catch (error) {
       console.error("Error adding liquidator:", error);
@@ -708,7 +713,8 @@ export const useAddRedeemer = (vaultId) => {
 
   return {
     addRedeemer,
-    loading
+    loading,
+    value
   };
 };
 

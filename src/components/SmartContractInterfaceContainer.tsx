@@ -22,6 +22,8 @@ import { LiquidationToken } from "./SecuritizeCreditVault/solanaSmartContractInt
 import { Paused } from "./SecuritizeCreditVault/solanaSmartContractInterface/read/Paused";
 import { Redemption } from "./SecuritizeCreditVault/solanaSmartContractInterface/read/Redemption";
 import { Role } from "./SecuritizeCreditVault/solanaSmartContractInterface/read/Role";
+import { AddLiquidator } from "./SecuritizeCreditVault/solanaSmartContractInterface/write/addLiquidator";
+import { AddRedeemer } from "./SecuritizeCreditVault/solanaSmartContractInterface/write/addRedeemer";
 
 export const SmartContractInterfaceContainer: React.FC = () => {
   const [tabValue, setTabValue] = useState(0);
@@ -72,6 +74,12 @@ export const SmartContractInterfaceContainer: React.FC = () => {
               <LiquidationToken setSnackbar={setSnackbar} />
               <Paused setSnackbar={setSnackbar} />
               <Redemption setSnackbar={setSnackbar} />
+            </>
+          )}
+          {isWriteMethods && (
+            <>
+              <AddLiquidator setSnackbar={setSnackbar} />
+              <AddRedeemer setSnackbar={setSnackbar} />
             </>
           )}
         </Box>
