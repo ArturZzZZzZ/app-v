@@ -10,28 +10,30 @@ import {
   Tabs
 } from "@mui/material";
 
-import { Asset } from "./SecuritizeCreditVault/solanaSmartContractInterface/Asset";
-import { BalanceOf } from "./SecuritizeCreditVault/solanaSmartContractInterface/BalanceOf";
-import { ConvertToAssets } from "./SecuritizeCreditVault/solanaSmartContractInterface/ConverToAssets";
-import { ConvertToShares } from "./SecuritizeCreditVault/solanaSmartContractInterface/ConverToShares";
-import { Decimal } from "./SecuritizeCreditVault/solanaSmartContractInterface/Decimal";
-import { GetShareValue } from "./SecuritizeCreditVault/solanaSmartContractInterface/GetShareValue";
-import { GetTotalAssets } from "./SecuritizeCreditVault/solanaSmartContractInterface/GetTotalAssets";
-import { LiquidationOpenToPublic } from "./SecuritizeCreditVault/solanaSmartContractInterface/LiquidationOpenToPublic";
-import { LiquidationToken } from "./SecuritizeCreditVault/solanaSmartContractInterface/LiquidationToken";
-import { Paused } from "./SecuritizeCreditVault/solanaSmartContractInterface/Paused";
-import { Redemption } from "./SecuritizeCreditVault/solanaSmartContractInterface/Redemption";
-import { Role } from "./SecuritizeCreditVault/solanaSmartContractInterface/Role";
+import { Asset } from "./SecuritizeCreditVault/solanaSmartContractInterface/read/Asset";
+import { BalanceOf } from "./SecuritizeCreditVault/solanaSmartContractInterface/read/BalanceOf";
+import { ConvertToAssets } from "./SecuritizeCreditVault/solanaSmartContractInterface/read/ConverToAssets";
+import { ConvertToShares } from "./SecuritizeCreditVault/solanaSmartContractInterface/read/ConverToShares";
+import { Decimal } from "./SecuritizeCreditVault/solanaSmartContractInterface/read/Decimal";
+import { GetShareValue } from "./SecuritizeCreditVault/solanaSmartContractInterface/read/GetShareValue";
+import { GetTotalAssets } from "./SecuritizeCreditVault/solanaSmartContractInterface/read/GetTotalAssets";
+import { LiquidationOpenToPublic } from "./SecuritizeCreditVault/solanaSmartContractInterface/read/LiquidationOpenToPublic";
+import { LiquidationToken } from "./SecuritizeCreditVault/solanaSmartContractInterface/read/LiquidationToken";
+import { Paused } from "./SecuritizeCreditVault/solanaSmartContractInterface/read/Paused";
+import { Redemption } from "./SecuritizeCreditVault/solanaSmartContractInterface/read/Redemption";
+import { Role } from "./SecuritizeCreditVault/solanaSmartContractInterface/read/Role";
 
 export const SmartContractInterfaceContainer: React.FC = () => {
   const [tabValue, setTabValue] = useState(0);
   const [, setExpanded] = useState<string | false>(false);
-
+  console.log({ tabValue });
   const [snackbar, setSnackbar] = useState({
     open: false,
     message: "",
     severity: "info" as "info" | "success" | "error"
   });
+  const isReadMethods = tabValue === 0;
+  const isWriteMethods = tabValue === 1;
 
   const handleTabChange = (_: React.SyntheticEvent, newValue: number) => {
     setTabValue(newValue);
@@ -54,20 +56,24 @@ export const SmartContractInterfaceContainer: React.FC = () => {
           <Tab label="Write Methods" />
         </Tabs>
         <Box mt={3}>
-          <BalanceOf setSnackbar={setSnackbar} />
-          <Asset setSnackbar={setSnackbar} />
-          <ConvertToAssets setSnackbar={setSnackbar} />
-          <ConvertToShares setSnackbar={setSnackbar} />
-          <Decimal setSnackbar={setSnackbar} />
-          <GetShareValue setSnackbar={setSnackbar} />
-          <GetTotalAssets setSnackbar={setSnackbar} />
-          <Role setSnackbar={setSnackbar} role="isAdmin" />
-          <Role setSnackbar={setSnackbar} role="isLiquidator" />
-          <Role setSnackbar={setSnackbar} role="isOperator" />
-          <LiquidationOpenToPublic setSnackbar={setSnackbar} />
-          <LiquidationToken setSnackbar={setSnackbar} />
-          <Paused setSnackbar={setSnackbar} />
-          <Redemption setSnackbar={setSnackbar} />
+          {isReadMethods && (
+            <>
+              <BalanceOf setSnackbar={setSnackbar} />
+              <Asset setSnackbar={setSnackbar} />
+              <ConvertToAssets setSnackbar={setSnackbar} />
+              <ConvertToShares setSnackbar={setSnackbar} />
+              <Decimal setSnackbar={setSnackbar} />
+              <GetShareValue setSnackbar={setSnackbar} />
+              <GetTotalAssets setSnackbar={setSnackbar} />
+              <Role setSnackbar={setSnackbar} role="isAdmin" />
+              <Role setSnackbar={setSnackbar} role="isLiquidator" />
+              <Role setSnackbar={setSnackbar} role="isOperator" />
+              <LiquidationOpenToPublic setSnackbar={setSnackbar} />
+              <LiquidationToken setSnackbar={setSnackbar} />
+              <Paused setSnackbar={setSnackbar} />
+              <Redemption setSnackbar={setSnackbar} />
+            </>
+          )}
         </Box>
       </Paper>
       <Snackbar
