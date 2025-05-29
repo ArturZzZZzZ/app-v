@@ -22,6 +22,8 @@ import { LiquidationToken } from "./SecuritizeCreditVault/solanaSmartContractInt
 import { Paused } from "./SecuritizeCreditVault/solanaSmartContractInterface/read/Paused";
 import { Redemption } from "./SecuritizeCreditVault/solanaSmartContractInterface/read/Redemption";
 import { Role } from "./SecuritizeCreditVault/solanaSmartContractInterface/read/Role";
+import { AddLiquidator } from "./SecuritizeCreditVault/solanaSmartContractInterface/write/AddLiquidator2";
+import { AddRedeemer } from "./SecuritizeCreditVault/solanaSmartContractInterface/write/AddRedeemer2";
 import { ChangeAdmin } from "./SecuritizeCreditVault/solanaSmartContractInterface/write/ChangeAdmin";
 import { Deposit } from "./SecuritizeCreditVault/solanaSmartContractInterface/write/Deposit";
 import { Liquidate } from "./SecuritizeCreditVault/solanaSmartContractInterface/write/Liquidate";
