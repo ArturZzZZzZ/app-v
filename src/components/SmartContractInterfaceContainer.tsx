@@ -27,6 +27,7 @@ import { Deposit } from "./SecuritizeCreditVault/solanaSmartContractInterface/wr
 import { Liquidate } from "./SecuritizeCreditVault/solanaSmartContractInterface/write/Liquidate";
 import { OnPause } from "./SecuritizeCreditVault/solanaSmartContractInterface/write/OnPause copy";
 import { Redeem } from "./SecuritizeCreditVault/solanaSmartContractInterface/write/Redeem";
+import { SetLiquidationOpenToPublic } from "./SecuritizeCreditVault/solanaSmartContractInterface/write/SetLiquidationOpenToPublic";
 import { UnPause } from "./SecuritizeCreditVault/solanaSmartContractInterface/write/UnPause";
 import { AddLiquidator } from "./SecuritizeCreditVault/solanaSmartContractInterface/write/addLiquidator";
 import { AddRedeemer } from "./SecuritizeCreditVault/solanaSmartContractInterface/write/addRedeemer";
@@ -92,6 +93,7 @@ export const SmartContractInterfaceContainer: React.FC = () => {
               <Redeem setSnackbar={setSnackbar} />
               <OnPause setSnackbar={setSnackbar} />
               <UnPause setSnackbar={setSnackbar} />
+              <SetLiquidationOpenToPublic setSnackbar={setSnackbar} />
             </>
           )}
         </Box>
