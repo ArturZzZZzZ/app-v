@@ -44,6 +44,8 @@ export const VaultSolanaTransactionContainer = () => {
     type: action
   });
 
+  const isCorrectType = action === activeType;
+
   useEffect(() => {
     if (action !== activeType) {
       setMaxAssets(0);
@@ -171,7 +173,7 @@ export const VaultSolanaTransactionContainer = () => {
       snackbarMessage={snackbarMessage}
       snackbarSeverity={snackbarSeverity}
       handleSnackbarClose={handleSnackbarClose}
-      maxAssets={maxAssets}
+      maxAssets={isCorrectType ? maxAssets : 0}
       tokenSymbol={
         action === "deposit"
           ? assetSymbol

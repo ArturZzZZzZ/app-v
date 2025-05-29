@@ -440,6 +440,7 @@ export const useTokenBalanceState = ({ vaultId = 0, type }) => {
   const [activeType, setActiveType] = useState("");
 
   const cancelledRef = useRef(false);
+  const intervalRef = useRef<any>(null);
 
   const fetchBalance = useCallback(async () => {
     cancelledRef.current = false;
@@ -449,6 +450,7 @@ export const useTokenBalanceState = ({ vaultId = 0, type }) => {
       setBalanceState(null);
       return;
     }
+
     try {
       const vaultState = await getVaultStateById(program, vaultId);
 
@@ -491,8 +493,16 @@ export const useTokenBalanceState = ({ vaultId = 0, type }) => {
 
   useEffect(() => {
     fetchBalance();
+
+    intervalRef.current = window.setInterval(() => {
+      fetchBalance();
+    }, 5000);
+
     return () => {
       cancelledRef.current = true;
+      if (intervalRef.current) {
+        window.clearInterval(intervalRef.current);
+      }
     };
   }, [fetchBalance]);
 
