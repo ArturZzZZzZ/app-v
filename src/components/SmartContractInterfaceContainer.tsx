@@ -19,6 +19,8 @@ import { GetShareValue } from "./SecuritizeCreditVault/solanaSmartContractInterf
 import { GetTotalAssets } from "./SecuritizeCreditVault/solanaSmartContractInterface/GetTotalAssets";
 import { LiquidationOpenToPublic } from "./SecuritizeCreditVault/solanaSmartContractInterface/LiquidationOpenToPublic";
 import { LiquidationToken } from "./SecuritizeCreditVault/solanaSmartContractInterface/LiquidationToken";
+import { Paused } from "./SecuritizeCreditVault/solanaSmartContractInterface/Paused";
+import { Redemption } from "./SecuritizeCreditVault/solanaSmartContractInterface/Redemption";
 import { Role } from "./SecuritizeCreditVault/solanaSmartContractInterface/Role";
 
 export const SmartContractInterfaceContainer: React.FC = () => {
@@ -64,6 +66,8 @@ export const SmartContractInterfaceContainer: React.FC = () => {
           <Role setSnackbar={setSnackbar} role="isOperator" />
           <LiquidationOpenToPublic setSnackbar={setSnackbar} />
           <LiquidationToken setSnackbar={setSnackbar} />
+          <Paused setSnackbar={setSnackbar} />
+          <Redemption setSnackbar={setSnackbar} />
         </Box>
       </Paper>
       <Snackbar

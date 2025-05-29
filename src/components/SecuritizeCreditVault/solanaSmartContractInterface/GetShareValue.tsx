@@ -16,7 +16,7 @@ import { useGetTotalAssets } from "@/utils/readMethods";
 export const GetShareValue = ({ setSnackbar }) => {
   const ctx = useAppContext();
   const vaultId = ctx.selectedAsset.solanaVaultId;
-  const methodName = "getShareValue";
+  const methodName = "shareValue";
 
   const { value, execute, isLoading } = useGetTotalAssets({ vaultId });
   const handler = () => {

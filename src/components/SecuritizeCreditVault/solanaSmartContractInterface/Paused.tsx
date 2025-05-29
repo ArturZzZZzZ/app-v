@@ -11,14 +11,15 @@ import {
 } from "@mui/material";
 
 import { useAppContext } from "@/utils/AppContext";
-import { useGetTotalAssets } from "@/utils/readMethods";
+import { useVaultState } from "@/utils/readMethods";
 
-export const GetTotalAssets = ({ setSnackbar }) => {
+export const Paused = ({ setSnackbar }) => {
   const ctx = useAppContext();
   const vaultId = ctx.selectedAsset.solanaVaultId;
-  const methodName = "totalAssets";
+  const methodName = "paused";
 
-  const { value, execute, isLoading } = useGetTotalAssets({ vaultId });
+  const { value, execute, isLoading } = useVaultState({ vaultId });
+
   const handler = () => {
     setSnackbar({
       open: true,
@@ -71,7 +72,8 @@ export const GetTotalAssets = ({ setSnackbar }) => {
                 sx={{ p: 2, mt: 1, backgroundColor: "#f5f5f5" }}
               >
                 <Typography variant="body2" sx={{ whiteSpace: "pre-wrap" }}>
-                  {value.toString()}
+                  {value?.isPaused.toString() || "null"}
+                  <br />
                 </Typography>
               </Paper>
             </Box>
