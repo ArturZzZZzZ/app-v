@@ -2,6 +2,7 @@ import { useCallback, useEffect, useMemo, useRef, useState } from "react";
 
 import { useGetNavProviderAccounts } from "@/api/solana/helpers";
 import { AnchorProvider, BN, Program } from "@coral-xyz/anchor";
+import { program } from "@coral-xyz/anchor/dist/cjs/native/system";
 import {
   TOKEN_2022_PROGRAM_ID,
   createAssociatedTokenAccountInstruction,
@@ -454,16 +455,15 @@ export const useRedeem = ({ vaultId }) => {
   const [loading, setLoading] = useState(false);
 
   const vault = useVault(vaultId);
-  const program = useProgram();
 
-  const { accounts } = useGetNavProviderAccounts({
+  const { accounts: navProviderAccounts } = useGetNavProviderAccounts({
     vaultId: vaultId
   });
 
   const onRedeem = useCallback(
     async (amountTokens: number) => {
       const { publicKey: userPk, sendTransaction } = wallet;
-      if (!userPk || !sendTransaction || !vault || !accounts) {
+      if (!userPk || !sendTransaction || !vault || !navProviderAccounts) {
         return;
       }
       const { config } = vault;
@@ -473,6 +473,8 @@ export const useRedeem = ({ vaultId }) => {
       setLoading(true);
 
       try {
+        const program = config.program;
+        const connection = program.provider.connection;
         const assetVaultPk = config.assetVaultPubkey;
         const shareMintPk = config.shareMintPubkey;
         const navProviderProgramPk = config.navProviderProgram;
@@ -494,8 +496,27 @@ export const useRedeem = ({ vaultId }) => {
           )
         ]);
 
+        let transferHookAccounts: AccountMeta[] = [];
+        const transferHookProgramId = await getTransferHookProgramId(
+          connection,
+          config.assetMintPubkey
+        );
+        if (transferHookProgramId) {
+          const transferHookArgs: WithTransferHookArgs = {
+            from: config.assetVaultPubkey,
+            mint: config.assetMintPubkey,
+            to: operatorAssetAta,
+            authority: config.authorityPubkey,
+            hookProgramId: transferHookProgramId
+          };
+          transferHookAccounts = await resolveExtraAccountMetas(
+            connection,
+            transferHookArgs
+          );
+        }
+
         const signature = await program.methods
-          .redeem(amount)
+          .redeem(amount, transferHookAccounts.length)
           .accountsPartial({
             operator: userPk,
             vaultState: config.statePubkey,
@@ -512,7 +533,7 @@ export const useRedeem = ({ vaultId }) => {
             liquidationTokenVault: config.liquidationTokenVaultPubkey!,
             navProviderProgram: navProviderProgramPk
           })
-          .remainingAccounts(accounts)
+          .remainingAccounts([...transferHookAccounts, ...navProviderAccounts])
           .rpc();
         console.log("Redeem signature:", signature);
         setValue(signature);
@@ -526,7 +547,7 @@ export const useRedeem = ({ vaultId }) => {
         setLoading(false);
       }
     },
-    [wallet, vault, accounts, program.methods]
+    [wallet, vault, navProviderAccounts]
   );
   return { onRedeem, loading, value };
 };
