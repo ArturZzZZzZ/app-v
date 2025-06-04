@@ -59,7 +59,7 @@ export const ConvertToShares = ({ setSnackbar }) => {
       <AccordionDetails>
         <Box>
           <TextField
-            label={`shares`}
+            label={`assets`}
             value={inputValue}
             onChange={(e) => {
               setInputValue(e.target.value);
