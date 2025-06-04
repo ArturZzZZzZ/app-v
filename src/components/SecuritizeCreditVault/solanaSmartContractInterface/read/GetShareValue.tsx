@@ -11,14 +11,14 @@ import {
 } from "@mui/material";
 
 import { useAppContext } from "@/utils/AppContext";
-import { useGetTotalAssets } from "@/utils/readMethods";
+import { useGetShareValue } from "@/utils/readMethods";
 
 export const GetShareValue = ({ setSnackbar }) => {
   const ctx = useAppContext();
   const vaultId = ctx.selectedAsset.solanaVaultId;
   const methodName = "shareValue";
 
-  const { value, execute, isLoading } = useGetTotalAssets({ vaultId });
+  const { value, execute, isLoading } = useGetShareValue({ vaultId });
   const handler = () => {
     setSnackbar({
       open: true,

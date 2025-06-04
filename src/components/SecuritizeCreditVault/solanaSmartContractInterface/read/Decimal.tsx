@@ -18,14 +18,16 @@ export const Decimal = ({ setSnackbar }) => {
   const vaultId = ctx.selectedAsset.solanaVaultId;
   const methodName = "decimal";
 
-  const { decimals, fetchDecimals, isLoading } = useAssetTokenDecimal();
+  const { decimals, fetchDecimals, isLoading } = useAssetTokenDecimal({
+    vaultId
+  });
   const handler = () => {
     setSnackbar({
       open: true,
       message: `Executing ${methodName}...`,
       severity: "info"
     });
-    fetchDecimals({ vaultId })
+    fetchDecimals()
       .then(() => {
         setSnackbar({
           open: true,

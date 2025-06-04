@@ -206,6 +206,9 @@ export const useConvertToShares = ({ vaultId }: { vaultId: number }) => {
   const [isLoading, setIsLoading] = useState(false);
   const [error, setError] = useState<Error | null>(null);
   const [assets, setAssets] = useState<BN | null>(null);
+  const { accounts: navProviderAccounts } = useGetNavProviderAccounts({
+    vaultId
+  });
 
   const convertToShares = useCallback(
     async (shares: number | BN): Promise<BN | null> => {
@@ -217,12 +220,8 @@ export const useConvertToShares = ({ vaultId }: { vaultId: number }) => {
       setError(null);
 
       try {
-        const navProviderAccounts = [
-          { pubkey: PublicKey.default, isSigner: false, isWritable: false }
-        ];
-
         const roundingArg = { floor: {} };
-
+        console.log(11111, shares);
         const assets = await program.methods
           .convertToShares(new BN(shares), roundingArg)
           .accountsPartial({
@@ -233,7 +232,7 @@ export const useConvertToShares = ({ vaultId }: { vaultId: number }) => {
             liquidationTokenMint: config.liquidationConfig?.mintPubkey! ?? null,
             liquidationTokenVault: config.liquidationTokenVaultPubkey!
           })
-          .remainingAccounts(navProviderAccounts)
+          .remainingAccounts(navProviderAccounts!)
           .view();
         setAssets(assets);
         return assets;
@@ -245,7 +244,7 @@ export const useConvertToShares = ({ vaultId }: { vaultId: number }) => {
         setIsLoading(false);
       }
     },
-    [vault]
+    [vault, navProviderAccounts]
   );
 
   return {
@@ -256,54 +255,51 @@ export const useConvertToShares = ({ vaultId }: { vaultId: number }) => {
   };
 };
 
-export function useAssetTokenDecimal() {
+export function useAssetTokenDecimal({ vaultId }: { vaultId: number }) {
   const program = useProgram();
   const connection = program.provider.connection;
 
   const [decimals, setDecimals] = useState<number | null>(null);
   const [loading, setLoading] = useState<boolean>(false);
 
-  const fetchDecimals = useCallback(
-    async ({ vaultId }) => {
-      setLoading(true);
+  const fetchDecimals = useCallback(async () => {
+    setLoading(true);
 
-      try {
-        const vaultState = await getVaultStateById(program, vaultId);
+    try {
+      const vaultState = await getVaultStateById(program, vaultId);
 
-        const assetVaultInfo = await connection.getAccountInfo(
-          vaultState.assetVault
-        );
-        const assetTokenProgram = assetVaultInfo?.owner;
+      const assetVaultInfo = await connection.getAccountInfo(
+        vaultState.assetVault
+      );
+      const assetTokenProgram = assetVaultInfo?.owner;
 
-        const assetVaultPubkey = new PublicKey(vaultState.assetVault);
-        const assetVault = await getAccount(
-          connection,
-          assetVaultPubkey,
-          connection.commitment,
-          assetTokenProgram
-        );
+      const assetVaultPubkey = new PublicKey(vaultState.assetVault);
+      const assetVault = await getAccount(
+        connection,
+        assetVaultPubkey,
+        connection.commitment,
+        assetTokenProgram
+      );
 
-        const assetMintPk = assetVault.mint;
+      const assetMintPk = assetVault.mint;
 
-        const mintInfo = await getMint(
-          connection,
-          assetMintPk,
-          connection.commitment,
-          assetTokenProgram
-        );
+      const mintInfo = await getMint(
+        connection,
+        assetMintPk,
+        connection.commitment,
+        assetTokenProgram
+      );
 
-        setDecimals(mintInfo.decimals);
-        return mintInfo.decimals;
-      } catch (err) {
-        const e = err instanceof Error ? err : new Error(String(err));
+      setDecimals(mintInfo.decimals);
+      return mintInfo.decimals;
+    } catch (err) {
+      const e = err instanceof Error ? err : new Error(String(err));
 
-        throw e;
-      } finally {
-        setLoading(false);
-      }
-    },
-    [connection, program]
-  );
+      throw e;
+    } finally {
+      setLoading(false);
+    }
+  }, [connection, program, vaultId]);
 
   return { decimals, isLoading: loading, fetchDecimals };
 }
@@ -314,6 +310,10 @@ export const useGetShareValue = ({ vaultId }: { vaultId: number }) => {
   const [error, setError] = useState<Error | null>(null);
   const [value, setValue] = useState<BN | null>(null);
 
+  const { accounts: navProviderAccounts } = useGetNavProviderAccounts({
+    vaultId
+  });
+
   const getShareValue = useCallback(async () => {
     if (!vault.config) return null;
 
@@ -323,10 +323,6 @@ export const useGetShareValue = ({ vaultId }: { vaultId: number }) => {
     setError(null);
 
     try {
-      const navProviderAccounts = [
-        { pubkey: PublicKey.default, isSigner: false, isWritable: false }
-      ];
-
       const assets = await program.methods
         .getShareValue()
         .accountsPartial({
@@ -337,7 +333,7 @@ export const useGetShareValue = ({ vaultId }: { vaultId: number }) => {
           liquidationTokenMint: config.liquidationConfig?.mintPubkey! ?? null,
           liquidationTokenVault: config.liquidationTokenVaultPubkey!
         })
-        .remainingAccounts(navProviderAccounts)
+        .remainingAccounts(navProviderAccounts!)
         .view();
       setValue(assets);
       return assets;
@@ -348,7 +344,7 @@ export const useGetShareValue = ({ vaultId }: { vaultId: number }) => {
     } finally {
       setIsLoading(false);
     }
-  }, [vault]);
+  }, [vault, navProviderAccounts]);
 
   return {
     value,
