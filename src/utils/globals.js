@@ -600,28 +600,7 @@ export const blockchainInfo = {
     chainId: "solana-mainnet",
     rpcUrl: "https://api.mainnet-beta.solana.com",
     icon: solanaIcon,
-    assets: [
-      {
-        vaultAddress: "9L4WxKkUHKBZ96EpHBc7APqvEhobmY1A2ENk5dUfdrpw",
-        address: "HH7HCHymx28RKrfUh8QgJBpEe92LQwSuvFENUVkcwQeg",
-        vaultId: "0",
-        name: "Solana",
-        symbol: "SPL vault0",
-        RepresentationTokenName: "sSPL vault0",
-        icon: "/solana-sol-logo.png"
-      },
-      {
-        vaultAddress: "DNuq6LfthiNbiTaNLwwhzNjzjfnMakxZHgUcvrRLBQ8d",
-        //Asset Vault
-        address: "qbciMuKoFVK4mPGeUvuPgQZg8irsV72YGCrXY2QB4AE",
-        vaultId: "2",
-        name: "Solana",
-        symbol: "WAGMI",
-        // vault token symbol
-        RepresentationTokenName: "sWAGMI",
-        icon: "/solana-sol-logo.png"
-      }
-    ]
+    assets: []
   }
 };
 
