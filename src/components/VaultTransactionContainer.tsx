@@ -57,11 +57,7 @@ export const VaultSolanaTransactionContainer = () => {
       setMaxAssets(0);
     }
     if (balanceState) {
-      if (activeType === "deposit") {
-        setMaxAssets(Number(balanceState.uiAmountString));
-      } else if (activeType === "redeem" || activeType === "liquidate") {
-        setMaxAssets(Number(balanceState.amount));
-      }
+      setMaxAssets(Number(balanceState.uiAmountString));
     }
   }, [action, activeType, balanceState]);
 

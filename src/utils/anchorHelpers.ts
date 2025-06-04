@@ -2,7 +2,6 @@ import { useCallback, useEffect, useMemo, useRef, useState } from "react";
 
 import { useGetNavProviderAccounts } from "@/api/solana/helpers";
 import { AnchorProvider, BN, Program } from "@coral-xyz/anchor";
-import { program } from "@coral-xyz/anchor/dist/cjs/native/system";
 import {
   TOKEN_2022_PROGRAM_ID,
   createAssociatedTokenAccountInstruction,
@@ -233,33 +232,42 @@ export function useVault(vaultId) {
         const assetVaultPk = vaultState.assetVault;
         const shareMintPk = vaultState.shareMint;
 
-        const assetVaultInfo = await connection.getAccountInfo(assetVaultPk);
+        const [assetVaultInfo, shareMintInfo] = await Promise.all([
+          connection.getAccountInfo(assetVaultPk),
+          connection.getAccountInfo(shareMintPk)
+        ]);
         const assetTokenProgram = assetVaultInfo?.owner;
+        const shareTokenProgram = shareMintInfo?.owner;
+
         const assetVault = await getAccount(
           connection,
           assetVaultPk,
           connection.commitment,
           assetTokenProgram
         );
-
         const assetMintPk = assetVault.mint;
-
-        const [{ decimals: assetTokenDecimal }, shareMintInfo] =
-          await Promise.all([
-            getMint(
-              connection,
-              assetMintPk,
-              connection.commitment,
-              assetTokenProgram
-            ),
-            connection.getAccountInfo(shareMintPk)
-          ]);
 
         if (!shareMintInfo) {
           throw new Error("Failed to retrieve mint information");
         }
 
-        const shareTokenProgram = shareMintInfo.owner;
+        const [
+          { decimals: assetTokenDecimal },
+          { decimals: sharesTokenDecimal }
+        ] = await Promise.all([
+          getMint(
+            connection,
+            assetMintPk,
+            connection.commitment,
+            assetTokenProgram
+          ),
+          getMint(
+            connection,
+            shareMintPk,
+            connection.commitment,
+            shareTokenProgram
+          )
+        ]);
 
         let liquidationConfig: {
           mintPubkey: PublicKey;
@@ -306,8 +314,9 @@ export function useVault(vaultId) {
           assetTokenProgram: assetTokenProgram || null,
           assetVaultPubkey: vaultState.assetVault,
           assetTokenDecimal,
+          sharesTokenDecimal,
           shareMintPubkey: vaultState.shareMint,
-          shareTokenProgram,
+          shareTokenProgram: shareTokenProgram || null,
           navProviderProgram: vaultState.navProviderProgram,
 
           // Handle liquidation configuration if available
@@ -382,7 +391,7 @@ export const useDeposit = ({ vaultId }) => {
             config.shareMintPubkey,
             userPk,
             false,
-            config.shareTokenProgram
+            config.shareTokenProgram!
           )
         ]);
 
@@ -438,7 +447,7 @@ export const useDeposit = ({ vaultId }) => {
               operatorShareAta,
               userPk,
               shareMintPk,
-              config.shareTokenProgram
+              config.shareTokenProgram!
             )
           );
         }
@@ -494,7 +503,10 @@ export const useRedeem = ({ vaultId }) => {
         const shareMintPk = config.shareMintPubkey;
         const navProviderProgramPk = config.navProviderProgram;
 
-        const amount = new BN(amountTokens);
+        const amount = toBaseUnits(
+          amountTokens.toString(),
+          config.sharesTokenDecimal
+        );
 
         const [operatorAssetAta, operatorShareAta] = await Promise.all([
           getAssociatedTokenAddress(
@@ -507,7 +519,7 @@ export const useRedeem = ({ vaultId }) => {
             config.shareMintPubkey,
             userPk,
             false,
-            config.shareTokenProgram
+            config.shareTokenProgram!
           )
         ]);
 
@@ -675,7 +687,10 @@ export const useLiquidate = ({ vaultId }) => {
         const shareMintPk = config.shareMintPubkey;
         const navProviderProgramPk = config.navProviderProgram;
 
-        const shares = new BN(amountTokens);
+        const shares = toBaseUnits(
+          amountTokens.toString(),
+          config.sharesTokenDecimal
+        );
 
         const [liquidatorAssetAta, liquidatorShareAta] = await Promise.all([
           getAssociatedTokenAddress(
@@ -688,7 +703,7 @@ export const useLiquidate = ({ vaultId }) => {
             config.shareMintPubkey,
             liquidatorPubkey,
             false,
-            config.shareTokenProgram
+            config.shareTokenProgram!
           )
         ]);
         const remainingAccounts: any[] = [];

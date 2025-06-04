@@ -26,8 +26,9 @@ export interface VaultConfig {
   assetTokenProgram: PublicKey | null;
   assetVaultPubkey: PublicKey;
   assetTokenDecimal: number;
+  sharesTokenDecimal: number;
   shareMintPubkey: PublicKey;
-  shareTokenProgram: PublicKey;
+  shareTokenProgram: PublicKey | null;
   navProviderProgram: PublicKey;
   liquidationTokenVaultPubkey: PublicKey | null;
   liquidationConfig: LiquidationConfig | null;
