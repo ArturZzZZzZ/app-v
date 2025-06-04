@@ -48,3 +48,11 @@ export interface VaultState {
   operators: PublicKey[];
   liquidators: PublicKey[];
 }
+
+export interface WithTransferHookArgs {
+  from: PublicKey;
+  mint: PublicKey;
+  to: PublicKey;
+  authority: PublicKey;
+  hookProgramId: PublicKey;
+}

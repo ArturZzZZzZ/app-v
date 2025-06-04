@@ -3,16 +3,27 @@ import { useCallback, useEffect, useMemo, useRef, useState } from "react";
 import { useGetNavProviderAccounts } from "@/api/solana/helpers";
 import { AnchorProvider, BN, Program } from "@coral-xyz/anchor";
 import {
+  TOKEN_2022_PROGRAM_ID,
   createAssociatedTokenAccountInstruction,
   getAccount,
   getAssociatedTokenAddress,
-  getMint
+  getExtraAccountMetaAddress,
+  getExtraAccountMetas,
+  getMint,
+  getTransferHook,
+  resolveExtraAccountMeta,
+  unpackMint
 } from "@solana/spl-token";
 import { useConnection, useWallet } from "@solana/wallet-adapter-react";
-import { PublicKey, Transaction } from "@solana/web3.js";
+import {
+  AccountMeta,
+  Connection,
+  PublicKey,
+  Transaction
+} from "@solana/web3.js";
 
 import idl from "../api/solana/idls/sc_vault.json";
-import { TokenBalance, VaultConfig } from "./type";
+import { TokenBalance, VaultConfig, WithTransferHookArgs } from "./type";
 
 export function makeProvider(connection, wallet) {
   const opts = AnchorProvider.defaultOptions();
@@ -75,6 +86,72 @@ export const getVaultStateById = async (program, vaultId) => {
   const vaultState = await program.account.vaultState.fetch(vaultPda);
   return vaultState;
 };
+
+export async function getTransferHookProgramId(
+  connection: Connection,
+  mintAddress: PublicKey
+): Promise<PublicKey | null> {
+  const mintInfo = await connection.getAccountInfo(mintAddress);
+  if (!mintInfo) {
+    throw new Error(`Mint account not found: ${mintAddress.toBase58()}`);
+  }
+  if (mintInfo.owner.toBase58() !== TOKEN_2022_PROGRAM_ID.toBase58()) {
+    return null;
+  }
+
+  const mint = unpackMint(mintAddress, mintInfo, TOKEN_2022_PROGRAM_ID);
+
+  const transferHook = getTransferHook(mint);
+
+  if (!transferHook) {
+    return null;
+  }
+  return transferHook.programId;
+}
+
+export async function resolveExtraAccountMetas(
+  connection: Connection,
+  args: WithTransferHookArgs
+): Promise<AccountMeta[]> {
+  const extraMetaListAddress = getExtraAccountMetaAddress(
+    args.mint,
+    args.hookProgramId
+  );
+  const extraMetaListAccount =
+    await connection.getAccountInfo(extraMetaListAddress);
+  const extraMetasList = getExtraAccountMetas(extraMetaListAccount!);
+
+  const extraHookAccounts: AccountMeta[] = [
+    args.from,
+    args.mint,
+    args.to,
+    args.authority,
+    extraMetaListAddress
+  ].map((account) => ({
+    pubkey: account,
+    isSigner: false,
+    isWritable: true
+  }));
+
+  for (const extraMeta of extraMetasList) {
+    const extraAccountMeta = await resolveExtraAccountMeta(
+      connection,
+      extraMeta,
+      extraHookAccounts,
+      Buffer.from([]),
+      args.hookProgramId
+    );
+    extraHookAccounts.push(extraAccountMeta);
+  }
+
+  extraHookAccounts.push({
+    pubkey: args.hookProgramId,
+    isSigner: false,
+    isWritable: false
+  });
+
+  return extraHookAccounts;
+}
 
 export async function getUserBalanceByAta(
   connection,
@@ -248,15 +325,14 @@ export const useDeposit = ({ vaultId }) => {
 
   const vault = useVault(vaultId);
 
-  const { accounts } = useGetNavProviderAccounts({
+  const { accounts: navProviderAccounts } = useGetNavProviderAccounts({
     vaultId: vaultId
   });
 
-  const program = useProgram();
   const onDeposit = useCallback(
     async (amountTokens: number) => {
       const { publicKey: userPk, sendTransaction } = wallet;
-      if (!userPk || !sendTransaction || !vault || !accounts) {
+      if (!userPk || !sendTransaction || !vault || !navProviderAccounts) {
         return;
       }
 
@@ -267,6 +343,7 @@ export const useDeposit = ({ vaultId }) => {
       setLoading(true);
 
       try {
+        const program = config.program;
         const connection = program.provider.connection;
 
         const assetVaultPk = config.assetVaultPubkey;
@@ -295,8 +372,28 @@ export const useDeposit = ({ vaultId }) => {
 
         const shareAtaInfo = await connection.getAccountInfo(operatorShareAta);
 
+        let transferHookAccounts: AccountMeta[] = [];
+        const transferHookProgramId = await getTransferHookProgramId(
+          connection,
+          config.assetMintPubkey
+        );
+
+        if (transferHookProgramId) {
+          const transferHookArgs: WithTransferHookArgs = {
+            from: operatorAssetAta,
+            mint: config.assetMintPubkey,
+            to: config.assetVaultPubkey,
+            authority: userPk,
+            hookProgramId: transferHookProgramId
+          };
+          transferHookAccounts = await resolveExtraAccountMetas(
+            connection,
+            transferHookArgs
+          );
+        }
+
         const depositIx = await program.methods
-          .deposit(amount)
+          .deposit(amount, transferHookAccounts.length)
           .accountsPartial({
             operator: userPk,
             vaultState: config.statePubkey,
@@ -313,7 +410,7 @@ export const useDeposit = ({ vaultId }) => {
             liquidationTokenVault: config.liquidationTokenVaultPubkey!,
             navProviderProgram: navProviderProgramPk
           })
-          .remainingAccounts(accounts)
+          .remainingAccounts([...transferHookAccounts, ...navProviderAccounts])
           .instruction();
 
         const tx = new Transaction();
@@ -345,7 +442,7 @@ export const useDeposit = ({ vaultId }) => {
         setLoading(false);
       }
     },
-    [wallet, vault, accounts, program.provider.connection, program.methods]
+    [wallet, vault, navProviderAccounts]
   );
 
   return { onDeposit, loading, value };

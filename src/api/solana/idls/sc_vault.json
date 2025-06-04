@@ -22,16 +22,7 @@
         "",
         "For detailed documentation, see `add_liquidator_handler`."
       ],
-      "discriminator": [
-        60,
-        33,
-        46,
-        47,
-        162,
-        22,
-        248,
-        97
-      ],
+      "discriminator": [60, 33, 46, 47, 162, 22, 248, 97],
       "accounts": [
         {
           "name": "admin",
@@ -41,9 +32,7 @@
             "This account must sign the transaction and must match the admin specified in the vault state."
           ],
           "signer": true,
-          "relations": [
-            "vault_state"
-          ]
+          "relations": ["vault_state"]
         },
         {
           "name": "vault_state",
@@ -58,19 +47,7 @@
             "seeds": [
               {
                 "kind": "const",
-                "value": [
-                  118,
-                  97,
-                  117,
-                  108,
-                  116,
-                  95,
-                  115,
-                  116,
-                  97,
-                  116,
-                  101
-                ]
+                "value": [118, 97, 117, 108, 116, 95, 115, 116, 97, 116, 101]
               },
               {
                 "kind": "account",
@@ -103,16 +80,7 @@
         "",
         "For detailed documentation, see `add_operator_handler`."
       ],
-      "discriminator": [
-        149,
-        142,
-        187,
-        68,
-        33,
-        250,
-        87,
-        105
-      ],
+      "discriminator": [149, 142, 187, 68, 33, 250, 87, 105],
       "accounts": [
         {
           "name": "admin",
@@ -122,9 +90,7 @@
             "This account must sign the transaction and must match the admin specified in the vault state."
           ],
           "signer": true,
-          "relations": [
-            "vault_state"
-          ]
+          "relations": ["vault_state"]
         },
         {
           "name": "vault_state",
@@ -139,19 +105,7 @@
             "seeds": [
               {
                 "kind": "const",
-                "value": [
-                  118,
-                  97,
-                  117,
-                  108,
-                  116,
-                  95,
-                  115,
-                  116,
-                  97,
-                  116,
-                  101
-                ]
+                "value": [118, 97, 117, 108, 116, 95, 115, 116, 97, 116, 101]
               },
               {
                 "kind": "account",
@@ -190,16 +144,7 @@
         "",
         "For detailed documentation, see `add_share_metadata_handler`."
       ],
-      "discriminator": [
-        220,
-        49,
-        245,
-        221,
-        94,
-        252,
-        89,
-        104
-      ],
+      "discriminator": [220, 49, 245, 221, 94, 252, 89, 104],
       "accounts": [
         {
           "name": "admin",
@@ -209,9 +154,7 @@
             "This account must sign the transaction and must match the admin specified in the vault state."
           ],
           "signer": true,
-          "relations": [
-            "vault_state"
-          ]
+          "relations": ["vault_state"]
         },
         {
           "name": "vault_state",
@@ -226,19 +169,7 @@
             "seeds": [
               {
                 "kind": "const",
-                "value": [
-                  118,
-                  97,
-                  117,
-                  108,
-                  116,
-                  95,
-                  115,
-                  116,
-                  97,
-                  116,
-                  101
-                ]
+                "value": [118, 97, 117, 108, 116, 95, 115, 116, 97, 116, 101]
               },
               {
                 "kind": "account",
@@ -261,21 +192,8 @@
               {
                 "kind": "const",
                 "value": [
-                  118,
-                  97,
-                  117,
-                  108,
-                  116,
-                  95,
-                  97,
-                  117,
-                  116,
-                  104,
-                  111,
-                  114,
-                  105,
-                  116,
-                  121
+                  118, 97, 117, 108, 116, 95, 97, 117, 116, 104, 111, 114, 105,
+                  116, 121
                 ]
               },
               {
@@ -298,16 +216,7 @@
             "seeds": [
               {
                 "kind": "const",
-                "value": [
-                  109,
-                  101,
-                  116,
-                  97,
-                  100,
-                  97,
-                  116,
-                  97
-                ]
+                "value": [109, 101, 116, 97, 100, 97, 116, 97]
               },
               {
                 "kind": "account",
@@ -333,9 +242,7 @@
             "the share mint specified in the vault state."
           ],
           "writable": true,
-          "relations": [
-            "vault_state"
-          ]
+          "relations": ["vault_state"]
         },
         {
           "name": "sysvar_instructions",
@@ -356,23 +263,17 @@
         },
         {
           "name": "system_program",
-          "docs": [
-            "The system program."
-          ],
+          "docs": ["The system program."],
           "address": "11111111111111111111111111111111"
         },
         {
           "name": "rent",
-          "docs": [
-            "The rent sysvar."
-          ],
+          "docs": ["The rent sysvar."],
           "address": "SysvarRent111111111111111111111111111111111"
         },
         {
           "name": "token_metadata_program",
-          "docs": [
-            "The Metaplex token metadata program."
-          ],
+          "docs": ["The Metaplex token metadata program."],
           "address": "metaqbxxUerdq28cj1RbAWkYQm3ybzjb6a8bt518x1s"
         }
       ],
@@ -402,16 +303,7 @@
         "",
         "For detailed documentation, see `change_admin_handler`."
       ],
-      "discriminator": [
-        193,
-        151,
-        203,
-        161,
-        200,
-        202,
-        32,
-        146
-      ],
+      "discriminator": [193, 151, 203, 161, 200, 202, 32, 146],
       "accounts": [
         {
           "name": "admin",
@@ -421,9 +313,7 @@
             "This account must sign the transaction and must match the admin specified in the vault state."
           ],
           "signer": true,
-          "relations": [
-            "vault_state"
-          ]
+          "relations": ["vault_state"]
         },
         {
           "name": "vault_state",
@@ -438,19 +328,7 @@
             "seeds": [
               {
                 "kind": "const",
-                "value": [
-                  118,
-                  97,
-                  117,
-                  108,
-                  116,
-                  95,
-                  115,
-                  116,
-                  97,
-                  116,
-                  101
-                ]
+                "value": [118, 97, 117, 108, 116, 95, 115, 116, 97, 116, 101]
               },
               {
                 "kind": "account",
@@ -490,22 +368,11 @@
         "",
         "For detailed documentation, see `convert_to_assets_handler`."
       ],
-      "discriminator": [
-        229,
-        109,
-        118,
-        143,
-        110,
-        190,
-        39,
-        123
-      ],
+      "discriminator": [229, 109, 118, 143, 110, 190, 39, 123],
       "accounts": [
         {
           "name": "asset_mint",
-          "docs": [
-            "The mint account for the asset token."
-          ]
+          "docs": ["The mint account for the asset token."]
         },
         {
           "name": "asset_vault",
@@ -513,18 +380,12 @@
             "The token account holding the asset tokens in the vault.",
             "Must be associated with the `asset_mint`."
           ],
-          "relations": [
-            "vault_state"
-          ]
+          "relations": ["vault_state"]
         },
         {
           "name": "share_mint",
-          "docs": [
-            "The mint account for the share token."
-          ],
-          "relations": [
-            "vault_state"
-          ]
+          "docs": ["The mint account for the share token."],
+          "relations": ["vault_state"]
         },
         {
           "name": "liquidation_token_mint",
@@ -555,19 +416,7 @@
             "seeds": [
               {
                 "kind": "const",
-                "value": [
-                  118,
-                  97,
-                  117,
-                  108,
-                  116,
-                  95,
-                  115,
-                  116,
-                  97,
-                  116,
-                  101
-                ]
+                "value": [118, 97, 117, 108, 116, 95, 115, 116, 97, 116, 101]
               },
               {
                 "kind": "account",
@@ -583,9 +432,7 @@
             "The program implementing the NAV provider interface.",
             "that implements nav-provider-interface."
           ],
-          "relations": [
-            "vault_state"
-          ]
+          "relations": ["vault_state"]
         }
       ],
       "args": [
@@ -626,22 +473,11 @@
         "",
         "For detailed documentation, see `convert_to_shares_handler`."
       ],
-      "discriminator": [
-        105,
-        52,
-        27,
-        205,
-        69,
-        47,
-        239,
-        221
-      ],
+      "discriminator": [105, 52, 27, 205, 69, 47, 239, 221],
       "accounts": [
         {
           "name": "asset_mint",
-          "docs": [
-            "The mint account for the asset token."
-          ]
+          "docs": ["The mint account for the asset token."]
         },
         {
           "name": "asset_vault",
@@ -649,18 +485,12 @@
             "The token account holding the asset tokens in the vault.",
             "Must be associated with the `asset_mint`."
           ],
-          "relations": [
-            "vault_state"
-          ]
+          "relations": ["vault_state"]
         },
         {
           "name": "share_mint",
-          "docs": [
-            "The mint account for the share token."
-          ],
-          "relations": [
-            "vault_state"
-          ]
+          "docs": ["The mint account for the share token."],
+          "relations": ["vault_state"]
         },
         {
           "name": "liquidation_token_mint",
@@ -691,19 +521,7 @@
             "seeds": [
               {
                 "kind": "const",
-                "value": [
-                  118,
-                  97,
-                  117,
-                  108,
-                  116,
-                  95,
-                  115,
-                  116,
-                  97,
-                  116,
-                  101
-                ]
+                "value": [118, 97, 117, 108, 116, 95, 115, 116, 97, 116, 101]
               },
               {
                 "kind": "account",
@@ -719,9 +537,7 @@
             "The program implementing the NAV provider interface.",
             "that implements nav-provider-interface."
           ],
-          "relations": [
-            "vault_state"
-          ]
+          "relations": ["vault_state"]
         }
       ],
       "args": [
@@ -765,16 +581,7 @@
         "",
         "For detailed documentation, see `deposit_handler`."
       ],
-      "discriminator": [
-        242,
-        35,
-        198,
-        137,
-        82,
-        225,
-        242,
-        182
-      ],
+      "discriminator": [242, 35, 198, 137, 82, 225, 242, 182],
       "accounts": [
         {
           "name": "operator",
@@ -788,9 +595,7 @@
         },
         {
           "name": "operator_asset_ata",
-          "docs": [
-            "The operator's associated token account for the asset."
-          ],
+          "docs": ["The operator's associated token account for the asset."],
           "writable": true,
           "pda": {
             "seeds": [
@@ -810,47 +615,16 @@
             "program": {
               "kind": "const",
               "value": [
-                140,
-                151,
-                37,
-                143,
-                78,
-                36,
-                137,
-                241,
-                187,
-                61,
-                16,
-                41,
-                20,
-                142,
-                13,
-                131,
-                11,
-                90,
-                19,
-                153,
-                218,
-                255,
-                16,
-                132,
-                4,
-                142,
-                123,
-                216,
-                219,
-                233,
-                248,
-                89
+                140, 151, 37, 143, 78, 36, 137, 241, 187, 61, 16, 41, 20, 142,
+                13, 131, 11, 90, 19, 153, 218, 255, 16, 132, 4, 142, 123, 216,
+                219, 233, 248, 89
               ]
             }
           }
         },
         {
           "name": "operator_share_ata",
-          "docs": [
-            "The operator's associated token account for the shares."
-          ],
+          "docs": ["The operator's associated token account for the shares."],
           "writable": true,
           "pda": {
             "seeds": [
@@ -870,104 +644,47 @@
             "program": {
               "kind": "const",
               "value": [
-                140,
-                151,
-                37,
-                143,
-                78,
-                36,
-                137,
-                241,
-                187,
-                61,
-                16,
-                41,
-                20,
-                142,
-                13,
-                131,
-                11,
-                90,
-                19,
-                153,
-                218,
-                255,
-                16,
-                132,
-                4,
-                142,
-                123,
-                216,
-                219,
-                233,
-                248,
-                89
+                140, 151, 37, 143, 78, 36, 137, 241, 187, 61, 16, 41, 20, 142,
+                13, 131, 11, 90, 19, 153, 218, 255, 16, 132, 4, 142, 123, 216,
+                219, 233, 248, 89
               ]
             }
           }
         },
         {
           "name": "asset_mint",
-          "docs": [
-            "The mint account for the asset token."
-          ]
+          "docs": ["The mint account for the asset token."]
         },
         {
           "name": "asset_vault",
-          "docs": [
-            "The token account holding the vault's assets."
-          ],
+          "docs": ["The token account holding the vault's assets."],
           "writable": true,
-          "relations": [
-            "vault_state"
-          ]
+          "relations": ["vault_state"]
         },
         {
           "name": "share_mint",
-          "docs": [
-            "The mint account for the vault's shares."
-          ],
+          "docs": ["The mint account for the vault's shares."],
           "writable": true,
-          "relations": [
-            "vault_state"
-          ]
+          "relations": ["vault_state"]
         },
         {
           "name": "liquidation_token_mint",
-          "docs": [
-            "The mint account for the liquidation token (optional)."
-          ],
+          "docs": ["The mint account for the liquidation token (optional)."],
           "optional": true
         },
         {
           "name": "liquidation_token_vault",
-          "docs": [
-            "The token account for the liquidation token (optional)."
-          ],
+          "docs": ["The token account for the liquidation token (optional)."],
           "optional": true
         },
         {
           "name": "vault_state",
-          "docs": [
-            "The account representing the state of the vault."
-          ],
+          "docs": ["The account representing the state of the vault."],
           "pda": {
             "seeds": [
               {
                 "kind": "const",
-                "value": [
-                  118,
-                  97,
-                  117,
-                  108,
-                  116,
-                  95,
-                  115,
-                  116,
-                  97,
-                  116,
-                  101
-                ]
+                "value": [118, 97, 117, 108, 116, 95, 115, 116, 97, 116, 101]
               },
               {
                 "kind": "account",
@@ -979,29 +696,14 @@
         },
         {
           "name": "vault_authority",
-          "docs": [
-            "The derived authority account for the vault."
-          ],
+          "docs": ["The derived authority account for the vault."],
           "pda": {
             "seeds": [
               {
                 "kind": "const",
                 "value": [
-                  118,
-                  97,
-                  117,
-                  108,
-                  116,
-                  95,
-                  97,
-                  117,
-                  116,
-                  104,
-                  111,
-                  114,
-                  105,
-                  116,
-                  121
+                  118, 97, 117, 108, 116, 95, 97, 117, 116, 104, 111, 114, 105,
+                  116, 121
                 ]
               },
               {
@@ -1013,30 +715,26 @@
         },
         {
           "name": "nav_provider_program",
-          "docs": [
-            "The program implementing the NAV provider interface."
-          ],
-          "relations": [
-            "vault_state"
-          ]
+          "docs": ["The program implementing the NAV provider interface."],
+          "relations": ["vault_state"]
         },
         {
           "name": "asset_token_program",
-          "docs": [
-            "The token program for the asset token."
-          ]
+          "docs": ["The token program for the asset token."]
         },
         {
           "name": "share_token_program",
-          "docs": [
-            "The token program for the share token."
-          ]
+          "docs": ["The token program for the share token."]
         }
       ],
       "args": [
         {
           "name": "assets",
           "type": "u64"
+        },
+        {
+          "name": "asset_transfer_hook_accounts_count",
+          "type": "u8"
         }
       ]
     },
@@ -1059,22 +757,11 @@
         "",
         "For detailed documentation, see `get_share_value_handler`."
       ],
-      "discriminator": [
-        233,
-        236,
-        228,
-        122,
-        160,
-        84,
-        137,
-        41
-      ],
+      "discriminator": [233, 236, 228, 122, 160, 84, 137, 41],
       "accounts": [
         {
           "name": "asset_mint",
-          "docs": [
-            "The mint account for the asset token."
-          ]
+          "docs": ["The mint account for the asset token."]
         },
         {
           "name": "asset_vault",
@@ -1082,18 +769,12 @@
             "The token account holding the asset tokens in the vault.",
             "Must be associated with the `asset_mint`."
           ],
-          "relations": [
-            "vault_state"
-          ]
+          "relations": ["vault_state"]
         },
         {
           "name": "share_mint",
-          "docs": [
-            "The mint account for the share token."
-          ],
-          "relations": [
-            "vault_state"
-          ]
+          "docs": ["The mint account for the share token."],
+          "relations": ["vault_state"]
         },
         {
           "name": "liquidation_token_mint",
@@ -1124,19 +805,7 @@
             "seeds": [
               {
                 "kind": "const",
-                "value": [
-                  118,
-                  97,
-                  117,
-                  108,
-                  116,
-                  95,
-                  115,
-                  116,
-                  97,
-                  116,
-                  101
-                ]
+                "value": [118, 97, 117, 108, 116, 95, 115, 116, 97, 116, 101]
               },
               {
                 "kind": "account",
@@ -1152,9 +821,7 @@
             "The program implementing the NAV provider interface.",
             "that implements nav-provider-interface."
           ],
-          "relations": [
-            "vault_state"
-          ]
+          "relations": ["vault_state"]
         }
       ],
       "args": [],
@@ -1181,16 +848,7 @@
         "",
         "For detailed documentation, see `initialize_handler`."
       ],
-      "discriminator": [
-        175,
-        175,
-        109,
-        31,
-        13,
-        152,
-        155,
-        237
-      ],
+      "discriminator": [175, 175, 109, 31, 13, 152, 155, 237],
       "accounts": [
         {
           "name": "admin",
@@ -1260,21 +918,8 @@
               {
                 "kind": "const",
                 "value": [
-                  118,
-                  97,
-                  117,
-                  108,
-                  116,
-                  95,
-                  97,
-                  117,
-                  116,
-                  104,
-                  111,
-                  114,
-                  105,
-                  116,
-                  121
+                  118, 97, 117, 108, 116, 95, 97, 117, 116, 104, 111, 114, 105,
+                  116, 121
                 ]
               },
               {
@@ -1297,19 +942,7 @@
               {
                 "kind": "const",
                 "value": [
-                  118,
-                  97,
-                  117,
-                  108,
-                  116,
-                  95,
-                  99,
-                  111,
-                  117,
-                  110,
-                  116,
-                  101,
-                  114
+                  118, 97, 117, 108, 116, 95, 99, 111, 117, 110, 116, 101, 114
                 ]
               }
             ]
@@ -1327,19 +960,7 @@
             "seeds": [
               {
                 "kind": "const",
-                "value": [
-                  118,
-                  97,
-                  117,
-                  108,
-                  116,
-                  95,
-                  115,
-                  116,
-                  97,
-                  116,
-                  101
-                ]
+                "value": [118, 97, 117, 108, 116, 95, 115, 116, 97, 116, 101]
               },
               {
                 "kind": "account",
@@ -1368,28 +989,20 @@
         },
         {
           "name": "asset_token_program",
-          "docs": [
-            "The token program for the asset token."
-          ]
+          "docs": ["The token program for the asset token."]
         },
         {
           "name": "liquidation_token_program",
-          "docs": [
-            "The token program for the liquidation token (optional)."
-          ],
+          "docs": ["The token program for the liquidation token (optional)."],
           "optional": true
         },
         {
           "name": "share_token_program",
-          "docs": [
-            "The token program for the share token."
-          ]
+          "docs": ["The token program for the share token."]
         },
         {
           "name": "system_program",
-          "docs": [
-            "The system program."
-          ],
+          "docs": ["The system program."],
           "address": "11111111111111111111111111111111"
         }
       ],
@@ -1409,16 +1022,7 @@
         "",
         "For detailed documentation, see `is_admin_handler`."
       ],
-      "discriminator": [
-        114,
-        10,
-        83,
-        250,
-        202,
-        233,
-        53,
-        63
-      ],
+      "discriminator": [114, 10, 83, 250, 202, 233, 53, 63],
       "accounts": [
         {
           "name": "vault_state",
@@ -1432,19 +1036,7 @@
             "seeds": [
               {
                 "kind": "const",
-                "value": [
-                  118,
-                  97,
-                  117,
-                  108,
-                  116,
-                  95,
-                  115,
-                  116,
-                  97,
-                  116,
-                  101
-                ]
+                "value": [118, 97, 117, 108, 116, 95, 115, 116, 97, 116, 101]
               },
               {
                 "kind": "account",
@@ -1477,16 +1069,7 @@
         "",
         "For detailed documentation, see `is_liquidator_handler`."
       ],
-      "discriminator": [
-        39,
-        19,
-        228,
-        224,
-        82,
-        160,
-        86,
-        159
-      ],
+      "discriminator": [39, 19, 228, 224, 82, 160, 86, 159],
       "accounts": [
         {
           "name": "vault_state",
@@ -1500,19 +1083,7 @@
             "seeds": [
               {
                 "kind": "const",
-                "value": [
-                  118,
-                  97,
-                  117,
-                  108,
-                  116,
-                  95,
-                  115,
-                  116,
-                  97,
-                  116,
-                  101
-                ]
+                "value": [118, 97, 117, 108, 116, 95, 115, 116, 97, 116, 101]
               },
               {
                 "kind": "account",
@@ -1545,16 +1116,7 @@
         "",
         "For detailed documentation, see `is_operator_handler`."
       ],
-      "discriminator": [
-        221,
-        227,
-        5,
-        233,
-        182,
-        150,
-        14,
-        178
-      ],
+      "discriminator": [221, 227, 5, 233, 182, 150, 14, 178],
       "accounts": [
         {
           "name": "vault_state",
@@ -1568,19 +1130,7 @@
             "seeds": [
               {
                 "kind": "const",
-                "value": [
-                  118,
-                  97,
-                  117,
-                  108,
-                  116,
-                  95,
-                  115,
-                  116,
-                  97,
-                  116,
-                  101
-                ]
+                "value": [118, 97, 117, 108, 116, 95, 115, 116, 97, 116, 101]
               },
               {
                 "kind": "account",
@@ -1628,16 +1178,7 @@
         "",
         "For detailed documentation, see `liquidate_handler`."
       ],
-      "discriminator": [
-        223,
-        179,
-        226,
-        125,
-        48,
-        46,
-        39,
-        74
-      ],
+      "discriminator": [223, 179, 226, 125, 48, 46, 39, 74],
       "accounts": [
         {
           "name": "liquidator",
@@ -1676,38 +1217,9 @@
             "program": {
               "kind": "const",
               "value": [
-                140,
-                151,
-                37,
-                143,
-                78,
-                36,
-                137,
-                241,
-                187,
-                61,
-                16,
-                41,
-                20,
-                142,
-                13,
-                131,
-                11,
-                90,
-                19,
-                153,
-                218,
-                255,
-                16,
-                132,
-                4,
-                142,
-                123,
-                216,
-                219,
-                233,
-                248,
-                89
+                140, 151, 37, 143, 78, 36, 137, 241, 187, 61, 16, 41, 20, 142,
+                13, 131, 11, 90, 19, 153, 218, 255, 16, 132, 4, 142, 123, 216,
+                219, 233, 248, 89
               ]
             }
           }
@@ -1739,38 +1251,9 @@
             "program": {
               "kind": "const",
               "value": [
-                140,
-                151,
-                37,
-                143,
-                78,
-                36,
-                137,
-                241,
-                187,
-                61,
-                16,
-                41,
-                20,
-                142,
-                13,
-                131,
-                11,
-                90,
-                19,
-                153,
-                218,
-                255,
-                16,
-                132,
-                4,
-                142,
-                123,
-                216,
-                219,
-                233,
-                248,
-                89
+                140, 151, 37, 143, 78, 36, 137, 241, 187, 61, 16, 41, 20, 142,
+                13, 131, 11, 90, 19, 153, 218, 255, 16, 132, 4, 142, 123, 216,
+                219, 233, 248, 89
               ]
             }
           }
@@ -1804,38 +1287,9 @@
             "program": {
               "kind": "const",
               "value": [
-                140,
-                151,
-                37,
-                143,
-                78,
-                36,
-                137,
-                241,
-                187,
-                61,
-                16,
-                41,
-                20,
-                142,
-                13,
-                131,
-                11,
-                90,
-                19,
-                153,
-                218,
-                255,
-                16,
-                132,
-                4,
-                142,
-                123,
-                216,
-                219,
-                233,
-                248,
-                89
+                140, 151, 37, 143, 78, 36, 137, 241, 187, 61, 16, 41, 20, 142,
+                13, 131, 11, 90, 19, 153, 218, 255, 16, 132, 4, 142, 123, 216,
+                219, 233, 248, 89
               ]
             }
           }
@@ -1856,9 +1310,7 @@
             "This account must have the correct mint and be owned by the vault_authority."
           ],
           "writable": true,
-          "relations": [
-            "vault_state"
-          ]
+          "relations": ["vault_state"]
         },
         {
           "name": "share_mint",
@@ -1869,9 +1321,7 @@
             "During liquidation, shares are burned from this mint."
           ],
           "writable": true,
-          "relations": [
-            "vault_state"
-          ]
+          "relations": ["vault_state"]
         },
         {
           "name": "liquidation_token_mint",
@@ -1909,19 +1359,7 @@
             "seeds": [
               {
                 "kind": "const",
-                "value": [
-                  118,
-                  97,
-                  117,
-                  108,
-                  116,
-                  95,
-                  115,
-                  116,
-                  97,
-                  116,
-                  101
-                ]
+                "value": [118, 97, 117, 108, 116, 95, 115, 116, 97, 116, 101]
               },
               {
                 "kind": "account",
@@ -1944,21 +1382,8 @@
               {
                 "kind": "const",
                 "value": [
-                  118,
-                  97,
-                  117,
-                  108,
-                  116,
-                  95,
-                  97,
-                  117,
-                  116,
-                  104,
-                  111,
-                  114,
-                  105,
-                  116,
-                  121
+                  118, 97, 117, 108, 116, 95, 97, 117, 116, 104, 111, 114, 105,
+                  116, 121
                 ]
               },
               {
@@ -1988,15 +1413,11 @@
             "It must implement the nav-provider-interface.",
             "that implements nav-provider-interface."
           ],
-          "relations": [
-            "vault_state"
-          ]
+          "relations": ["vault_state"]
         },
         {
           "name": "asset_token_program",
-          "docs": [
-            "The token program for the asset token."
-          ]
+          "docs": ["The token program for the asset token."]
         },
         {
           "name": "liquidation_token_program",
@@ -2009,9 +1430,7 @@
         },
         {
           "name": "share_token_program",
-          "docs": [
-            "The token program for the share token."
-          ]
+          "docs": ["The token program for the share token."]
         }
       ],
       "args": [
@@ -2024,6 +1443,10 @@
           "type": {
             "option": "u64"
           }
+        },
+        {
+          "name": "asset_transfer_hook_accounts_count",
+          "type": "u8"
         },
         {
           "name": "nav_provider_accounts_count",
@@ -2044,16 +1467,7 @@
         "",
         "For detailed documentation, see `pause_handler`."
       ],
-      "discriminator": [
-        211,
-        22,
-        221,
-        251,
-        74,
-        121,
-        193,
-        47
-      ],
+      "discriminator": [211, 22, 221, 251, 74, 121, 193, 47],
       "accounts": [
         {
           "name": "admin",
@@ -2063,9 +1477,7 @@
             "This account must sign the transaction and must match the admin specified in the vault state."
           ],
           "signer": true,
-          "relations": [
-            "vault_state"
-          ]
+          "relations": ["vault_state"]
         },
         {
           "name": "vault_state",
@@ -2080,19 +1492,7 @@
             "seeds": [
               {
                 "kind": "const",
-                "value": [
-                  118,
-                  97,
-                  117,
-                  108,
-                  116,
-                  95,
-                  115,
-                  116,
-                  97,
-                  116,
-                  101
-                ]
+                "value": [118, 97, 117, 108, 116, 95, 115, 116, 97, 116, 101]
               },
               {
                 "kind": "account",
@@ -2130,16 +1530,7 @@
         "",
         "For detailed documentation, see `redeem_handler`."
       ],
-      "discriminator": [
-        184,
-        12,
-        86,
-        149,
-        70,
-        196,
-        97,
-        225
-      ],
+      "discriminator": [184, 12, 86, 149, 70, 196, 97, 225],
       "accounts": [
         {
           "name": "operator",
@@ -2153,9 +1544,7 @@
         },
         {
           "name": "operator_asset_ata",
-          "docs": [
-            "The operator's associated token account for the asset."
-          ],
+          "docs": ["The operator's associated token account for the asset."],
           "writable": true,
           "pda": {
             "seeds": [
@@ -2175,47 +1564,16 @@
             "program": {
               "kind": "const",
               "value": [
-                140,
-                151,
-                37,
-                143,
-                78,
-                36,
-                137,
-                241,
-                187,
-                61,
-                16,
-                41,
-                20,
-                142,
-                13,
-                131,
-                11,
-                90,
-                19,
-                153,
-                218,
-                255,
-                16,
-                132,
-                4,
-                142,
-                123,
-                216,
-                219,
-                233,
-                248,
-                89
+                140, 151, 37, 143, 78, 36, 137, 241, 187, 61, 16, 41, 20, 142,
+                13, 131, 11, 90, 19, 153, 218, 255, 16, 132, 4, 142, 123, 216,
+                219, 233, 248, 89
               ]
             }
           }
         },
         {
           "name": "operator_share_ata",
-          "docs": [
-            "The operator's associated token account for the shares."
-          ],
+          "docs": ["The operator's associated token account for the shares."],
           "writable": true,
           "pda": {
             "seeds": [
@@ -2235,104 +1593,47 @@
             "program": {
               "kind": "const",
               "value": [
-                140,
-                151,
-                37,
-                143,
-                78,
-                36,
-                137,
-                241,
-                187,
-                61,
-                16,
-                41,
-                20,
-                142,
-                13,
-                131,
-                11,
-                90,
-                19,
-                153,
-                218,
-                255,
-                16,
-                132,
-                4,
-                142,
-                123,
-                216,
-                219,
-                233,
-                248,
-                89
+                140, 151, 37, 143, 78, 36, 137, 241, 187, 61, 16, 41, 20, 142,
+                13, 131, 11, 90, 19, 153, 218, 255, 16, 132, 4, 142, 123, 216,
+                219, 233, 248, 89
               ]
             }
           }
         },
         {
           "name": "asset_mint",
-          "docs": [
-            "The mint account for the asset token."
-          ]
+          "docs": ["The mint account for the asset token."]
         },
         {
           "name": "asset_vault",
-          "docs": [
-            "The token account holding the vault's assets."
-          ],
+          "docs": ["The token account holding the vault's assets."],
           "writable": true,
-          "relations": [
-            "vault_state"
-          ]
+          "relations": ["vault_state"]
         },
         {
           "name": "share_mint",
-          "docs": [
-            "The mint account for the vault's shares."
-          ],
+          "docs": ["The mint account for the vault's shares."],
           "writable": true,
-          "relations": [
-            "vault_state"
-          ]
+          "relations": ["vault_state"]
         },
         {
           "name": "liquidation_token_mint",
-          "docs": [
-            "The mint account for the liquidation token (optional)."
-          ],
+          "docs": ["The mint account for the liquidation token (optional)."],
           "optional": true
         },
         {
           "name": "liquidation_token_vault",
-          "docs": [
-            "The token account for the liquidation token (optional)."
-          ],
+          "docs": ["The token account for the liquidation token (optional)."],
           "optional": true
         },
         {
           "name": "vault_state",
-          "docs": [
-            "The account representing the state of the vault."
-          ],
+          "docs": ["The account representing the state of the vault."],
           "pda": {
             "seeds": [
               {
                 "kind": "const",
-                "value": [
-                  118,
-                  97,
-                  117,
-                  108,
-                  116,
-                  95,
-                  115,
-                  116,
-                  97,
-                  116,
-                  101
-                ]
+                "value": [118, 97, 117, 108, 116, 95, 115, 116, 97, 116, 101]
               },
               {
                 "kind": "account",
@@ -2344,29 +1645,14 @@
         },
         {
           "name": "vault_authority",
-          "docs": [
-            "The derived authority account for the vault."
-          ],
+          "docs": ["The derived authority account for the vault."],
           "pda": {
             "seeds": [
               {
                 "kind": "const",
                 "value": [
-                  118,
-                  97,
-                  117,
-                  108,
-                  116,
-                  95,
-                  97,
-                  117,
-                  116,
-                  104,
-                  111,
-                  114,
-                  105,
-                  116,
-                  121
+                  118, 97, 117, 108, 116, 95, 97, 117, 116, 104, 111, 114, 105,
+                  116, 121
                 ]
               },
               {
@@ -2378,30 +1664,26 @@
         },
         {
           "name": "nav_provider_program",
-          "docs": [
-            "The program implementing the NAV provider interface."
-          ],
-          "relations": [
-            "vault_state"
-          ]
+          "docs": ["The program implementing the NAV provider interface."],
+          "relations": ["vault_state"]
         },
         {
           "name": "asset_token_program",
-          "docs": [
-            "The token program for the asset token."
-          ]
+          "docs": ["The token program for the asset token."]
         },
         {
           "name": "share_token_program",
-          "docs": [
-            "The token program for the share token."
-          ]
+          "docs": ["The token program for the share token."]
         }
       ],
       "args": [
         {
           "name": "shares",
           "type": "u64"
+        },
+        {
+          "name": "asset_transfer_hook_accounts_count",
+          "type": "u8"
         }
       ]
     },
@@ -2420,16 +1702,7 @@
         "",
         "For detailed documentation, see `revoke_liquidator_handler`."
       ],
-      "discriminator": [
-        30,
-        146,
-        107,
-        68,
-        92,
-        196,
-        4,
-        174
-      ],
+      "discriminator": [30, 146, 107, 68, 92, 196, 4, 174],
       "accounts": [
         {
           "name": "admin",
@@ -2439,9 +1712,7 @@
             "This account must sign the transaction and must match the admin specified in the vault state."
           ],
           "signer": true,
-          "relations": [
-            "vault_state"
-          ]
+          "relations": ["vault_state"]
         },
         {
           "name": "vault_state",
@@ -2456,19 +1727,7 @@
             "seeds": [
               {
                 "kind": "const",
-                "value": [
-                  118,
-                  97,
-                  117,
-                  108,
-                  116,
-                  95,
-                  115,
-                  116,
-                  97,
-                  116,
-                  101
-                ]
+                "value": [118, 97, 117, 108, 116, 95, 115, 116, 97, 116, 101]
               },
               {
                 "kind": "account",
@@ -2501,16 +1760,7 @@
         "",
         "For detailed documentation, see `revoke_operator_handler`."
       ],
-      "discriminator": [
-        185,
-        25,
-        87,
-        77,
-        88,
-        8,
-        30,
-        175
-      ],
+      "discriminator": [185, 25, 87, 77, 88, 8, 30, 175],
       "accounts": [
         {
           "name": "admin",
@@ -2520,9 +1770,7 @@
             "This account must sign the transaction and must match the admin specified in the vault state."
           ],
           "signer": true,
-          "relations": [
-            "vault_state"
-          ]
+          "relations": ["vault_state"]
         },
         {
           "name": "vault_state",
@@ -2537,19 +1785,7 @@
             "seeds": [
               {
                 "kind": "const",
-                "value": [
-                  118,
-                  97,
-                  117,
-                  108,
-                  116,
-                  95,
-                  115,
-                  116,
-                  97,
-                  116,
-                  101
-                ]
+                "value": [118, 97, 117, 108, 116, 95, 115, 116, 97, 116, 101]
               },
               {
                 "kind": "account",
@@ -2583,16 +1819,7 @@
         "",
         "For detailed documentation, see `set_liquidation_open_to_public_handler`."
       ],
-      "discriminator": [
-        80,
-        71,
-        82,
-        93,
-        90,
-        183,
-        32,
-        130
-      ],
+      "discriminator": [80, 71, 82, 93, 90, 183, 32, 130],
       "accounts": [
         {
           "name": "admin",
@@ -2602,9 +1829,7 @@
             "This account must sign the transaction and must match the admin specified in the vault state."
           ],
           "signer": true,
-          "relations": [
-            "vault_state"
-          ]
+          "relations": ["vault_state"]
         },
         {
           "name": "vault_state",
@@ -2619,19 +1844,7 @@
             "seeds": [
               {
                 "kind": "const",
-                "value": [
-                  118,
-                  97,
-                  117,
-                  108,
-                  116,
-                  95,
-                  115,
-                  116,
-                  97,
-                  116,
-                  101
-                ]
+                "value": [118, 97, 117, 108, 116, 95, 115, 116, 97, 116, 101]
               },
               {
                 "kind": "account",
@@ -2662,16 +1875,7 @@
         "",
         "For detailed documentation, see `unpause_handler`."
       ],
-      "discriminator": [
-        169,
-        144,
-        4,
-        38,
-        10,
-        141,
-        188,
-        255
-      ],
+      "discriminator": [169, 144, 4, 38, 10, 141, 188, 255],
       "accounts": [
         {
           "name": "admin",
@@ -2681,9 +1885,7 @@
             "This account must sign the transaction and must match the admin specified in the vault state."
           ],
           "signer": true,
-          "relations": [
-            "vault_state"
-          ]
+          "relations": ["vault_state"]
         },
         {
           "name": "vault_state",
@@ -2698,19 +1900,7 @@
             "seeds": [
               {
                 "kind": "const",
-                "value": [
-                  118,
-                  97,
-                  117,
-                  108,
-                  116,
-                  95,
-                  115,
-                  116,
-                  97,
-                  116,
-                  101
-                ]
+                "value": [118, 97, 117, 108, 116, 95, 115, 116, 97, 116, 101]
               },
               {
                 "kind": "account",
@@ -2737,16 +1927,7 @@
         "",
         "For detailed documentation, see `update_nav_provider_handler`."
       ],
-      "discriminator": [
-        22,
-        213,
-        60,
-        60,
-        31,
-        211,
-        145,
-        198
-      ],
+      "discriminator": [22, 213, 60, 60, 31, 211, 145, 198],
       "accounts": [
         {
           "name": "admin",
@@ -2756,9 +1937,7 @@
             "This account must sign the transaction and must match the admin specified in the vault state."
           ],
           "signer": true,
-          "relations": [
-            "vault_state"
-          ]
+          "relations": ["vault_state"]
         },
         {
           "name": "vault_state",
@@ -2773,19 +1952,7 @@
             "seeds": [
               {
                 "kind": "const",
-                "value": [
-                  118,
-                  97,
-                  117,
-                  108,
-                  116,
-                  95,
-                  115,
-                  116,
-                  97,
-                  116,
-                  101
-                ]
+                "value": [118, 97, 117, 108, 116, 95, 115, 116, 97, 116, 101]
               },
               {
                 "kind": "account",
@@ -2797,10 +1964,7 @@
         },
         {
           "name": "new_nav_provider_program",
-          "docs": [
-            "The new NAV provider program account.",
-            ""
-          ]
+          "docs": ["The new NAV provider program account.", ""]
         }
       ],
       "args": []
@@ -2809,200 +1973,65 @@
   "accounts": [
     {
       "name": "VaultCounter",
-      "discriminator": [
-        180,
-        127,
-        122,
-        230,
-        154,
-        126,
-        126,
-        98
-      ]
+      "discriminator": [180, 127, 122, 230, 154, 126, 126, 98]
     },
     {
       "name": "VaultState",
-      "discriminator": [
-        228,
-        196,
-        82,
-        165,
-        98,
-        210,
-        235,
-        152
-      ]
+      "discriminator": [228, 196, 82, 165, 98, 210, 235, 152]
     }
   ],
   "events": [
     {
       "name": "AdminChanged",
-      "discriminator": [
-        232,
-        34,
-        31,
-        226,
-        62,
-        18,
-        19,
-        114
-      ]
+      "discriminator": [232, 34, 31, 226, 62, 18, 19, 114]
     },
     {
       "name": "Deposit",
-      "discriminator": [
-        62,
-        205,
-        242,
-        175,
-        244,
-        169,
-        136,
-        52
-      ]
+      "discriminator": [62, 205, 242, 175, 244, 169, 136, 52]
     },
     {
       "name": "Initialized",
-      "discriminator": [
-        208,
-        213,
-        115,
-        98,
-        115,
-        82,
-        201,
-        209
-      ]
+      "discriminator": [208, 213, 115, 98, 115, 82, 201, 209]
     },
     {
       "name": "Liquidate",
-      "discriminator": [
-        82,
-        165,
-        82,
-        245,
-        248,
-        64,
-        66,
-        30
-      ]
+      "discriminator": [82, 165, 82, 245, 248, 64, 66, 30]
     },
     {
       "name": "LiquidationOpenToPublic",
-      "discriminator": [
-        125,
-        85,
-        76,
-        3,
-        194,
-        24,
-        21,
-        55
-      ]
+      "discriminator": [125, 85, 76, 3, 194, 24, 21, 55]
     },
     {
       "name": "LiquidatorAdded",
-      "discriminator": [
-        223,
-        250,
-        146,
-        144,
-        250,
-        98,
-        60,
-        120
-      ]
+      "discriminator": [223, 250, 146, 144, 250, 98, 60, 120]
     },
     {
       "name": "LiquidatorRevoked",
-      "discriminator": [
-        111,
-        189,
-        247,
-        121,
-        125,
-        30,
-        157,
-        234
-      ]
+      "discriminator": [111, 189, 247, 121, 125, 30, 157, 234]
     },
     {
       "name": "NavProviderUpdated",
-      "discriminator": [
-        37,
-        225,
-        186,
-        150,
-        238,
-        181,
-        132,
-        44
-      ]
+      "discriminator": [37, 225, 186, 150, 238, 181, 132, 44]
     },
     {
       "name": "OperatorAdded",
-      "discriminator": [
-        216,
-        247,
-        101,
-        54,
-        51,
-        70,
-        215,
-        192
-      ]
+      "discriminator": [216, 247, 101, 54, 51, 70, 215, 192]
     },
     {
       "name": "OperatorRevoked",
-      "discriminator": [
-        234,
-        41,
-        78,
-        23,
-        191,
-        224,
-        103,
-        64
-      ]
+      "discriminator": [234, 41, 78, 23, 191, 224, 103, 64]
     },
     {
       "name": "Paused",
-      "discriminator": [
-        172,
-        248,
-        5,
-        253,
-        49,
-        255,
-        255,
-        232
-      ]
+      "discriminator": [172, 248, 5, 253, 49, 255, 255, 232]
     },
     {
       "name": "Redeem",
-      "discriminator": [
-        251,
-        40,
-        155,
-        2,
-        18,
-        221,
-        176,
-        73
-      ]
+      "discriminator": [251, 40, 155, 2, 18, 221, 176, 73]
     },
     {
       "name": "Unpaused",
-      "discriminator": [
-        156,
-        150,
-        47,
-        174,
-        120,
-        216,
-        93,
-        117
-      ]
+      "discriminator": [156, 150, 47, 174, 120, 216, 93, 117]
     }
   ],
   "errors": [
@@ -3073,38 +2102,38 @@
     },
     {
       "code": 6013,
+      "name": "InvalidTransferHookConfiguration",
+      "msg": "Invalid transfer hook configuration"
+    },
+    {
+      "code": 6014,
       "name": "NoChange",
       "msg": "No change detected"
     },
     {
-      "code": 6014,
+      "code": 6015,
       "name": "NoTokensRedeemed",
       "msg": "No tokens redeemed"
     },
     {
-      "code": 6015,
+      "code": 6016,
       "name": "DivisionByZero",
       "msg": "Division by zero"
     },
     {
-      "code": 6016,
+      "code": 6017,
       "name": "Overflow",
       "msg": "Overflow occurred"
     },
     {
-      "code": 6017,
+      "code": 6018,
       "name": "MaxLiquidators",
       "msg": "Maximum number of liquidators reached"
     },
     {
-      "code": 6018,
+      "code": 6019,
       "name": "MaxOperators",
       "msg": "Maximum number of operators reached"
-    },
-    {
-      "code": 6019,
-      "name": "TooManyNavProviderAccounts",
-      "msg": "Too many NAV provider accounts"
     },
     {
       "code": 6020,
@@ -3113,31 +2142,36 @@
     },
     {
       "code": 6021,
+      "name": "NotEnoughRemainingAccountsProvided",
+      "msg": "Not enough remaining accounts provided"
+    },
+    {
+      "code": 6022,
       "name": "NotEnoughAssets",
       "msg": "Not enough assets available"
     },
     {
-      "code": 6022,
+      "code": 6023,
       "name": "NotEnoughShares",
       "msg": "Not enough shares available"
     },
     {
-      "code": 6023,
+      "code": 6024,
       "name": "InsufficientOutputAmount",
       "msg": "Insufficient output amount"
     },
     {
-      "code": 6024,
+      "code": 6025,
       "name": "RedemptionAccountsRequired",
       "msg": "Redemption accounts required"
     },
     {
-      "code": 6025,
+      "code": 6026,
       "name": "ZeroAssets",
       "msg": "The asset amount cannot be zero"
     },
     {
-      "code": 6026,
+      "code": 6027,
       "name": "ZeroShares",
       "msg": "The share amount cannot be zero"
     }
@@ -3145,31 +2179,23 @@
   "types": [
     {
       "name": "AddShareMetadataArgs",
-      "docs": [
-        "Arguments for the `add_share_metadata` instruction."
-      ],
+      "docs": ["Arguments for the `add_share_metadata` instruction."],
       "type": {
         "kind": "struct",
         "fields": [
           {
             "name": "token_name",
-            "docs": [
-              "The name of the share token."
-            ],
+            "docs": ["The name of the share token."],
             "type": "string"
           },
           {
             "name": "token_symbol",
-            "docs": [
-              "The symbol of the share token."
-            ],
+            "docs": ["The symbol of the share token."],
             "type": "string"
           },
           {
             "name": "uri",
-            "docs": [
-              "The URI pointing to the token's metadata JSON."
-            ],
+            "docs": ["The URI pointing to the token's metadata JSON."],
             "type": "string"
           }
         ]
@@ -3628,25 +2654,19 @@
   "constants": [
     {
       "name": "VAULT_AUTHORITY_SEED",
-      "docs": [
-        "Seed for deriving the vault authority PDA"
-      ],
+      "docs": ["Seed for deriving the vault authority PDA"],
       "type": "bytes",
       "value": "[118, 97, 117, 108, 116, 95, 97, 117, 116, 104, 111, 114, 105, 116, 121]"
     },
     {
       "name": "VAULT_COUNTER_SEED",
-      "docs": [
-        "Seed for deriving the vault counter PDA"
-      ],
+      "docs": ["Seed for deriving the vault counter PDA"],
       "type": "bytes",
       "value": "[118, 97, 117, 108, 116, 95, 99, 111, 117, 110, 116, 101, 114]"
     },
     {
       "name": "VAULT_STATE_SEED",
-      "docs": [
-        "Seed for deriving the vault state PDA"
-      ],
+      "docs": ["Seed for deriving the vault state PDA"],
       "type": "bytes",
       "value": "[118, 97, 117, 108, 116, 95, 115, 116, 97, 116, 101]"
     }
