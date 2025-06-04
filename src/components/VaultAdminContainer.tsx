@@ -153,6 +153,7 @@ export const VaultAdminContainer = () => {
 
   return (
     <VaultAdminUI
+      key={vaultId}
       setAction={setAction}
       activeTab={activeTab}
       onTabChange={onTabChange}

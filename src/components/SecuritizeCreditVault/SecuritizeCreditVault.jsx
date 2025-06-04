@@ -48,7 +48,7 @@ function SecuritizeCreditVault() {
   const { vaultAssetAddress, setVaultAssetAddress } = useAppContext();
   const { TargetBlockchainChainId, setTargetBlockchainChainId } =
     useAppContext();
-
+  const vaultId = selectedAsset.solanaVaultId;
   const blockchainType = selectedAsset?.chainName.toLowerCase();
   const isSolana = blockchainType === "solana";
 
@@ -101,7 +101,7 @@ function SecuritizeCreditVault() {
             <Box sx={{ mt: 3 }}>
               {tabValue === 0 &&
                 (isSolana ? (
-                  <VaultSolanaTransactionContainer />
+                  <VaultSolanaTransactionContainer key={vaultId} />
                 ) : (
                   <VaultTransaction action="deposit" />
                 ))}
@@ -109,7 +109,7 @@ function SecuritizeCreditVault() {
                 (isSolana ? <VaultAdminContainer /> : <VaultAdmin />)}
               {tabValue === 2 &&
                 (isSolana ? (
-                  <SmartContractInterfaceContainer />
+                  <SmartContractInterfaceContainer key={vaultId} />
                 ) : (
                   <SmartContractInterface />
                 ))}

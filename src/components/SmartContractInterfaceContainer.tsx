@@ -10,8 +10,6 @@ import {
   Tabs
 } from "@mui/material";
 
-import { useAppContext } from "@/utils/AppContext";
-
 import { Asset } from "./SecuritizeCreditVault/solanaSmartContractInterface/read/Asset";
 import { BalanceOf } from "./SecuritizeCreditVault/solanaSmartContractInterface/read/BalanceOf";
 import { ConvertToAssets } from "./SecuritizeCreditVault/solanaSmartContractInterface/read/ConverToAssets";
@@ -47,8 +45,6 @@ export const SmartContractInterfaceContainer: React.FC = () => {
   });
   const isReadMethods = tabValue === 0;
   const isWriteMethods = tabValue === 1;
-  const ctx = useAppContext();
-  const vaultId = ctx.selectedAsset.solanaVaultId;
 
   const handleTabChange = (_: React.SyntheticEvent, newValue: number) => {
     setTabValue(newValue);
@@ -70,7 +66,7 @@ export const SmartContractInterfaceContainer: React.FC = () => {
           <Tab label="Read Methods" />
           <Tab label="Write Methods" />
         </Tabs>
-        <Box mt={3} key={vaultId}>
+        <Box mt={3}>
           {isReadMethods && (
             <>
               <BalanceOf setSnackbar={setSnackbar} />
