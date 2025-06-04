@@ -18,10 +18,12 @@ import {
 import { useConnection, useWallet } from "@solana/wallet-adapter-react";
 import {
   AccountMeta,
+  ComputeBudgetProgram,
   Connection,
   PublicKey,
   Transaction
 } from "@solana/web3.js";
+import { c } from "vite/dist/node/moduleRunnerTransport.d-DJ_mE5sf";
 
 import idl from "../api/solana/idls/sc_vault.json";
 import { TokenBalance, VaultConfig, WithTransferHookArgs } from "./type";
@@ -636,7 +638,6 @@ export const useLiquidate = ({ vaultId }) => {
   const wallet = useWallet();
   const [loading, setLoading] = useState(false);
 
-  const program = useProgram();
   const vault = useVault(vaultId);
   const { accounts } = useGetNavProviderAccounts({
     vaultId: vaultId
@@ -655,6 +656,8 @@ export const useLiquidate = ({ vaultId }) => {
       setLoading(true);
 
       try {
+        const program = config.program;
+        const connection = program.provider.connection;
         const assetVaultPk = config.assetVaultPubkey;
         const shareMintPk = config.shareMintPubkey;
         const navProviderProgramPk = config.navProviderProgram;
@@ -679,10 +682,13 @@ export const useLiquidate = ({ vaultId }) => {
         const navProviderAccounts = navProviderProgramPk ? accounts : [];
         const navProviderAccountsLength = navProviderAccounts.length;
 
-        remainingAccounts.push(...navProviderAccounts);
+        let transferHookAccounts: AccountMeta[] = [];
+        const transferHookProgramId = await getTransferHookProgramId(
+          connection,
+          config.assetMintPubkey
+        );
 
         let liquidatorLiquidationTokenAta: PublicKey | null = null;
-
         if (config?.liquidationConfig) {
           liquidatorLiquidationTokenAta = await getAssociatedTokenAddress(
             config?.liquidationConfig?.mintPubkey,
@@ -691,15 +697,61 @@ export const useLiquidate = ({ vaultId }) => {
             config?.liquidationConfig?.tokenProgram
           );
 
+          const redemptionAccounts = [
+            {
+              pubkey: config?.liquidationConfig?.redemptionProgramPubkey,
+              isSigner: false,
+              isWritable: true
+            }
+          ];
+          if (transferHookProgramId && redemptionAccounts.length > 0) {
+            const transferHookArgs: WithTransferHookArgs = {
+              from: config.assetVaultPubkey,
+              mint: config.assetMintPubkey,
+              to: redemptionAccounts[0].pubkey,
+              authority: config.authorityPubkey,
+              hookProgramId: transferHookProgramId
+            };
+            transferHookAccounts = await resolveExtraAccountMetas(
+              connection,
+              transferHookArgs
+            );
+            remainingAccounts.push(
+              ...transferHookAccounts,
+              ...navProviderAccounts,
+              ...redemptionAccounts
+            );
+          }
+        } else {
+          if (transferHookProgramId) {
+            const transferHookArgs: WithTransferHookArgs = {
+              from: config.assetVaultPubkey,
+              mint: config.assetMintPubkey,
+              to: liquidatorAssetAta,
+              authority: config.authorityPubkey,
+              hookProgramId: transferHookProgramId
+            };
+            transferHookAccounts = await resolveExtraAccountMetas(
+              connection,
+              transferHookArgs
+            );
+          }
           remainingAccounts.push(
-            ...(config?.liquidationConfig?.redemptionProgramPubkey
-              ? [config.liquidationConfig.redemptionProgramPubkey]
-              : [])
+            ...transferHookAccounts,
+            ...navProviderAccounts
           );
         }
+        const computeIx = ComputeBudgetProgram.setComputeUnitLimit({
+          units: 300_000
+        });
 
         const signature = await program.methods
-          .liquidate(shares, null, navProviderAccountsLength)
+          .liquidate(
+            shares,
+            null,
+            transferHookAccounts.length,
+            navProviderAccountsLength
+          )
           .accountsPartial({
             liquidator: liquidatorPubkey,
             vaultState: config.statePubkey,
@@ -722,6 +774,7 @@ export const useLiquidate = ({ vaultId }) => {
               config?.liquidationConfig?.redemptionProgramPubkey! || null
           })
           .remainingAccounts(remainingAccounts)
+          .preInstructions([computeIx])
           .rpc();
         console.log("Redeem signature:", signature);
         setValue(signature);
@@ -732,7 +785,7 @@ export const useLiquidate = ({ vaultId }) => {
         setLoading(false);
       }
     },
-    [wallet, vault, accounts, program.methods]
+    [wallet, vault, accounts]
   );
   return { onLiquidate, loading, value };
 };
