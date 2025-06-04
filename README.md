@@ -1,5 +1,21 @@
 # README
 
+## Vault Program Interaction Guide
+
+To interact with the Vault program, you must use the up-to-date IDL files located at:
+src/api/solana/idls
+
+### IDL Files:
+
+- **Mainnet**:  
+  `sc_vault.json`
+
+- **Devnet**:  
+  `sc_vault_devnet.json`
+
+> ⚠️ **Important:**  
+> Update these files after each release of a new version of the Vault smart contract.
+
 ## Adding New Assets (Tokens) in Solana
 
 To add new assets (tokens) in Solana, follow these steps:

@@ -19,23 +19,31 @@ import { useConnection, useWallet } from "@solana/wallet-adapter-react";
 import {
   AccountMeta,
   ComputeBudgetProgram,
+  ConfirmOptions,
   Connection,
   PublicKey,
   Transaction
 } from "@solana/web3.js";
-import { c } from "vite/dist/node/moduleRunnerTransport.d-DJ_mE5sf";
 
 import idl from "../api/solana/idls/sc_vault.json";
+import idlDevnet from "../api/solana/idls/sc_vault_devnet.json";
+import { useAppContext } from "./AppContext";
 import { TokenBalance, VaultConfig, WithTransferHookArgs } from "./type";
 
-export function makeProvider(connection, wallet) {
-  const opts = AnchorProvider.defaultOptions();
+export function makeProvider(connection: Connection, wallet, isDevnet) {
+  const opts = isDevnet
+    ? AnchorProvider.defaultOptions()
+    : ({
+        commitment: "finalized",
+        preflightCommitment: "finalized"
+      } as ConfirmOptions);
+
   const provider = new AnchorProvider(connection, wallet, opts);
   return provider;
 }
 
-export function makeVaultProgram(provider) {
-  return new Program(idl, provider);
+export function makeVaultProgram(provider, isDevnet) {
+  return new Program(isDevnet ? idlDevnet : idl, provider);
 }
 
 export const getVaultStatePda = (programIdPk, vaultId) => {
@@ -177,14 +185,19 @@ export async function getUserBalanceByAta(
 
 export const useProgram = () => {
   const { connection } = useConnection();
+  const { showMainNets } = useAppContext();
   const wallet = useWallet();
+  const isDevnet = !showMainNets;
 
   const provider = useMemo(
-    () => makeProvider(connection, wallet),
-    [connection, wallet]
+    () => makeProvider(connection, wallet, isDevnet),
+    [connection, wallet, isDevnet]
   );
 
-  const program = useMemo(() => makeVaultProgram(provider), [provider]);
+  const program = useMemo(
+    () => makeVaultProgram(provider, isDevnet),
+    [provider, isDevnet]
+  );
 
   return useMemo(() => program, [program]);
 };
