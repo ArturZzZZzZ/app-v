@@ -580,12 +580,14 @@ export const blockchainInfo = {
         icon: "/solana-sol-logo.png"
       },
       {
-        vaultAddress: "AvNSrKuttzfUV68siGaKVcJhMDXCcPads9iNVoCiuuDz",
-        address: "5oFHj4eGMNbwXKPecjCV9dqQXBbcnpcPC9o8yropms7z",
-        vaultId: "1",
+        vaultAddress: "DNuq6LfthiNbiTaNLwwhzNjzjfnMakxZHgUcvrRLBQ8d",
+        //Asset Vault
+        address: "qbciMuKoFVK4mPGeUvuPgQZg8irsV72YGCrXY2QB4AE",
+        vaultId: "2",
         name: "Solana",
-        symbol: "SPL vault1",
-        RepresentationTokenName: "sSPL vault1",
+        symbol: "WAGMI",
+        // vault token symbol
+        RepresentationTokenName: "sWAGMI",
         icon: "/solana-sol-logo.png"
       }
     ]
