@@ -5,14 +5,16 @@
 To add new assets (tokens) in Solana, follow these steps:
 
 1. **Open** the `globals.js` file.
-2. **Find** the `blockchainInfo` object and locate the `solana` section.
-3. **Locate** the `assets` array inside the `solana` object. Each item is an object describing a token.
+2. **Find** the `blockchainInfo` object and locate the `solana` or `solanaDevnet` section.
+3. **Locate** the `assets` array inside the `solana` or `solanaDevnet` object. Each item is an object describing a token.
 4. **Add** a new object to the `assets` array with the following **required** fields:
 
    - **vaultAddress**: the vault address on Solana (required).
+   - **address**: the asset Vault on Solana (required).
    - **vaultId**: the vault identifier (required).
    - **name**: the token name.
    - **symbol**: the token symbol.
+   - **RepresentationTokenName**: the vault token symbol.
    - **icon**: the path to the token icon (local file or URL).
 
 ### Example
@@ -20,17 +22,21 @@ To add new assets (tokens) in Solana, follow these steps:
 ```js
 assets: [
   {
-    vaultAddress: "9N3yqarWXmXJ9NQBGgN47JXV82smby8nSMffkwetgYov",
+    vaultAddress: "9L4WxKkUHKBZ96EpHBc7APqvEhobmY1A2ENk5dUfdrpw",
+    address: "HH7HCHymx28RKrfUh8QgJBpEe92LQwSuvFENUVkcwQeg",
     vaultId: "0",
     name: "Solana",
-    symbol: "SPL",
+    symbol: "SPL vault0",
+    RepresentationTokenName: "sSPL vault0",
     icon: "/solana-sol-logo.png"
   },
   {
     vaultAddress: "YOUR_NEW_VAULT_ADDRESS",
+    address: "YOUR_ASSETS_VAULT_ADDRESS",
     vaultId: "YOUR_VAULT_ID",
     name: "Token Name",
     symbol: "SYMBOL",
+    RepresentationTokenName: "VAULT TOKEN SYMBOL",
     icon: "path/to/icon.png"
   }
 ];
