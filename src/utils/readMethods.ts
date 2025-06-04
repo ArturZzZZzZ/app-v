@@ -47,11 +47,16 @@ export const useTokenBalanceStateByAddress = ({
 
         let mintPk;
         if (type === "deposit") {
-          const assetVaultAccount = await getAccount(
+          const assetVaultPk = vaultState.assetVault;
+          const assetVaultInfo = await connection.getAccountInfo(assetVaultPk);
+          const assetTokenProgram = assetVaultInfo?.owner;
+          const assetVault = await getAccount(
             connection,
-            vaultState.assetVault
+            assetVaultPk,
+            connection.commitment,
+            assetTokenProgram
           );
-          mintPk = assetVaultAccount.mint;
+          mintPk = assetVault.mint;
         } else {
           mintPk = vaultState.shareMint;
         }
@@ -63,8 +68,6 @@ export const useTokenBalanceStateByAddress = ({
           tokenProgram: mintInfo?.owner,
           userPubkey: userPk
         });
-        console.log(123);
-        console.log(`Fetched ${type} balance for user ${userBalance}:`);
 
         if (!cancelledRef.current) {
           setBalanceState(userBalance);
