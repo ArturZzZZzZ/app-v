@@ -48,7 +48,7 @@ function SecuritizeCreditVault() {
   const { vaultAssetAddress, setVaultAssetAddress } = useAppContext();
   const { TargetBlockchainChainId, setTargetBlockchainChainId } =
     useAppContext();
-  const vaultId = selectedAsset.solanaVaultId;
+  const vaultId = selectedAsset?.solanaVaultId;
   const blockchainType = selectedAsset?.chainName.toLowerCase();
   const isSolana = blockchainType === "solana";
 
