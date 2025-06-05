@@ -26,7 +26,7 @@ export function getCluster(cluster) {
       return {
         name: "Mainnet Beta",
         endpoint:
-          "https://purple-still-sun.solana-mainnet.quiknode.pro/db54b19be71f4f11d7717c2b7cc371f3fc3a26fb/",
+          "https://maximum-serene-wind.solana-mainnet.quiknode.pro/e69943cdc12bd7aeee3825d23609c3fb98220f20",
         network: WalletAdapterNetwork.Mainnet
       };
     case WalletAdapterNetwork.Devnet:
