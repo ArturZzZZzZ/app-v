@@ -600,7 +600,19 @@ export const blockchainInfo = {
     chainId: "solana-mainnet",
     rpcUrl: "https://api.mainnet-beta.solana.com",
     icon: solanaIcon,
-    assets: []
+    assets: [
+      {
+        vaultAddress: "9L4WxKkUHKBZ96EpHBc7APqvEhobmY1A2ENk5dUfdrpw",
+        //Asset Vault
+        address: "9SHe6s8sEXbWA7w7JzjwPxXck4y7y2yDDwF9iyeynhp",
+        vaultId: "0",
+        name: "Solana",
+        symbol: "ACRED",
+        // vault token symbol
+        RepresentationTokenName: "sACRED",
+        icon: "/solana-sol-logo.png"
+      }
+    ]
   }
 };
 

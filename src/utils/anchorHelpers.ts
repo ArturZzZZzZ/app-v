@@ -94,6 +94,7 @@ export const getAllVaultState = async (program) => {
 export const getVaultStateById = async (program, vaultId) => {
   const vaultPda = getVaultStatePda(program.programId, vaultId);
   const vaultState = await program.account.vaultState.fetch(vaultPda);
+
   return vaultState;
 };
 

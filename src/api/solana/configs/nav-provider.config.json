@@ -34,5 +34,15 @@
     }
   },
   "testnet": {},
-  "mainnet": {}
+  "mainnet": {
+    "zg8bo1F8M9KYiJfmPLBPHQmLKXqs6QTS65GMNbnXoGB": {
+      "FubtUcvhSCr3VPXEcxouoQjKQ7NWTCzXyECe76B7L3f8": {
+        "name": "redstone-acred-nav-provider",
+        "accounts": [
+          "G98KYT3XbdjmHGtn7zJjKcBrkVS3ZN65fdf83WBJAdix",
+          "6sK8czVw8Xy6T8YbH6VC8p5ovNZD2mXf5vUTv8sgnUJf"
+        ]
+      }
+    }
+  }
 }
